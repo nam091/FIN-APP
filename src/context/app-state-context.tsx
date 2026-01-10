@@ -194,11 +194,34 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     const [financeFilter, setFinanceFilter] = useState("All");
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [dismissedItems, setDismissedItems] = useState<string[]>([]);
-    const [tasks, setTasks] = useState<Task[]>(initialTasks);
-    const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
-    const [notes, setNotes] = useState<Note[]>(initialNotes);
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [notes, setNotes] = useState<Note[]>([]);
     const [userSettings, setUserSettings] = useState<UserSettings>(initialSettings);
     const [chatHistory, setChatHistory] = useState<ChatMessage[]>(initialChatHistory);
+
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!session?.user?.email) return;
+            try {
+                const res = await fetch("/api/sync");
+                if (res.ok) {
+                    const data = await res.json();
+                    setTasks(data.tasks || []);
+                    setTransactions(data.transactions || []);
+                    setNotes(data.notes || []);
+                    if (data.settings && data.settings.theme) {
+                        setUserSettings(prev => ({ ...prev, theme: data.settings.theme }));
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to sync data", error);
+            }
+        };
+        fetchData();
+    }, [session]);
 
     // Persistence for Chat History
     useEffect(() => {
@@ -235,11 +258,27 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         setDismissedItems((prev) => [...prev, id]);
     };
 
-    const toggleTask = (id: number) => {
+    const toggleTask = async (id: number) => {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+
+        // Optimistic update
         setTasks((prev) => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+
+        try {
+            await fetch("/api/tasks", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, completed: !task.completed }),
+            });
+        } catch (error) {
+            console.error("Failed to toggle task", error);
+            // Rollback
+            setTasks((prev) => prev.map(t => t.id === id ? { ...t, completed: task.completed } : t));
+        }
     };
 
-    const { data: session } = useSession();
+    // session already retrieved above
 
     const syncToGoogleCalendar = async (task: Task) => {
         if (!session || !userSettings.integrations.googleCalendarSync || !task.dueDate) return;
@@ -266,6 +305,11 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             if (response.ok) {
                 const data = await response.json();
                 if (data.event?.id) {
+                    await fetch("/api/tasks", {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ id: task.id, googleEventId: data.event.id }),
+                    });
                     setTasks(prev => prev.map(t => t.id === task.id ? { ...t, googleEventId: data.event.id } : t));
                 }
             }
@@ -274,52 +318,132 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const addTask = (task: Omit<Task, "id">) => {
-        const newTask = { ...task, id: Date.now() };
-        setTasks(prev => [newTask, ...prev]);
-        syncToGoogleCalendar(newTask);
+    const addTask = async (task: Omit<Task, "id">) => {
+        try {
+            const res = await fetch("/api/tasks", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(task),
+            });
+            if (res.ok) {
+                const newTask = await res.json();
+                setTasks(prev => [newTask, ...prev]);
+                syncToGoogleCalendar(newTask);
+            }
+        } catch (error) {
+            console.error("Failed to add task", error);
+        }
     };
 
-    const updateTask = (id: number, task: Partial<Task>) => {
+    const updateTask = async (id: number, task: Partial<Task>) => {
         setTasks(prev => prev.map(t => t.id === id ? { ...t, ...task } : t));
-        // Simple fire-and-forget sync for updates for now - ideally we'd update the specific event
-        // But for MVP, if we have the full task content, we could try to sync.
-        // Getting the full task is tricky here without finding it first.
-        // Let's defer "update existing event" logic for a cleaner implementation later needed.
+        try {
+            await fetch("/api/tasks", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, ...task }),
+            });
+        } catch (error) {
+            console.error("Failed to update task", error);
+        }
     };
 
-    const deleteTask = (id: number) => {
+    const deleteTask = async (id: number) => {
         setTasks(prev => prev.filter(t => t.id !== id));
+        try {
+            await fetch(`/api/tasks?id=${id}`, { method: "DELETE" });
+        } catch (error) {
+            console.error("Failed to delete task", error);
+        }
     };
 
-    const addTransaction = (tx: Omit<Transaction, "id">) => {
-        const newTx = { ...tx, id: Date.now().toString() };
-        setTransactions(prev => [newTx, ...prev]);
+    const addTransaction = async (tx: Omit<Transaction, "id">) => {
+        try {
+            const res = await fetch("/api/transactions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(tx),
+            });
+            if (res.ok) {
+                const newTx = await res.json();
+                setTransactions(prev => [newTx, ...prev]);
+            }
+        } catch (error) {
+            console.error("Failed to add transaction", error);
+        }
     };
 
-    const addNote = (note: Omit<Note, "id">) => {
-        const newNote = { ...note, id: Date.now().toString() };
-        setNotes(prev => [newNote, ...prev]);
+    const addNote = async (note: Omit<Note, "id">) => {
+        try {
+            const res = await fetch("/api/notes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(note),
+            });
+            if (res.ok) {
+                const newNote = await res.json();
+                setNotes(prev => [newNote, ...prev]);
+            }
+        } catch (error) {
+            console.error("Failed to add note", error);
+        }
     };
 
-    const updateNote = (id: string, note: Partial<Note>) => {
+    const updateNote = async (id: string, note: Partial<Note>) => {
         setNotes(prev => prev.map(n => n.id === id ? { ...n, ...note } : n));
+        try {
+            await fetch("/api/notes", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, ...note }),
+            });
+        } catch (error) {
+            console.error("Failed to update note", error);
+        }
     };
 
-    const deleteNote = (id: string) => {
+    const deleteNote = async (id: string) => {
         setNotes(prev => prev.filter(n => n.id !== id));
+        try {
+            await fetch(`/api/notes?id=${id}`, { method: "DELETE" });
+        } catch (error) {
+            console.error("Failed to delete note", error);
+        }
     };
 
-    const updateTransaction = (id: string, tx: Partial<Transaction>) => {
+    const updateTransaction = async (id: string, tx: Partial<Transaction>) => {
         setTransactions(prev => prev.map(t => t.id === id ? { ...t, ...tx } : t));
+        try {
+            await fetch("/api/transactions", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, ...tx }),
+            });
+        } catch (error) {
+            console.error("Failed to update transaction", error);
+        }
     };
 
-    const deleteTransaction = (id: string) => {
+    const deleteTransaction = async (id: string) => {
         setTransactions(prev => prev.filter(t => t.id !== id));
+        try {
+            await fetch(`/api/transactions?id=${id}`, { method: "DELETE" });
+        } catch (error) {
+            console.error("Failed to delete transaction", error);
+        }
     };
 
-    const updateSettings = (settings: Partial<UserSettings>) => {
+    const updateSettings = async (settings: Partial<UserSettings>) => {
         setUserSettings(prev => ({ ...prev, ...settings }));
+        try {
+            await fetch("/api/settings", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ...userSettings, ...settings }),
+            });
+        } catch (error) {
+            console.error("Failed to update settings", error);
+        }
     };
 
     const addNotificationHook = (hook: Omit<NotificationHook, "id">) => {
