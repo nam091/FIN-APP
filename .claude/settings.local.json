@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sudo apt update:*)",
+      "WebSearch",
+      "WebFetch(domain:ai.google.dev)"
+    ]
+  }
+}
