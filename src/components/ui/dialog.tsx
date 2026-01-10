@@ -46,12 +46,18 @@ function DialogOverlay({
   )
 }
 
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
+
 function DialogContent({
   className,
   children,
+  title = "Dialog",
+  description = "Modal content",
   showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
+  title?: string
+  description?: string
   showCloseButton?: boolean
 }) {
   return (
@@ -65,6 +71,12 @@ function DialogContent({
         )}
         {...props}
       >
+        <VisuallyHidden.Root asChild>
+          <DialogPrimitive.Title>{title}</DialogPrimitive.Title>
+        </VisuallyHidden.Root>
+        <VisuallyHidden.Root asChild>
+          <DialogPrimitive.Description>{description}</DialogPrimitive.Description>
+        </VisuallyHidden.Root>
         {children}
         {showCloseButton && (
           <DialogPrimitive.Close

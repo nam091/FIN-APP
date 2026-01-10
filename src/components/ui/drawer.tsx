@@ -49,9 +49,13 @@ function DrawerOverlay({
 function DrawerContent({
   className,
   children,
-  title = "Dialog",
+  title = "Details",
+  description = "Detailed information and actions",
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Content> & { title?: string }) {
+}: React.ComponentProps<typeof DrawerPrimitive.Content> & {
+  title?: string;
+  description?: string;
+}) {
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />
@@ -69,6 +73,9 @@ function DrawerContent({
       >
         <VisuallyHidden.Root asChild>
           <DrawerPrimitive.Title>{title}</DrawerPrimitive.Title>
+        </VisuallyHidden.Root>
+        <VisuallyHidden.Root asChild>
+          <DrawerPrimitive.Description>{description}</DrawerPrimitive.Description>
         </VisuallyHidden.Root>
         <div className="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
         {children}
