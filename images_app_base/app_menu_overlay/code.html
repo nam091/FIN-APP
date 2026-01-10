@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>App Menu Overlay (No Upgrade) V1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FF4D4D",
+                        "background-light": "#F9FAFB",
+                        "background-dark": "#000000",
+                        "card-dark": "#1C1C1E",
+                        "sheet-dark": "#2C2C2E",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ios-blur {
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark text-gray-900 dark:text-white h-screen overflow-hidden">
+<div class="relative h-full w-full flex flex-col p-4 opacity-40 grayscale-[0.2] pointer-events-none">
+<div class="flex items-center justify-between mb-8 pt-12">
+<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-zinc-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-zinc-400">settings</span>
+</div>
+<div class="flex-1 mx-4">
+<div class="bg-gray-100 dark:bg-zinc-900 rounded-full px-4 py-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-zinc-500 text-lg">search</span>
+<span class="text-zinc-500">Search</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+                S
+            </div>
+</div>
+<div class="space-y-6">
+<div class="space-y-4">
+<div class="flex items-center gap-4 text-primary">
+<span class="material-symbols-outlined">inbox</span>
+<span class="font-medium">Inbox</span>
+</div>
+<div class="flex items-center gap-4 text-primary">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-medium">Today</span>
+</div>
+<div class="flex items-center gap-4 text-primary">
+<span class="material-symbols-outlined">check_circle</span>
+<span class="font-medium">Tasks</span>
+</div>
+<div class="flex items-center gap-4 text-primary">
+<span class="material-symbols-outlined">list</span>
+<span class="font-medium">Lists</span>
+</div>
+</div>
+<div class="pt-4 border-t border-zinc-800">
+<div class="flex items-center justify-between text-zinc-500 mb-4">
+<div class="flex items-center gap-2">
+<span class="font-semibold text-sm">Favorites</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</div>
+<span class="material-symbols-outlined">add</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="text-xl">🎉</span>
+<span class="text-zinc-400">Add a title</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xl">📒</span>
+<span class="text-zinc-400">Add a title</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xl">👋</span>
+<span class="text-zinc-400">Getting Started</span>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-0 left-0 right-0 p-4 pb-12 flex justify-around items-center opacity-40">
+<span class="material-symbols-outlined text-3xl">home</span>
+<div class="bg-zinc-800 w-20 h-12 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">add</span>
+</div>
+<span class="material-symbols-outlined text-3xl">notifications</span>
+</div>
+</div>
+<div class="fixed inset-0 bg-black/40 dark:bg-black/60 z-40"></div>
+<div class="fixed bottom-4 left-4 right-4 z-50">
+<div class="bg-white/90 dark:bg-sheet-dark/95 rounded-[24px] shadow-2xl overflow-hidden ios-blur">
+<div class="flex justify-center pt-3 pb-2">
+<div class="w-12 h-1 bg-gray-300 dark:bg-zinc-600 rounded-full"></div>
+</div>
+<div class="px-2 pb-6">
+<button class="w-full flex items-center gap-4 px-4 py-4 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-gray-700 dark:text-zinc-200 group">
+<span class="material-symbols-outlined text-zinc-500 dark:text-zinc-400 group-active:scale-95 transition-transform">settings</span>
+<span class="font-medium text-lg">Settings</span>
+</button>
+<button class="w-full flex items-center gap-4 px-4 py-4 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-gray-700 dark:text-zinc-200 group">
+<span class="material-symbols-outlined text-zinc-500 dark:text-zinc-400 group-active:scale-95 transition-transform">layers</span>
+<span class="font-medium text-lg">Integrations</span>
+</button>
+<div class="mx-4 my-1 border-t border-gray-100 dark:border-zinc-700/50"></div>
+<button class="w-full flex items-center gap-4 px-4 py-4 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-gray-700 dark:text-zinc-200 group">
+<span class="material-symbols-outlined text-zinc-500 dark:text-zinc-400 group-active:scale-95 transition-transform">chat_bubble</span>
+<span class="font-medium text-lg">Get support</span>
+</button>
+<button class="w-full flex items-center gap-4 px-4 py-4 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-gray-700 dark:text-zinc-200 group">
+<span class="material-symbols-outlined text-zinc-500 dark:text-zinc-400 group-active:scale-95 transition-transform">bolt</span>
+<span class="font-medium text-lg">See what's new</span>
+</button>
+</div>
+</div>
+</div>
+<div class="fixed bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/20 dark:bg-white/20 rounded-full z-50"></div>
+<script>
+        // Default to dark mode for a premium productivity app look
+        document.documentElement.classList.add('dark');
+    </script>
+
+</body></html>

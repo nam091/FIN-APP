@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Task Details &amp; Edit - Productivity App</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8B5CF6", // Vibrant purple seen in Superlist accents
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#000000",
+                        "card-light": "#F3F4F6",
+                        "card-dark": "#121212",
+                        "surface-dark": "#1C1C1E",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .ios-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased min-h-screen flex justify-center">
+<div class="w-full max-w-[430px] min-h-screen bg-background-light dark:bg-background-dark relative flex flex-col shadow-2xl">
+<div class="h-12 flex justify-between items-center px-8 w-full">
+<span class="text-sm font-semibold">9:41</span>
+<div class="flex gap-1.5 items-center">
+<span class="material-icons-outlined text-[16px]">signal_cellular_alt</span>
+<span class="material-icons-outlined text-[16px]">wifi</span>
+<span class="material-icons-outlined text-[16px]">battery_full</span>
+</div>
+</div>
+<header class="flex items-center justify-between px-6 py-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-surface-dark transition-active active:scale-95">
+<span class="material-icons-outlined text-xl">chevron_left</span>
+</button>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-surface-dark">
+<span class="material-icons-outlined text-xl">share</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-surface-dark">
+<span class="material-icons-outlined text-xl">more_horiz</span>
+</button>
+</div>
+</header>
+<main class="flex-1 px-6 pb-24 overflow-y-auto hide-scrollbar">
+<div class="mt-4 flex items-start gap-4">
+<div class="mt-1.5 w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-700 flex-shrink-0"></div>
+<div class="flex-1">
+<textarea class="w-full bg-transparent border-none p-0 text-3xl font-semibold focus:ring-0 placeholder-slate-400 resize-none leading-tight" placeholder="Task title" rows="2">Update project documentation for the upcoming launch</textarea>
+</div>
+</div>
+<div class="mt-8 space-y-1">
+<div class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-surface-dark transition-colors cursor-pointer group">
+<span class="material-icons-outlined text-primary">calendar_today</span>
+<div class="flex-1">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Due date</p>
+<p class="text-base">Monday at 10:00 AM</p>
+</div>
+<span class="material-icons-outlined text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">chevron_right</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-surface-dark transition-colors cursor-pointer group">
+<span class="material-icons-outlined text-blue-500">list_alt</span>
+<div class="flex-1">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">List</p>
+<p class="text-base">Getting Started</p>
+</div>
+<span class="material-icons-outlined text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">chevron_right</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-surface-dark transition-colors cursor-pointer group">
+<span class="material-icons-outlined text-emerald-500">person_outline</span>
+<div class="flex-1">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Assignee</p>
+<p class="text-base">Me</p>
+</div>
+<span class="material-icons-outlined text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">chevron_right</span>
+</div>
+</div>
+<div class="mt-10">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-semibold flex items-center gap-2">
+                        Subtasks
+                        <span class="text-xs font-normal bg-slate-100 dark:bg-surface-dark px-2 py-0.5 rounded-full text-slate-500">2/4</span>
+</h3>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="material-icons-outlined text-primary text-[22px]">check_circle</span>
+<span class="flex-1 text-slate-500 dark:text-slate-500 line-through">Draft introduction</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-icons-outlined text-primary text-[22px]">check_circle</span>
+<span class="flex-1 text-slate-500 dark:text-slate-500 line-through">Review technical specs</span>
+</div>
+<div class="flex items-center gap-3 group">
+<div class="w-5 h-5 rounded-md border-2 border-slate-300 dark:border-slate-700"></div>
+<input class="flex-1 bg-transparent border-none p-0 focus:ring-0 text-base" type="text" value="Create visual diagrams"/>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400">
+<span class="material-icons-outlined text-lg">close</span>
+</button>
+</div>
+<div class="flex items-center gap-3 group">
+<div class="w-5 h-5 rounded-md border-2 border-slate-300 dark:border-slate-700"></div>
+<input class="flex-1 bg-transparent border-none p-0 focus:ring-0 text-base" type="text" value="Get feedback from marketing"/>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400">
+<span class="material-icons-outlined text-lg">close</span>
+</button>
+</div>
+<button class="flex items-center gap-3 text-primary font-medium pt-2">
+<span class="material-icons-outlined text-[22px]">add</span>
+<span>Add subtask</span>
+</button>
+</div>
+</div>
+<div class="mt-10 mb-10">
+<h3 class="text-lg font-semibold mb-4">Notes</h3>
+<div class="bg-slate-50 dark:bg-surface-dark p-4 rounded-2xl">
+<textarea class="w-full bg-transparent border-none p-0 text-base focus:ring-0 placeholder-slate-400 resize-none min-h-[100px]" placeholder="Add additional details or notes here..."></textarea>
+</div>
+</div>
+</main>
+<nav class="absolute bottom-0 left-0 right-0 ios-blur bg-white/80 dark:bg-black/80 border-t border-slate-200 dark:border-slate-800 px-6 py-4 flex justify-between items-center pb-8">
+<div class="flex-1 flex justify-around items-center">
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons-outlined">sticky_note_2</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">Notes</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-icons-outlined">check_circle</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">Tasks</span>
+</button>
+<div class="w-12"></div> 
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons-outlined">account_balance_wallet</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">Finance</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons-outlined">settings</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">Settings</span>
+</button>
+</div>
+<button class="absolute left-1/2 -translate-x-1/2 -top-6 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center transition-transform active:scale-90 ring-4 ring-white dark:ring-black">
+<span class="material-icons-outlined text-3xl">add</span>
+</button>
+</nav>
+<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-slate-300 dark:bg-slate-800 rounded-full"></div>
+</div>
+
+</body></html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Updates &amp; Activity</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FF4D4D", // Vibrant red/orange from the reference
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#000000",
+                        "surface-dark": "#121212",
+                        "card-dark": "#1C1C1E",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-status-bar {
+            height: 44px;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .bottom-nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.8);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col">
+<div class="ios-status-bar flex justify-between items-center px-6 pt-2">
+<span class="text-sm font-semibold">9:41</span>
+<div class="flex items-center space-x-1.5">
+<span class="material-icons-outlined text-sm">signal_cellular_alt</span>
+<span class="material-icons-outlined text-sm">wifi</span>
+<span class="material-icons-outlined text-sm">battery_full</span>
+</div>
+</div>
+<header class="px-6 pt-6 pb-2">
+<h1 class="text-4xl font-bold tracking-tight mb-6">Updates</h1>
+<div class="flex space-x-2 overflow-x-auto hide-scrollbar -mx-6 px-6">
+<button class="px-5 py-2 rounded-full bg-slate-900 dark:bg-white text-white dark:text-black font-medium text-sm transition-all whitespace-nowrap">
+                All
+            </button>
+<button class="px-5 py-2 rounded-full bg-slate-100 dark:bg-card-dark text-slate-600 dark:text-slate-400 font-medium text-sm border border-transparent dark:border-white/5 transition-all whitespace-nowrap">
+                Tasks
+            </button>
+<button class="px-5 py-2 rounded-full bg-slate-100 dark:bg-card-dark text-slate-600 dark:text-slate-400 font-medium text-sm border border-transparent dark:border-white/5 transition-all whitespace-nowrap">
+                Messages
+            </button>
+<button class="px-5 py-2 rounded-full bg-slate-100 dark:bg-card-dark text-slate-600 dark:text-slate-400 font-medium text-sm border border-transparent dark:border-white/5 transition-all whitespace-nowrap">
+                Finance
+            </button>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center px-10 text-center pb-32">
+<div class="relative w-48 h-48 mb-8 opacity-60">
+<svg class="w-full h-full stroke-slate-400 dark:stroke-slate-500" fill="none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<circle cx="100" cy="100" r="40" stroke-dasharray="4 4" stroke-width="2"></circle>
+<path d="M70 140C70 140 85 130 100 130C115 130 130 140 130 140" stroke-linecap="round" stroke-width="2"></path>
+<rect height="25" rx="4" stroke-width="2" width="25" x="60" y="50"></rect>
+<path d="M68 62.5L72 66.5L80 58.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M130 60C145 60 155 70 155 85C155 100 145 110 130 110" stroke-linecap="round" stroke-width="2"></path>
+<path d="M125 75L135 75M125 85L140 85" stroke-linecap="round" stroke-width="2"></path>
+<circle class="text-slate-400 dark:text-slate-500" cx="100" cy="100" fill="currentColor" r="4"></circle>
+</svg>
+</div>
+<p class="text-slate-500 dark:text-slate-400 leading-relaxed max-w-xs text-md">
+            Tasks assigned to you, comments, completed tasks and everything else will appear here.
+        </p>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 px-6 pb-8 pt-4 bottom-nav-blur border-t border-slate-200 dark:border-white/5">
+<div class="flex items-center justify-between max-w-md mx-auto h-14">
+<button class="p-2 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors flex items-center justify-center">
+<span class="material-icons-outlined text-3xl">home</span>
+</button>
+<button class="bg-card-dark dark:bg-card-dark border border-slate-200 dark:border-white/10 w-24 h-14 rounded-[28px] flex items-center justify-center shadow-xl translate-y-0">
+<span class="material-icons-outlined text-white text-3xl">add</span>
+</button>
+<button class="p-2 text-slate-900 dark:text-white transition-colors relative flex items-center justify-center">
+<span class="material-icons-outlined text-3xl">notifications</span>
+<div class="absolute -top-1 right-2 w-2 h-2 bg-primary rounded-full"></div>
+</button>
+</div>
+</nav>
+<div class="fixed bottom-32 left-0 right-0 flex justify-center pointer-events-none">
+<div class="bg-slate-800/20 dark:bg-white/5 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/5 pointer-events-auto cursor-pointer flex items-center gap-2 opacity-0 hover:opacity-100 transition-opacity">
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Settings</span>
+<span class="material-icons-outlined text-xs text-slate-400">tune</span>
+</div>
+</div>
+</body></html>

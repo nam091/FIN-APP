@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mobile Finance Dashboard V1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#6366f1", // Indigo/Purple accent seen in reference
+                        "background-light": "#ffffff",
+                        "background-dark": "#000000",
+                        "card-dark": "#151515",
+                        "card-light": "#f3f4f6",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "1.25rem",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex justify-center">
+<div class="relative w-full max-w-md h-screen overflow-hidden flex flex-col shadow-2xl">
+<div class="flex justify-between items-center px-8 pt-4 pb-2">
+<span class="text-sm font-semibold">9:49</span>
+<div class="flex items-center space-x-2">
+<span class="material-icons-round text-[16px]">bluetooth</span>
+<span class="material-icons-round text-[18px]">signal_cellular_alt</span>
+<span class="material-icons-round text-[18px]">wifi</span>
+<div class="border border-slate-400 dark:border-slate-600 rounded-sm px-1 py-0 flex items-center h-4">
+<span class="text-[10px] font-bold">72</span>
+</div>
+</div>
+</div>
+<header class="px-6 py-4 flex justify-between items-center">
+<button class="w-10 h-10 flex items-center justify-center bg-slate-100 dark:bg-zinc-800 rounded-full">
+<span class="material-icons-round text-slate-600 dark:text-slate-400">chevron_left</span>
+</button>
+<div class="flex space-x-2">
+<button class="px-4 py-2 bg-slate-100 dark:bg-zinc-800 rounded-full flex items-center space-x-2">
+<span class="material-icons-round text-primary text-sm">sort</span>
+<span class="text-xs font-medium dark:text-slate-300">Date</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center bg-slate-100 dark:bg-zinc-800 rounded-full">
+<span class="material-icons-round text-slate-600 dark:text-slate-400">more_horiz</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto no-scrollbar px-6 pb-32">
+<h1 class="text-5xl font-bold mt-2 mb-6 tracking-tight">Finance</h1>
+<div class="bg-card-light dark:bg-card-dark rounded-3xl p-5 mb-8">
+<div class="flex items-start space-x-4">
+<div class="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl">
+<span class="material-icons-round text-primary">account_balance_wallet</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-700 dark:text-indigo-200/90 text-[15px] leading-relaxed">
+                            Manage your budget and track expenses — see where your money goes every month.
+                        </p>
+</div>
+</div>
+<div class="flex space-x-3 mt-5">
+<button class="flex-1 py-3 bg-slate-200/50 dark:bg-white/5 hover:bg-white/10 transition-colors rounded-2xl text-sm font-semibold dark:text-slate-300">
+                        Learn more
+                    </button>
+<button class="flex-1 py-3 bg-slate-200/50 dark:bg-white/5 hover:bg-white/10 transition-colors rounded-2xl text-sm font-semibold dark:text-slate-300">
+                        Dismiss
+                    </button>
+</div>
+</div>
+<div class="flex space-x-2 mb-8 overflow-x-auto no-scrollbar">
+<button class="flex items-center px-4 py-2 bg-slate-100 dark:bg-zinc-800 rounded-full">
+<span class="material-icons-round text-sm mr-1">search</span>
+</button>
+<button class="px-5 py-2 bg-slate-900 dark:bg-zinc-800 text-white dark:text-slate-100 rounded-full text-sm font-medium whitespace-nowrap">
+                    All transactions
+                </button>
+<button class="px-5 py-2 bg-slate-100 dark:bg-zinc-900 text-slate-600 dark:text-slate-400 rounded-full text-sm font-medium whitespace-nowrap">
+                    Income
+                </button>
+<button class="px-5 py-2 bg-slate-100 dark:bg-zinc-900 text-slate-600 dark:text-slate-400 rounded-full text-sm font-medium whitespace-nowrap">
+                    Savings
+                </button>
+</div>
+<div class="space-y-6">
+<div>
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-600 mb-4 px-1">Today</h3>
+<div class="space-y-4">
+<div class="flex items-center group cursor-pointer">
+<div class="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-zinc-800 flex items-center justify-center mr-4">
+<span class="material-icons-round text-slate-400 dark:text-zinc-600 text-lg">restaurant</span>
+</div>
+<div class="flex-1">
+<h4 class="text-[17px] font-medium leading-tight">Dinner at Sotto Sotto</h4>
+<p class="text-xs text-slate-500 dark:text-zinc-500 mt-0.5">Dining &amp; Drinks</p>
+</div>
+<span class="text-[17px] font-semibold">-$84.20</span>
+</div>
+<div class="flex items-center group cursor-pointer">
+<div class="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-zinc-800 flex items-center justify-center mr-4">
+<span class="material-icons-round text-slate-400 dark:text-zinc-600 text-lg">shopping_bag</span>
+</div>
+<div class="flex-1">
+<h4 class="text-[17px] font-medium leading-tight">Apple Store</h4>
+<p class="text-xs text-slate-500 dark:text-zinc-500 mt-0.5">Electronics</p>
+</div>
+<span class="text-[17px] font-semibold">-$129.00</span>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-600 mb-4 px-1">Yesterday</h3>
+<div class="space-y-4">
+<div class="flex items-center group cursor-pointer">
+<div class="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-zinc-800 flex items-center justify-center mr-4">
+<span class="material-icons-round text-slate-400 dark:text-zinc-600 text-lg">work</span>
+</div>
+<div class="flex-1">
+<h4 class="text-[17px] font-medium leading-tight">Payroll Deposit</h4>
+<p class="text-xs text-slate-500 dark:text-zinc-500 mt-0.5">Income</p>
+</div>
+<span class="text-[17px] font-semibold text-emerald-500">+$3,250.00</span>
+</div>
+<div class="flex items-center group cursor-pointer">
+<div class="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-zinc-800 flex items-center justify-center mr-4">
+<span class="material-icons-round text-slate-400 dark:text-zinc-600 text-lg">local_taxi</span>
+</div>
+<div class="flex-1">
+<h4 class="text-[17px] font-medium leading-tight">Uber Trip</h4>
+<p class="text-xs text-slate-500 dark:text-zinc-500 mt-0.5">Transportation</p>
+</div>
+<span class="text-[17px] font-semibold">-$14.50</span>
+</div>
+<div class="flex items-center group cursor-pointer">
+<div class="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-zinc-800 flex items-center justify-center mr-4">
+<span class="material-icons-round text-slate-400 dark:text-zinc-600 text-lg">fitness_center</span>
+</div>
+<div class="flex-1">
+<h4 class="text-[17px] font-medium leading-tight">Equinox Membership</h4>
+<p class="text-xs text-slate-500 dark:text-zinc-500 mt-0.5">Health &amp; Fitness</p>
+</div>
+<span class="text-[17px] font-semibold">-$225.00</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<div class="absolute bottom-10 left-0 right-0 px-6">
+<div class="flex items-center space-x-3">
+<button class="flex-1 bg-slate-200 dark:bg-zinc-800 h-14 rounded-full flex items-center px-6 space-x-3 hover:bg-slate-300 dark:hover:bg-zinc-700 transition-colors">
+<span class="material-icons-round text-2xl">add</span>
+<span class="font-semibold">New transaction</span>
+</button>
+<button class="w-14 h-14 bg-slate-200 dark:bg-zinc-800 rounded-full flex items-center justify-center hover:bg-slate-300 dark:hover:bg-zinc-700 transition-colors">
+<div class="flex items-center space-x-0.5">
+<div class="w-1 h-3 bg-red-400 rounded-full animate-pulse"></div>
+<div class="w-1 h-5 bg-indigo-500 rounded-full"></div>
+<div class="w-1 h-3 bg-red-400 rounded-full animate-pulse"></div>
+</div>
+</button>
+</div>
+</div>
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-slate-300 dark:bg-zinc-700 rounded-full"></div>
+</div>
+
+</body></html>

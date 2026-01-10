@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Project Focused Navigation V3</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#FF4D3D", // The vibrant coral/red from the icons
+              "background-light": "#FFFFFF",
+              "background-dark": "#000000",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "12px",
+            },
+          },
+        },
+      };
+    </script>
+<style>
+      .material-symbols-rounded {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen selection:bg-primary/30">
+<div class="max-w-[430px] mx-auto min-h-screen relative flex flex-col pb-24">
+<div class="flex justify-between items-center px-8 py-3 w-full">
+<span class="text-sm font-semibold">9:49</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-rounded text-[18px]">bluetooth</span>
+<span class="material-symbols-rounded text-[18px]">signal_cellular_4_bar</span>
+<span class="material-symbols-rounded text-[18px]">wifi</span>
+<span class="text-xs font-bold border border-slate-400/50 dark:border-white/30 px-1 rounded-sm leading-none py-0.5">72</span>
+</div>
+</div>
+<header class="px-5 mt-2 mb-8 flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-rounded text-slate-600 dark:text-slate-400">settings</span>
+</button>
+<div class="flex-1 relative group">
+<div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+<span class="material-symbols-rounded text-slate-400 dark:text-slate-500 text-[20px]">search</span>
+</div>
+<input class="w-full bg-slate-100 dark:bg-zinc-900 border-none rounded-full py-2.5 pl-10 pr-4 text-[15px] focus:ring-1 focus:ring-primary/50 placeholder:text-slate-500 dark:placeholder:text-zinc-500" placeholder="Search" type="text"/>
+</div>
+<button class="w-9 h-9 flex items-center justify-center rounded-full bg-primary text-white font-semibold text-sm">
+                S
+            </button>
+</header>
+<nav class="px-5 space-y-6">
+<div class="space-y-4">
+<a class="flex items-center gap-4 group" href="#">
+<span class="material-symbols-rounded text-primary group-active:scale-95 transition-transform">inbox</span>
+<span class="text-[17px] font-medium text-slate-700 dark:text-zinc-200">Project Inbox</span>
+</a>
+<a class="flex items-center gap-4 group" href="#">
+<span class="material-symbols-rounded text-primary group-active:scale-95 transition-transform">calendar_today</span>
+<span class="text-[17px] font-medium text-slate-700 dark:text-zinc-200">Canvas Today</span>
+</a>
+<a class="flex items-center gap-4 group" href="#">
+<span class="material-symbols-rounded text-primary group-active:scale-95 transition-transform">check_circle</span>
+<span class="text-[17px] font-medium text-slate-700 dark:text-zinc-200">Active Tasks</span>
+</a>
+<a class="flex items-center gap-4 group" href="#">
+<span class="material-symbols-rounded text-primary group-active:scale-95 transition-transform">view_list</span>
+<span class="text-[17px] font-medium text-slate-700 dark:text-zinc-200">Shared Lists</span>
+</a>
+</div>
+<section class="pt-2">
+<div class="flex items-center justify-between mb-4">
+<button class="flex items-center gap-1 text-slate-400 dark:text-zinc-500 font-medium hover:text-slate-600 dark:hover:text-zinc-300 transition-colors">
+                        Favorites
+                        <span class="material-symbols-rounded text-[18px]">expand_more</span>
+</button>
+<button class="text-slate-400 dark:text-zinc-500 hover:text-primary transition-colors">
+<span class="material-symbols-rounded text-[22px]">add</span>
+</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4">
+<span class="text-lg">🚀</span>
+<span class="text-[17px] text-slate-700 dark:text-zinc-200">Startup Idea</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-lg">📈</span>
+<span class="text-[17px] text-slate-700 dark:text-zinc-200">Portfolio</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-lg">👏</span>
+<span class="text-[17px] text-slate-700 dark:text-zinc-200">Getting Started</span>
+</div>
+</div>
+</section>
+<section class="pt-2">
+<div class="flex items-center justify-between mb-2">
+<button class="flex items-center gap-1 text-slate-400 dark:text-zinc-500 font-medium hover:text-slate-600 dark:hover:text-zinc-300 transition-colors">
+                        Meetings
+                        <span class="material-symbols-rounded text-[18px]">expand_more</span>
+</button>
+</div>
+</section>
+</nav>
+<div class="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto px-6 pb-8 pt-4 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light/95 dark:via-background-dark/95 to-transparent backdrop-blur-sm">
+<div class="flex items-center justify-between gap-4">
+<button class="flex-1 flex justify-center py-2 group">
+<span class="material-symbols-rounded text-slate-900 dark:text-white text-[28px] group-active:scale-90 transition-transform">home</span>
+</button>
+<button class="w-24 h-12 bg-slate-200/50 dark:bg-zinc-800 rounded-full flex items-center justify-center hover:bg-slate-300/50 dark:hover:bg-zinc-700 transition-all active:scale-95 shadow-lg shadow-black/5">
+<span class="material-symbols-rounded text-[32px] text-slate-900 dark:text-white">add</span>
+</button>
+<button class="flex-1 flex justify-center py-2 group">
+<span class="material-symbols-rounded text-slate-500 dark:text-zinc-500 text-[28px] group-hover:text-primary transition-colors group-active:scale-90 transition-transform">notifications</span>
+</button>
+</div>
+<div class="w-32 h-1.5 bg-slate-300 dark:bg-zinc-800 rounded-full mx-auto mt-6"></div>
+</div>
+</div>
+
+</body></html>

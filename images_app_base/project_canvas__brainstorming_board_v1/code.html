@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Project Canvas: Brainstorming Board</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FFFFFF",
+                        "background-light": "#F9FAFB",
+                        "background-dark": "#0A0A0A",
+                        "card-dark": "#161616",
+                        "accent-blue": "#3B82F6",
+                        "accent-purple": "#8B5CF6",
+                        "accent-green": "#10B981"
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                        "xl": "20px",
+                        "2xl": "28px"
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;}
+        .canvas-grid {
+            background-image: radial-gradient(circle, #262626 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        .glass-panel {
+            background: rgba(22, 22, 22, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .drag-handle {
+            cursor: grab;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 h-screen w-screen overflow-hidden">
+<div class="absolute inset-0 canvas-grid opacity-50"></div>
+<div class="fixed top-0 w-full z-50 flex justify-between items-center px-8 py-3 text-xs font-semibold">
+<span>9:49</span>
+<div class="flex items-center gap-1.5">
+<span class="material-icons-round text-sm">signal_cellular_alt</span>
+<span class="material-icons-round text-sm">wifi</span>
+<span class="material-icons-round text-sm">battery_full</span>
+</div>
+</div>
+<div class="fixed top-12 left-0 right-0 z-40 px-4">
+<div class="glass-panel rounded-2xl flex items-center justify-between px-4 py-2">
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors">
+<span class="material-icons-round text-xl">arrow_back_ios_new</span>
+</button>
+<h1 class="font-bold text-lg tracking-tight">Project Canvas</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-full text-xs font-medium">
+<span class="material-icons-round text-sm text-blue-400">filter_list</span>
+                    Due Date
+                </button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10">
+<span class="material-icons-round">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<main class="relative h-full w-full p-4 pt-32 overflow-auto">
+<div class="mb-8 ml-2">
+<h2 class="text-4xl font-bold mb-6">Today</h2>
+<div class="border-2 border-dashed border-neutral-800 rounded-3xl p-6 mb-8 max-w-md">
+<p class="text-neutral-400 text-sm mb-6 leading-relaxed">
+                    Transform your Today view into a meeting hub: see your schedule, join video calls, and take notes for any meeting.
+                </p>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 bg-[#1f1f1f] px-4 py-2.5 rounded-2xl text-sm font-medium">
+<img alt="Google Calendar" class="w-4 h-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5a3q_19tB5s1LyGuBIitnHIkRqNskb_TG0pPbwJTodpPDZOZ43laCPNxk3lq0zYLHl92hAANa0f3HtzNSCfYO9AvaGPdpXQd49CeHVfrFXIrIGDTuVUtu40ZkgX7IlPD3LRyEZP7cqgUF7hKARpZehjnK2-zdJPNIED8q5xh25Sd0w4tww6bV7n9_HrZ-pKYvhWxrl11n3o_rNasUG_hnHOzS5bBVi3wYm9qd1LkiPdWa637zOf2vB_3YhxNWcb8FSEiumgsnYXtr"/>
+                        Add my calendar
+                    </button>
+<button class="px-4 py-2.5 rounded-2xl text-sm font-medium border border-neutral-800 text-neutral-400">
+                        No thanks
+                    </button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-40">
+<div class="glass-panel p-5 rounded-3xl drag-handle">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-semibold text-neutral-300 flex items-center gap-2">
+<span class="material-icons-round text-accent-blue">check_circle</span>
+                        Active Tasks
+                    </h3>
+<span class="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Today</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-5 h-5 rounded-full border-2 border-neutral-700"></div>
+<div class="h-4 bg-neutral-800 rounded w-3/4 animate-pulse"></div>
+</div>
+<div class="flex items-center gap-3 opacity-60">
+<div class="w-5 h-5 rounded-full border-2 border-neutral-700"></div>
+<div class="h-4 bg-neutral-800 rounded w-1/2"></div>
+</div>
+<div class="flex items-center gap-3 opacity-40">
+<div class="w-5 h-5 rounded-full border-2 border-neutral-700"></div>
+<div class="h-4 bg-neutral-800 rounded w-2/3"></div>
+</div>
+</div>
+</div>
+<div class="bg-[#1a1a1a] p-5 rounded-3xl border border-white/5 drag-handle">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-semibold text-neutral-300 flex items-center gap-2">
+<span class="material-icons-round text-accent-green">account_balance_wallet</span>
+                        Monthly Budget
+                    </h3>
+<span class="material-icons-round text-neutral-500 text-sm">open_in_full</span>
+</div>
+<div class="mb-4">
+<div class="text-3xl font-bold tracking-tight">$4,280.00</div>
+<div class="text-xs text-neutral-500 mt-1 flex items-center gap-1">
+<span class="text-accent-green font-medium">+12%</span> vs last month
+                    </div>
+</div>
+<div class="w-full bg-neutral-800 h-2 rounded-full overflow-hidden">
+<div class="bg-accent-green h-full w-[65%]"></div>
+</div>
+</div>
+<div class="bg-amber-100/10 border border-amber-200/20 p-5 rounded-xl rotate-1 shadow-lg drag-handle">
+<div class="flex items-center gap-2 mb-2 text-amber-200/50">
+<span class="material-icons-round text-sm">push_pin</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Brainstorm</span>
+</div>
+<p class="text-amber-100/80 text-sm font-medium leading-relaxed italic">
+                    "The best way to predict the future is to create it." - Note: Remember to finalize the UI/UX workshop notes by Friday morning.
+                </p>
+</div>
+<div class="glass-panel p-5 rounded-3xl drag-handle">
+<h3 class="font-semibold text-neutral-300 flex items-center gap-2 mb-4">
+<span class="material-icons-round text-accent-purple">description</span>
+                    Recent Notes
+                </h3>
+<div class="space-y-3">
+<div class="p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors cursor-pointer">
+<div class="font-medium text-sm">Marketing Strategy 2024</div>
+<div class="text-[10px] text-neutral-500 mt-1">Edited 2h ago</div>
+</div>
+<div class="p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors cursor-pointer">
+<div class="font-medium text-sm">Team Weekly Sync</div>
+<div class="text-[10px] text-neutral-500 mt-1">Edited 5h ago</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed bottom-10 left-0 right-0 px-6 flex justify-between items-center pointer-events-none">
+<button class="pointer-events-auto bg-[#1a1a1a] border border-white/10 flex items-center gap-2 px-5 py-3.5 rounded-full shadow-2xl hover:bg-neutral-800 transition-all active:scale-95">
+<span class="material-icons-round text-white">add</span>
+<span class="font-semibold text-sm">New task</span>
+</button>
+<button class="pointer-events-auto w-14 h-14 bg-[#1a1a1a] border border-white/10 rounded-full flex items-center justify-center shadow-2xl group transition-all">
+<div class="flex items-center gap-0.5 group-active:animate-pulse">
+<div class="w-1 h-3 bg-blue-500 rounded-full"></div>
+<div class="w-1 h-5 bg-purple-500 rounded-full"></div>
+<div class="w-1 h-6 bg-red-500 rounded-full"></div>
+<div class="w-1 h-4 bg-orange-500 rounded-full"></div>
+</div>
+</button>
+</div>
+<div class="fixed bottom-28 right-6 pointer-events-none">
+<button class="pointer-events-auto w-12 h-12 bg-white text-black rounded-full flex items-center justify-center shadow-xl hover:bg-neutral-200 transition-colors">
+<span class="material-icons-round">auto_fix_high</span>
+</button>
+</div>
+<div class="fixed bottom-1 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-neutral-800 rounded-full opacity-50"></div>
+
+</body></html>

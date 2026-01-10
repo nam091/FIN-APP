@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Modern Productivity Dashboard V1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#6366f1",
+                        "background-light": "#f9fafb",
+                        "background-dark": "#000000",
+                        "card-dark": "#121212",
+                        "accent-purple": "#8b5cf6",
+                        "accent-blue": "#3b82f6",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "1.25rem",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ios-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .gradient-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen pb-24">
+<div class="h-12 w-full flex items-center justify-between px-8 text-xs font-semibold select-none">
+<span class="dark:text-white">9:41</span>
+<div class="flex items-center gap-1.5">
+<span class="material-icons-round text-[14px]">signal_cellular_alt</span>
+<span class="material-icons-round text-[14px]">wifi</span>
+<span class="material-icons-round text-[18px]">battery_full</span>
+</div>
+</div>
+<div class="relative w-full h-48 mb-[-2rem] overflow-hidden">
+<div class="absolute inset-0 gradient-header opacity-80 dark:opacity-100"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-background-light dark:to-background-dark"></div>
+<div class="relative px-6 pt-4 flex justify-between items-start">
+<button class="w-10 h-10 rounded-full bg-white/20 dark:bg-black/20 flex items-center justify-center ios-blur">
+<span class="material-icons-round text-white">menu</span>
+</button>
+<div class="flex gap-3">
+<button class="w-10 h-10 rounded-full bg-white/20 dark:bg-black/20 flex items-center justify-center ios-blur">
+<span class="material-icons-round text-white">search</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-primary border-2 border-white dark:border-slate-800 flex items-center justify-center overflow-hidden">
+<img alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDLJW0SaEqEr9e4LjAGgTeaI-wLe2imDKFjKGOQft6ByOSITzSKUORWpgUUd3QJUpJ_owEn_jmuk9vP35qAXxR0M7o_SRH9SYCg8SwarmtbJcu0tJH8TAhrH6iRE20zIHa9uttEj1V-NukWzOqt2o1xeVyLJouXEYghLiQMGamuuB7djNBSX08nj9zHMpwYL-iwE_eZR1id__wTljwDKh_xncr0kR7ravrIY1ky5q28JUnKWPqWk6XicY4m3fQBP6W36AFNOdODjGj"/>
+</div>
+</div>
+</div>
+<div class="relative px-6 mt-4">
+<h1 class="text-4xl font-bold tracking-tight text-white">Good Morning</h1>
+<p class="text-white/80 font-medium mt-1">Wednesday, Oct 25</p>
+</div>
+</div>
+<main class="px-5 space-y-6 relative z-10">
+<section class="bg-white dark:bg-card-dark rounded-3xl p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-white/5">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Balance</h2>
+<span class="text-emerald-500 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-full">+12.5%</span>
+</div>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="text-3xl font-bold">$24,850.00</span>
+</div>
+<div class="h-16 w-full flex items-end gap-1 px-1">
+<div class="flex-1 bg-primary/20 rounded-t-sm h-[40%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-[60%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-[45%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-[70%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-[85%]"></div>
+<div class="flex-1 bg-primary h-[65%] shadow-[0_-4px_10px_rgba(99,102,241,0.5)]"></div>
+<div class="flex-1 bg-primary/40 rounded-t-sm h-[90%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-[75%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-[60%]"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-[80%]"></div>
+</div>
+</section>
+<section>
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-bold">Today's Tasks</h2>
+<button class="text-primary text-sm font-semibold">View all</button>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-2xl border border-slate-100 dark:border-white/5">
+<button class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center">
+</button>
+<div class="flex-1">
+<h3 class="font-medium">Update design system</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">Project: Superlist Clone</p>
+</div>
+<span class="material-icons-round text-slate-400 text-lg">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-2xl border border-slate-100 dark:border-white/5">
+<button class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
+<span class="material-icons-round text-white text-sm">done</span>
+</button>
+<div class="flex-1">
+<h3 class="font-medium text-slate-400 line-through">Check recurring payments</h3>
+<p class="text-xs text-slate-500/50">Finance</p>
+</div>
+<span class="material-icons-round text-slate-400 text-lg">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-2xl border border-slate-100 dark:border-white/5">
+<button class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center">
+</button>
+<div class="flex-1">
+<h3 class="font-medium">Call with marketing team</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">14:00 PM</p>
+</div>
+<div class="flex -space-x-2">
+<img alt="Team member" class="w-6 h-6 rounded-full border border-white dark:border-slate-800" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7-qaAX9VHDShRMliHHiIVopkc5NUU7vUG_O2JOG6R-2yAVz47Dam2ToJ4oeNTpcIUH1YOGwQlCgL84CBSbhRZN1Q8LuUDhYsGlL2rj9Pjn5pmzXVmY1Kheakoo9J4HuDztGvtIxUWv9CwEc7s0iGcDWX0VQCVN8TrH6ZD69xfYlQuEwSpr8Av38UPDc5ozrTx1ukaraJ8S1Zt7BbOp_GgTNWFV8VQ8ni2bPP5hMsg6Sxi6vnYsnC7H9GD7TmFDOzWAEeIAP2l2op"/>
+<img alt="Team member" class="w-6 h-6 rounded-full border border-white dark:border-slate-800" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJAE21V-ApFCOU2lA-j4rKYtlJ8JNhgpmHuXzDCr0W_mOfBp7a9EgJV5Lf8TfS__URmbve2OQ6VqCX2wcJflQg44wCVSSJxMU8f33ne9tT0eG18RGnT_R4r13ng4KrWwtJ5CllUV4MPHQksqkG0th4tIVs31VuR-OpZw02u0KusTS19LsUznHBVY1UJzKB_uaHcb-MDSJeVuC_YpT9wlzO9zv4HT4i_O-G80SXnkjSXx1u3yzg0s9O81QsexXcSNpHFclj33rk5Xim"/>
+</div>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-xl font-bold mb-4">Quick Note</h2>
+<div class="bg-amber-50 dark:bg-amber-900/10 p-5 rounded-3xl border border-amber-100 dark:border-amber-900/30">
+<textarea class="w-full bg-transparent border-none p-0 focus:ring-0 text-slate-700 dark:text-amber-200 placeholder-slate-400 dark:placeholder-amber-900/50 resize-none" placeholder="Tap anywhere and start typing..." rows="3"></textarea>
+<div class="flex justify-between items-center mt-2">
+<div class="flex gap-3 text-amber-600/60 dark:text-amber-200/40">
+<span class="material-icons-round text-sm">format_list_bulleted</span>
+<span class="material-icons-round text-sm">attach_file</span>
+<span class="material-icons-round text-sm">mic</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-amber-600/40 dark:text-amber-200/20">Saved 2m ago</span>
+</div>
+</div>
+</section>
+<section class="pb-4">
+<h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 px-1">Shortcuts</h2>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar -mx-5 px-5">
+<div class="flex-shrink-0 w-28 aspect-square bg-slate-100 dark:bg-card-dark rounded-3xl flex flex-col items-center justify-center gap-2 border border-slate-200/50 dark:border-white/5">
+<div class="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+<span class="material-icons-round">receipt_long</span>
+</div>
+<span class="text-xs font-semibold">Invoices</span>
+</div>
+<div class="flex-shrink-0 w-28 aspect-square bg-slate-100 dark:bg-card-dark rounded-3xl flex flex-col items-center justify-center gap-2 border border-slate-200/50 dark:border-white/5">
+<div class="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+<span class="material-icons-round">analytics</span>
+</div>
+<span class="text-xs font-semibold">Reports</span>
+</div>
+<div class="flex-shrink-0 w-28 aspect-square bg-slate-100 dark:bg-card-dark rounded-3xl flex flex-col items-center justify-center gap-2 border border-slate-200/50 dark:border-white/5">
+<div class="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500">
+<span class="material-icons-round">event</span>
+</div>
+<span class="text-xs font-semibold">Calendar</span>
+</div>
+<div class="flex-shrink-0 w-28 aspect-square bg-slate-100 dark:bg-card-dark rounded-3xl flex flex-col items-center justify-center gap-2 border border-slate-200/50 dark:border-white/5">
+<div class="w-10 h-10 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500">
+<span class="material-icons-round">favorite</span>
+</div>
+<span class="text-xs font-semibold">Goals</span>
+</div>
+</div>
+</section>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-black/80 ios-blur border-t border-slate-200 dark:border-white/5 px-6 pb-8 pt-3 flex justify-between items-center z-50">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-icons-round">grid_view</span>
+<span class="text-[10px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons-round">check_circle_outline</span>
+<span class="text-[10px] font-medium">Tasks</span>
+</button>
+<button class="w-14 h-14 bg-primary text-white rounded-2xl shadow-lg shadow-primary/40 -mt-10 flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-icons-round text-3xl">add</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons-round">account_balance_wallet</span>
+<span class="text-[10px] font-medium">Finance</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons-round">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</nav>
+
+</body></html>

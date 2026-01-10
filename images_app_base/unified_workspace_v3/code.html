@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Unified Workspace V3</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#6366f1",
+                        "background-light": "#F9FAFB",
+                        "background-dark": "#000000",
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#121212",
+                        "accent-purple": "#8B5CF6",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen overflow-hidden flex flex-col">
+<div class="h-11 w-full bg-background-light dark:bg-background-dark"></div>
+<div class="flex-1 overflow-y-auto relative hide-scrollbar">
+<div class="relative h-48 w-full overflow-hidden">
+<img alt="Abstract purple gradient header" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpk0Q_OkzZxxusFcnegAluWcLnmkhbNxtPv74Qd6z02oj1x1Fxaeoy_X71-WtnskTQ82_rrdhK4TkNRsqFP2j4y4ySKCJOmyktqvHxG6PJtcPHSFfg_AkTcN2OTDLtqKLMwbfyoD3rFt7YCgcKlZ_w8kv9EBaddhP0TQDC2mUE9BRm1HKF8Fk8SSDzpXkAHbdcwTNYT0WGgcA69B0tHeFTMVO8Z-22HAb2VK_J5W-WRomm9CExU0sY_8X9s5JWes9uUx23xNAInxdP"/>
+<div class="absolute top-4 left-4 right-4 flex justify-between items-center">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white">
+<span class="material-icons-round">chevron_left</span>
+</button>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white">
+<span class="material-icons-round">star_border</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white">
+<span class="material-icons-round">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<div class="px-6 -mt-6 relative bg-background-light dark:bg-background-dark rounded-t-[32px] pt-8 min-h-screen">
+<div class="mb-4">
+<span class="px-3 py-1 bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400 text-xs font-semibold rounded-full uppercase tracking-wider">Share</span>
+</div>
+<h1 class="text-4xl font-bold mb-8 dark:text-white">Getting Started</h1>
+<div class="space-y-6 mb-10">
+<div class="flex items-start gap-3">
+<span class="text-2xl">👋</span>
+<h2 class="text-xl font-semibold dark:text-slate-100">Welcome to Unified Workspace</h2>
+</div>
+<p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                    All your <span class="font-bold italic">tasks</span> and <span class="font-bold italic">notes</span> in one place. Using our workspace feels as natural and fast as using pen and paper.
+                </p>
+</div>
+<div class="space-y-6 mb-32">
+<h3 class="text-sm font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">A nice way to get started:</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-4 group">
+<div class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-700 flex-shrink-0 cursor-pointer"></div>
+<p class="text-[17px] text-slate-800 dark:text-slate-200">Tap the checkmark to complete this task</p>
+</div>
+<div class="flex items-center gap-4 group">
+<div class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-700 flex-shrink-0 cursor-pointer"></div>
+<p class="text-[17px] text-slate-800 dark:text-slate-200">Tap anywhere and just start typing</p>
+</div>
+<div class="flex items-center gap-4 group">
+<div class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-700 flex-shrink-0 cursor-pointer"></div>
+<p class="text-[17px] text-slate-800 dark:text-slate-200 leading-snug">Add due dates by typing phrases like "Tomorrow" or "Monday at 10am"</p>
+</div>
+<div class="flex items-center gap-4 group opacity-40">
+<div class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-700 flex-shrink-0 cursor-pointer"></div>
+<p class="text-[17px] text-slate-800 dark:text-slate-200">Swipe left on this task to add</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-0 left-0 right-0 p-4 pb-10 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light/95 dark:via-background-dark/95 to-transparent">
+<div class="max-w-md mx-auto bg-white/80 dark:bg-[#1C1C1E]/90 backdrop-blur-xl rounded-full px-4 py-2 shadow-2xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-black rounded-full font-semibold text-sm transition-transform active:scale-95">
+<span class="material-icons-round text-lg">add</span>
+<span>New task</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5">
+<span class="material-icons-round text-[22px]">graphic_eq</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5">
+<span class="material-icons-round text-[22px]">subject</span>
+</button>
+<div class="w-px h-6 bg-slate-200 dark:bg-white/10 mx-1"></div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-300 dark:text-slate-700">
+<span class="material-icons-round text-[22px]">format_bold</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-300 dark:text-slate-700">
+<span class="material-icons-round text-[22px]">format_italic</span>
+</button>
+</div>
+</div>
+</div>
+<div class="fixed top-1/2 left-0 -translate-y-1/2 w-1.5 h-12 bg-slate-300 dark:bg-white/20 rounded-r-full"></div>
+
+</body></html>
