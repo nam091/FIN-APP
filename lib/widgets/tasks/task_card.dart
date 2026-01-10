@@ -17,158 +17,124 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Checkbox
-              GestureDetector(
-                onTap: onToggle,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Checkbox
+            GestureDetector(
+              onTap: onToggle,
+              child: Container(
+                width: 24,
+                height: 24,
+                margin: const EdgeInsets.only(top: 2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: task.isCompleted 
+                      ? AppTheme.success 
+                      : Colors.transparent,
+                  border: Border.all(
                     color: task.isCompleted 
                         ? AppTheme.success 
-                        : Colors.transparent,
-                    border: Border.all(
+                        : AppTheme.surfaceLight,
+                    width: 2,
+                  ),
+                ),
+                child: task.isCompleted
+                    ? const Icon(
+                        Icons.check,
+                        size: 14,
+                        color: Colors.white,
+                      )
+                    : null,
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    task.title,
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
                       color: task.isCompleted 
-                          ? AppTheme.success 
-                          : _getPriorityColor(task.priority),
-                      width: 2,
+                          ? AppTheme.textMuted 
+                          : AppTheme.textPrimary,
+                      decoration: task.isCompleted 
+                          ? TextDecoration.lineThrough 
+                          : null,
+                      height: 1.3,
                     ),
                   ),
-                  child: task.isCompleted
-                      ? const Icon(
-                          Icons.check,
-                          size: 16,
-                          color: Colors.white,
-                        )
-                      : null,
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Content
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      task.title,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: task.isCompleted 
-                            ? AppTheme.textMuted 
-                            : AppTheme.textPrimary,
-                        decoration: task.isCompleted 
-                            ? TextDecoration.lineThrough 
-                            : null,
-                      ),
-                    ),
-                    if (task.listName != null || task.dueDate != null) ...[
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          if (task.listName != null) ...[
-                            Icon(
-                              Icons.folder_outlined,
-                              size: 12,
-                              color: AppTheme.primaryPurple,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              task.listName!,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: AppTheme.primaryPurple,
-                              ),
-                            ),
-                          ],
-                          if (task.dueDate != null) ...[
-                            if (task.listName != null) 
-                              const SizedBox(width: 12),
-                            Icon(
-                              Icons.access_time,
-                              size: 12,
-                              color: _getDueDateColor(task.dueDate!),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              _formatDueDate(task.dueDate!),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: _getDueDateColor(task.dueDate!),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ],
-                    // Subtasks progress
-                    if (task.subtasks.isNotEmpty) ...[
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: LinearProgressIndicator(
-                                value: task.progress,
-                                backgroundColor: AppTheme.surfaceLight,
-                                valueColor: AlwaysStoppedAnimation(
-                                  task.progress == 1.0 
-                                      ? AppTheme.success 
-                                      : AppTheme.primaryPurple,
-                                ),
-                                minHeight: 4,
-                              ),
-                            ),
+                  if (task.listName != null || task.dueDate != null) ...[
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        if (task.listName != null) ...[
+                          Icon(
+                            Icons.notes,
+                            size: 14,
+                            color: AppTheme.textMuted,
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 4),
                           Text(
-                            '${task.completedSubtasks}/${task.subtasks.length}',
+                            task.listName!,
                             style: const TextStyle(
-                              fontSize: 11,
+                              fontSize: 13,
                               color: AppTheme.textMuted,
                             ),
                           ),
                         ],
-                      ),
-                    ],
+                        if (task.dueDate != null) ...[
+                          if (task.listName != null) 
+                            const SizedBox(width: 12),
+                          Icon(
+                            Icons.access_time,
+                            size: 14,
+                            color: _getDueDateColor(task.dueDate!),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            _formatDueDate(task.dueDate!),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: _getDueDateColor(task.dueDate!),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   ],
-                ),
+                  // Subtasks progress
+                  if (task.subtasks.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(3),
+                      child: LinearProgressIndicator(
+                        value: task.progress,
+                        backgroundColor: AppTheme.surfaceLight,
+                        valueColor: AlwaysStoppedAnimation(
+                          task.progress == 1.0 
+                              ? AppTheme.success 
+                              : AppTheme.primaryPurple,
+                        ),
+                        minHeight: 4,
+                      ),
+                    ),
+                  ],
+                ],
               ),
-              // Chevron
-              const Icon(
-                Icons.chevron_right,
-                color: AppTheme.textMuted,
-                size: 20,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  Color _getPriorityColor(TaskPriority priority) {
-    switch (priority) {
-      case TaskPriority.high:
-        return AppTheme.error;
-      case TaskPriority.medium:
-        return AppTheme.warning;
-      case TaskPriority.low:
-        return AppTheme.textMuted;
-    }
   }
 
   Color _getDueDateColor(DateTime dueDate) {

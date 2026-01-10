@@ -4,7 +4,6 @@ import '../theme/app_theme.dart';
 import '../providers/finance_provider.dart';
 import '../models/transaction.dart';
 import '../widgets/finance/transaction_tile.dart';
-import '../widgets/common/gradient_card.dart';
 import 'package:intl/intl.dart';
 
 class FinanceScreen extends StatefulWidget {
@@ -26,267 +25,370 @@ class _FinanceScreenState extends State<FinanceScreen> {
           builder: (context, financeProvider, _) {
             final currencyFormat = NumberFormat.currency(symbol: '\$', decimalDigits: 2);
             
-            return CustomScrollView(
-              slivers: [
-                // Header
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+            return Stack(
+              children: [
+                CustomScrollView(
+                  slivers: [
+                    // Header - Back button + Date filter + More
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            // Back button
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: AppTheme.backgroundCard,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.chevron_left, color: AppTheme.textSecondary),
+                                onPressed: () => Navigator.maybePop(context),
+                                padding: EdgeInsets.zero,
+                              ),
+                            ),
+                            // Right buttons
                             Row(
                               children: [
-                                IconButton(
-                                  icon: const Icon(Icons.settings, color: AppTheme.textSecondary),
-                                  onPressed: () {},
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                ),
-                                const SizedBox(width: 12),
-                                const Text(
-                                  'Finance',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppTheme.textPrimary,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.backgroundCard,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.sort, size: 16, color: AppTheme.primaryPurple),
+                                      const SizedBox(width: 8),
+                                      const Text(
+                                        'Date',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: AppTheme.textSecondary,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.add, color: AppTheme.textSecondary),
-                                  onPressed: () => _showAddTransactionSheet(context),
-                                ),
-                                CircleAvatar(
-                                  radius: 16,
-                                  backgroundColor: AppTheme.error,
-                                  child: const Text(
-                                    'S',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
+                                const SizedBox(width: 8),
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.backgroundCard,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Icon(
+                                    Icons.more_horiz,
+                                    color: AppTheme.textSecondary,
                                   ),
                                 ),
                               ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
 
-                // Balance Card
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: GradientCard(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // Title
+                    const SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          'Finance',
+                          style: TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.w800,
+                            color: AppTheme.textPrimary,
+                            letterSpacing: -1,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SliverToBoxAdapter(child: SizedBox(height: 20)),
+
+                    // Info Card
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: AppTheme.backgroundCard,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Column(
                             children: [
-                              const Text(
-                                'Total Balance',
-                                style: TextStyle(
-                                  color: AppTheme.textSecondary,
-                                  fontSize: 14,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 44,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.primaryPurple.withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child: Icon(
+                                      Icons.account_balance_wallet,
+                                      color: AppTheme.primaryPurple,
+                                      size: 22,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  const Expanded(
+                                    child: Text(
+                                      'Manage your budget and track expenses — see where your money goes every month.',
+                                      style: TextStyle(
+                                        color: AppTheme.textSecondary,
+                                        fontSize: 15,
+                                        height: 1.5,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _ActionButton(label: 'Learn more', onTap: () {}),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: _ActionButton(label: 'Dismiss', onTap: () {}),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+                    // Filter Chips
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              // Search button
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppTheme.surfaceLight),
+                                ),
+                                child: const Icon(
+                                  Icons.search,
+                                  color: AppTheme.textMuted,
+                                  size: 20,
                                 ),
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.success.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(12),
+                              const SizedBox(width: 12),
+                              _FilterChip(
+                                label: 'All transactions',
+                                isSelected: _selectedFilter == 'all',
+                                onTap: () => setState(() => _selectedFilter = 'all'),
+                              ),
+                              const SizedBox(width: 8),
+                              _FilterChip(
+                                label: 'Income',
+                                isSelected: _selectedFilter == 'income',
+                                onTap: () => setState(() => _selectedFilter = 'income'),
+                              ),
+                              const SizedBox(width: 8),
+                              _FilterChip(
+                                label: 'Savings',
+                                isSelected: _selectedFilter == 'savings',
+                                onTap: () => setState(() => _selectedFilter = 'savings'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+                    // Transactions grouped by date
+                    ..._buildTransactionGroups(financeProvider, currencyFormat),
+
+                    const SliverToBoxAdapter(child: SizedBox(height: 120)),
+                  ],
+                ),
+
+                // Floating buttons at bottom
+                Positioned(
+                  left: 20,
+                  right: 20,
+                  bottom: 32,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => _showAddTransactionSheet(context),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                            decoration: BoxDecoration(
+                              color: AppTheme.backgroundCard,
+                              borderRadius: BorderRadius.circular(28),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.3),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
                                 ),
-                                child: const Text(
-                                  '+2.4%',
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.add, color: AppTheme.textPrimary),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'New transaction',
                                   style: TextStyle(
-                                    color: AppTheme.success,
-                                    fontSize: 12,
                                     fontWeight: FontWeight.w600,
+                                    color: AppTheme.textPrimary,
+                                    fontSize: 15,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            currencyFormat.format(financeProvider.totalBalance),
-                            style: const TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.textPrimary,
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          Row(
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      // AI button
+                      Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: AppTheme.backgroundCard,
+                          borderRadius: BorderRadius.circular(28),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.3),
+                              blurRadius: 20,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'MONTHLY INCOME',
-                                      style: TextStyle(
-                                        color: AppTheme.textMuted,
-                                        fontSize: 10,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      currencyFormat.format(financeProvider.monthlyIncome),
-                                      style: const TextStyle(
-                                        color: AppTheme.success,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
+                              Container(
+                                width: 3,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade400,
+                                  borderRadius: BorderRadius.circular(2),
                                 ),
                               ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'MONTHLY SPENT',
-                                      style: TextStyle(
-                                        color: AppTheme.textMuted,
-                                        fontSize: 10,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      currencyFormat.format(financeProvider.monthlyExpense),
-                                      style: const TextStyle(
-                                        color: AppTheme.error,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
+                              const SizedBox(width: 2),
+                              Container(
+                                width: 3,
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  color: AppTheme.primaryPurple,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                              const SizedBox(width: 2),
+                              Container(
+                                width: 3,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade400,
+                                  borderRadius: BorderRadius.circular(2),
                                 ),
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-
-                // Filter Tabs
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          _FilterChip(
-                            label: 'All Insights',
-                            isSelected: _selectedFilter == 'all',
-                            onTap: () => setState(() => _selectedFilter = 'all'),
-                          ),
-                          const SizedBox(width: 8),
-                          _FilterChip(
-                            label: 'Expenses',
-                            isSelected: _selectedFilter == 'expense',
-                            onTap: () => setState(() => _selectedFilter = 'expense'),
-                          ),
-                          const SizedBox(width: 8),
-                          _FilterChip(
-                            label: 'Income',
-                            isSelected: _selectedFilter == 'income',
-                            onTap: () => setState(() => _selectedFilter = 'income'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Transactions Header
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Recent Transactions',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textPrimary,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'View All',
-                            style: TextStyle(color: AppTheme.primaryBlue),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Transactions List
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      List<Transaction> transactions = financeProvider.recentTransactions;
-                      
-                      if (_selectedFilter == 'income') {
-                        transactions = transactions.where((t) => t.type == TransactionType.income).toList();
-                      } else if (_selectedFilter == 'expense') {
-                        transactions = transactions.where((t) => t.type == TransactionType.expense).toList();
-                      }
-                      
-                      if (index >= transactions.length) return null;
-                      
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: TransactionTile(
-                          transaction: transactions[index],
-                          onDelete: () => financeProvider.deleteTransaction(transactions[index].id),
-                        ),
-                      );
-                    },
-                    childCount: () {
-                      List<Transaction> transactions = financeProvider.recentTransactions;
-                      if (_selectedFilter == 'income') {
-                        return transactions.where((t) => t.type == TransactionType.income).length;
-                      } else if (_selectedFilter == 'expense') {
-                        return transactions.where((t) => t.type == TransactionType.expense).length;
-                      }
-                      return transactions.length;
-                    }(),
-                  ),
-                ),
-
-                const SliverToBoxAdapter(child: SizedBox(height: 100)),
               ],
             );
           },
         ),
       ),
     );
+  }
+
+  List<Widget> _buildTransactionGroups(FinanceProvider provider, NumberFormat format) {
+    List<Transaction> transactions = provider.recentTransactions;
+    
+    if (_selectedFilter == 'income') {
+      transactions = transactions.where((t) => t.type == TransactionType.income).toList();
+    } else if (_selectedFilter == 'expense') {
+      transactions = transactions.where((t) => t.type == TransactionType.expense).toList();
+    }
+
+    // Group by date
+    final Map<String, List<Transaction>> grouped = {};
+    final now = DateTime.now();
+    
+    for (var t in transactions) {
+      String label;
+      if (t.date.day == now.day && t.date.month == now.month && t.date.year == now.year) {
+        label = 'TODAY';
+      } else if (t.date.day == now.day - 1 && t.date.month == now.month && t.date.year == now.year) {
+        label = 'YESTERDAY';
+      } else {
+        label = DateFormat('MMMM d').format(t.date).toUpperCase();
+      }
+      grouped[label] ??= [];
+      grouped[label]!.add(t);
+    }
+
+    final widgets = <Widget>[];
+    grouped.forEach((label, items) {
+      widgets.add(SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 12),
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: AppTheme.textMuted,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+      ));
+      
+      widgets.add(SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: TransactionTile(
+                transaction: items[index],
+                onDelete: () => provider.deleteTransaction(items[index].id),
+              ),
+            );
+          },
+          childCount: items.length,
+        ),
+      ));
+    });
+
+    return widgets;
   }
 
   void _showAddTransactionSheet(BuildContext context) {
@@ -297,6 +399,37 @@ class _FinanceScreenState extends State<FinanceScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) => const _AddTransactionSheet(),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _ActionButton({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceDark,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textSecondary,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -316,22 +449,21 @@ class _FilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.textPrimary : AppTheme.backgroundCard,
-          borderRadius: BorderRadius.circular(20),
+          color: isSelected ? AppTheme.backgroundCard : Colors.transparent,
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isSelected ? AppTheme.textPrimary : AppTheme.surfaceLight,
+            color: isSelected ? Colors.transparent : AppTheme.surfaceLight,
           ),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? AppTheme.backgroundDark : AppTheme.textSecondary,
-            fontSize: 14,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            color: isSelected ? AppTheme.textPrimary : AppTheme.textMuted,
+            fontSize: 13,
+            fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
           ),
         ),
       ),
@@ -365,6 +497,17 @@ class _AddTransactionSheetState extends State<_AddTransactionSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppTheme.surfaceLight,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
           const Text(
             'Add Transaction',
             style: TextStyle(
@@ -381,12 +524,12 @@ class _AddTransactionSheetState extends State<_AddTransactionSheet> {
                 child: GestureDetector(
                   onTap: () => setState(() => _type = TransactionType.expense),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
                       color: _type == TransactionType.expense
                           ? AppTheme.error.withValues(alpha: 0.2)
                           : AppTheme.surfaceDark,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: Center(
                       child: Text(
@@ -407,12 +550,12 @@ class _AddTransactionSheetState extends State<_AddTransactionSheet> {
                 child: GestureDetector(
                   onTap: () => setState(() => _type = TransactionType.income),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
                       color: _type == TransactionType.income
                           ? AppTheme.success.withValues(alpha: 0.2)
                           : AppTheme.surfaceDark,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: Center(
                       child: Text(

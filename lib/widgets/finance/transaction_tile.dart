@@ -33,84 +33,96 @@ class TransactionTile extends StatelessWidget {
         ),
         child: const Icon(Icons.delete_outline, color: Colors.white),
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-            child: Row(
-              children: [
-                // Icon
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceDark,
-                    borderRadius: BorderRadius.circular(12),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            children: [
+              // Icon
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppTheme.surfaceLight,
+                    width: 2,
                   ),
-                  child: Center(
-                    child: Text(
-                      Transaction.getCategoryIcon(transaction.category),
-                      style: const TextStyle(fontSize: 20),
+                ),
+                child: Center(
+                  child: Icon(
+                    _getCategoryIcon(transaction.category),
+                    color: AppTheme.textMuted,
+                    size: 18,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Title and Category
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      transaction.title,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        color: AppTheme.textPrimary,
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                // Title and Category
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        transaction.title,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: AppTheme.textPrimary,
-                        ),
+                    const SizedBox(height: 2),
+                    Text(
+                      Transaction.getCategoryName(transaction.category),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppTheme.textMuted,
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${Transaction.getCategoryName(transaction.category)} • ${_formatDate(transaction.date)}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppTheme.textMuted,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                // Amount
-                Text(
-                  '${isIncome ? '+' : '-'}${currencyFormat.format(transaction.amount)}',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: isIncome ? AppTheme.success : AppTheme.textPrimary,
-                  ),
+              ),
+              // Amount
+              Text(
+                '${isIncome ? '+' : '-'}${currencyFormat.format(transaction.amount)}',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: isIncome ? AppTheme.success : AppTheme.textPrimary,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-    
-    if (difference.inDays == 0) {
-      return 'Today';
-    } else if (difference.inDays == 1) {
-      return 'Yesterday';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else {
-      return DateFormat('MMM d').format(date);
+  IconData _getCategoryIcon(TransactionCategory category) {
+    switch (category) {
+      case TransactionCategory.food:
+        return Icons.restaurant;
+      case TransactionCategory.transport:
+        return Icons.local_taxi;
+      case TransactionCategory.shopping:
+        return Icons.shopping_bag;
+      case TransactionCategory.entertainment:
+        return Icons.movie;
+      case TransactionCategory.bills:
+        return Icons.receipt;
+      case TransactionCategory.health:
+        return Icons.fitness_center;
+      case TransactionCategory.education:
+        return Icons.school;
+      case TransactionCategory.salary:
+      case TransactionCategory.freelance:
+      case TransactionCategory.investment:
+        return Icons.work;
+      case TransactionCategory.subscription:
+        return Icons.subscriptions;
+      case TransactionCategory.other:
+        return Icons.more_horiz;
     }
   }
 }

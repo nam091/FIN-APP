@@ -5,10 +5,11 @@ import '../theme/app_theme.dart';
 import '../providers/finance_provider.dart';
 import '../providers/task_provider.dart';
 import '../providers/note_provider.dart';
-import '../widgets/finance/balance_card.dart';
-import '../widgets/tasks/task_card.dart';
+import '../models/transaction.dart';
 import '../widgets/common/gradient_card.dart';
+import '../widgets/tasks/task_card.dart';
 import 'chat_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -24,71 +25,121 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            // Header
+            // Header - Settings left, Search center, Avatar right
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          greeting,
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textPrimary,
-                          ),
+                    // Settings button (top left)
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                        );
+                      },
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: AppTheme.backgroundCard,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          dateFormat.format(now),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppTheme.textSecondary,
-                          ),
+                        child: const Icon(
+                          Icons.menu_rounded,
+                          color: AppTheme.textSecondary,
+                          size: 20,
                         ),
-                      ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.search, color: AppTheme.textSecondary),
-                          onPressed: () {},
+                    const Spacer(),
+                    // Search button
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: AppTheme.backgroundCard,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        const SizedBox(width: 4),
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundColor: AppTheme.primaryPurple,
-                          child: const Text(
-                            'S',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        child: const Icon(
+                          Icons.search,
+                          color: AppTheme.textSecondary,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Avatar
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.orange.shade400, Colors.orange.shade600],
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'S',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
 
-            // Balance Card
-            const SliverToBoxAdapter(
+            // Greeting
+            SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: BalanceCard(),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      greeting,
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      dateFormat.format(now),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppTheme.textMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+
+            // Balance Card
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: _BalanceCard(),
               ),
             ),
 
             // Today's Tasks Section
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 28),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -102,11 +153,16 @@ class HomeScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {},
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
                       child: const Text(
                         'View all',
                         style: TextStyle(
                           color: AppTheme.primaryBlue,
-                          fontSize: 14,
+                          fontSize: 13,
                         ),
                       ),
                     ),
@@ -124,21 +180,26 @@ class HomeScreen extends StatelessWidget {
                   return SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SolidCard(
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: AppTheme.backgroundCard,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
                         child: Center(
                           child: Column(
                             children: [
                               Icon(
                                 Icons.check_circle_outline,
-                                size: 48,
+                                size: 40,
                                 color: AppTheme.textMuted.withValues(alpha: 0.5),
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: 8),
                               const Text(
                                 'No tasks for today',
                                 style: TextStyle(
                                   color: AppTheme.textMuted,
-                                  fontSize: 14,
+                                  fontSize: 13,
                                 ),
                               ),
                             ],
@@ -169,7 +230,7 @@ class HomeScreen extends StatelessWidget {
             // Quick Note Section
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 28),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -186,31 +247,44 @@ class HomeScreen extends StatelessWidget {
                       builder: (context, noteProvider, _) {
                         final latestNote = noteProvider.getLatestNote();
                         
-                        return SolidCard(
-                          color: AppTheme.surfaceDark,
+                        return Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                AppTheme.primaryPurple.withValues(alpha: 0.2),
+                                AppTheme.primaryBlue.withValues(alpha: 0.1),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (latestNote != null) ...[
-                                Text(
-                                  latestNote.preview,
-                                  style: const TextStyle(
-                                    color: AppTheme.textSecondary,
-                                    fontSize: 14,
-                                    height: 1.5,
-                                  ),
+                              Text(
+                                latestNote?.preview ?? 'Tap anywhere and start typing...',
+                                style: TextStyle(
+                                  color: latestNote != null 
+                                      ? AppTheme.textSecondary 
+                                      : AppTheme.textMuted,
+                                  fontSize: 14,
+                                  height: 1.5,
                                 ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        _QuickAction(icon: Icons.mic_none, onTap: () {}),
-                                        const SizedBox(width: 8),
-                                        _QuickAction(icon: Icons.format_list_bulleted, onTap: () {}),
-                                      ],
-                                    ),
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      _QuickAction(icon: Icons.mic_none, onTap: () {}),
+                                      const SizedBox(width: 8),
+                                      _QuickAction(icon: Icons.format_list_bulleted, onTap: () {}),
+                                    ],
+                                  ),
+                                  if (latestNote != null)
                                     Text(
                                       'SAVED ${_formatTime(latestNote.updatedAt)}',
                                       style: const TextStyle(
@@ -219,20 +293,8 @@ class HomeScreen extends StatelessWidget {
                                         letterSpacing: 0.5,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ] else ...[
-                                const TextField(
-                                  decoration: InputDecoration(
-                                    hintText: 'Tap anywhere and start typing...',
-                                    hintStyle: TextStyle(color: AppTheme.textMuted),
-                                    border: InputBorder.none,
-                                    filled: false,
-                                  ),
-                                  style: TextStyle(color: AppTheme.textPrimary),
-                                  maxLines: 3,
-                                ),
-                              ],
+                                ],
+                              ),
                             ],
                           ),
                         );
@@ -246,14 +308,14 @@ class HomeScreen extends StatelessWidget {
             // Shortcuts Section
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 24, bottom: 100),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 28, bottom: 100),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'SHORTCUTS',
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: AppTheme.textMuted,
                         letterSpacing: 1,
@@ -328,6 +390,101 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+class _BalanceCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<FinanceProvider>(
+      builder: (context, provider, _) {
+        final currencyFormat = NumberFormat.currency(symbol: '\$', decimalDigits: 2);
+        final percentChange = provider.totalIncome > 0 
+            ? ((provider.monthlyIncome - provider.monthlyExpense) / provider.totalIncome * 100)
+            : 0.0;
+        
+        return GradientCard(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              const Color(0xFF1A1A2E),
+              const Color(0xFF16213E),
+            ],
+          ),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'TOTAL BALANCE',
+                    style: TextStyle(
+                      color: AppTheme.textMuted,
+                      fontSize: 11,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: percentChange >= 0 
+                          ? AppTheme.success.withValues(alpha: 0.2)
+                          : AppTheme.error.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '${percentChange >= 0 ? '+' : ''}${percentChange.toStringAsFixed(1)}%',
+                      style: TextStyle(
+                        color: percentChange >= 0 ? AppTheme.success : AppTheme.error,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                currencyFormat.format(provider.totalBalance),
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Mini Chart
+              SizedBox(
+                height: 50,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: List.generate(12, (index) {
+                    final weeklyData = provider.getWeeklyData(TransactionType.expense);
+                    final value = index < weeklyData.length ? weeklyData[index] : 0.0;
+                    final maxValue = weeklyData.isEmpty ? 1.0 : weeklyData.reduce((a, b) => a > b ? a : b);
+                    final height = maxValue > 0 ? (value / maxValue * 40) : 0.0;
+                    
+                    return Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                        height: height < 4 ? 4 : height,
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryPurple.withValues(alpha: 0.6),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
 class _QuickAction extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
@@ -372,24 +529,24 @@ class _ShortcutCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppTheme.backgroundCard,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           children: [
             Container(
-              width: 48,
-              height: 48,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: color, size: 24),
+              child: Icon(icon, color: color, size: 22),
             ),
             const SizedBox(height: 8),
             Text(
               label,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 11,
                 color: AppTheme.textSecondary,
               ),
             ),
