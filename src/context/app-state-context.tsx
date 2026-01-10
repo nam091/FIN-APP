@@ -68,6 +68,7 @@ interface NotificationHook {
 
 interface UserSettings {
     theme: "dark" | "light" | "system";
+    dismissedItems: Record<string, number>;
     notifications: {
         enabled: boolean;
         hooks: NotificationHook[];
@@ -171,6 +172,7 @@ const initialChatHistory: ChatMessage[] = [
 
 const initialSettings: UserSettings = {
     theme: "dark",
+    dismissedItems: {},
     notifications: {
         enabled: true,
         hooks: [
@@ -193,7 +195,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     const [activeTab, setActiveTab] = useState<TabType>("finance");
     const [financeFilter, setFinanceFilter] = useState("All");
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    const [dismissedItems, setDismissedItems] = useState<string[]>([]);
     const [tasks, setTasks] = useState<Task[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [notes, setNotes] = useState<Note[]>([]);
@@ -212,8 +213,25 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
                     setTasks(data.tasks || []);
                     setTransactions(data.transactions || []);
                     setNotes(data.notes || []);
-                    if (data.settings && data.settings.theme) {
-                        setUserSettings(prev => ({ ...prev, theme: data.settings.theme }));
+                    if (data.settings) {
+                        const parsedData = typeof data.settings.data === 'string'
+                            ? JSON.parse(data.settings.data)
+                            : (data.settings.data || {});
+
+                        // Migration: If dismissedItems is array, convert to object
+                        if (Array.isArray(parsedData.dismissedItems)) {
+                            const migrated: Record<string, number> = {};
+                            parsedData.dismissedItems.forEach((id: string) => {
+                                migrated[id] = Date.now();
+                            });
+                            parsedData.dismissedItems = migrated;
+                        }
+
+                        setUserSettings(prev => ({
+                            ...prev,
+                            ...parsedData, // Merge saved settings
+                            theme: data.settings.theme
+                        }));
                     }
                 }
             } catch (error) {
@@ -255,7 +273,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     }, [userSettings.theme]);
 
     const dismissItem = (id: string) => {
-        setDismissedItems((prev) => [...prev, id]);
+        const newDismissed = { ...userSettings.dismissedItems, [id]: Date.now() };
+        updateSettings({ dismissedItems: newDismissed });
     };
 
     const toggleTask = async (id: number) => {
@@ -522,7 +541,15 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             setFinanceFilter,
             isSidebarOpen,
             setIsSidebarOpen,
-            dismissedItems,
+            dismissedItems: useMemo(() => {
+                const now = Date.now();
+                const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+                const items = userSettings.dismissedItems || {};
+                return Object.keys(items).filter(key => {
+                    const timestamp = items[key];
+                    return (now - timestamp) < sevenDaysMs;
+                });
+            }, [userSettings.dismissedItems]),
             dismissItem,
             tasks,
             toggleTask,
