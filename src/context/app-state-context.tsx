@@ -25,7 +25,7 @@ export interface Transaction {
     iconName: string;
 }
 
-interface Task {
+export interface Task {
     id: number;
     title: string;
     project: string;
@@ -38,7 +38,7 @@ interface Task {
     googleEventId?: string;
 }
 
-interface Note {
+export interface Note {
     id: string;
     title: string;
     content: string;
