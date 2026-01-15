@@ -9,19 +9,28 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
+        console.log("POST /api/notes: Creating note for", session.user.email);
+
         const user = await db.user.findUnique({ where: { email: session.user.email } });
-        if (!user) return new NextResponse("User not found", { status: 404 });
+        if (!user) {
+            console.error("POST /api/notes: User not found");
+            return new NextResponse("User not found", { status: 404 });
+        }
+
+        // Strip id
+        const { id, ...noteData } = body;
 
         const note = await db.note.create({
             data: {
-                ...body,
+                ...noteData,
                 userId: user.id,
             },
         });
+        console.log("POST /api/notes: Success, id:", note.id);
         return NextResponse.json(note);
-    } catch (error) {
-        console.error(error);
-        return new NextResponse("Internal Error", { status: 500 });
+    } catch (error: any) {
+        console.error("POST /api/notes: Error", error.message || error);
+        return new NextResponse(`Internal Error: ${error.message}`, { status: 500 });
     }
 }
 

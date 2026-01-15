@@ -9,18 +9,28 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
+        console.log("POST /api/transactions: Creating transaction for", session.user.email);
+
         const user = await db.user.findUnique({ where: { email: session.user.email } });
-        if (!user) return new NextResponse("User not found", { status: 404 });
+        if (!user) {
+            console.error("POST /api/transactions: User not found");
+            return new NextResponse("User not found", { status: 404 });
+        }
+
+        // Strip id to let CUID/Autoincrement handle it
+        const { id, ...txData } = body;
 
         const transaction = await db.transaction.create({
             data: {
-                ...body,
+                ...txData,
                 userId: user.id,
             },
         });
+        console.log("POST /api/transactions: Success, id:", transaction.id);
         return NextResponse.json(transaction);
-    } catch (error) {
-        return new NextResponse("Internal Error", { status: 500 });
+    } catch (error: any) {
+        console.error("POST /api/transactions: Error", error.message || error);
+        return new NextResponse(`Internal Error: ${error.message}`, { status: 500 });
     }
 }
 

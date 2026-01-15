@@ -9,18 +9,28 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
+        console.log("POST /api/tasks: Constructing task for user", session.user.email);
+
         const user = await db.user.findUnique({ where: { email: session.user.email } });
-        if (!user) return new NextResponse("User not found", { status: 404 });
+        if (!user) {
+            console.error("POST /api/tasks: User not found in DB");
+            return new NextResponse("User not found", { status: 404 });
+        }
+
+        // Destructure to ensure we don't pass an 'id' that might conflict with autoincrement
+        const { id, ...taskData } = body;
 
         const task = await db.task.create({
             data: {
-                ...body,
+                ...taskData,
                 userId: user.id,
             },
         });
+        console.log("POST /api/tasks: Success, id:", task.id);
         return NextResponse.json(task);
-    } catch (error) {
-        return new NextResponse("Internal Error", { status: 500 });
+    } catch (error: any) {
+        console.error("POST /api/tasks: Internal Error", error.message || error);
+        return new NextResponse(`Internal Error: ${error.message}`, { status: 500 });
     }
 }
 

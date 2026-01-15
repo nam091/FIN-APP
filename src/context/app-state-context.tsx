@@ -207,9 +207,11 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         const fetchData = async () => {
             if (!session?.user?.email) return;
             try {
+                console.log("AppStateContext: Fetching data from /api/sync...");
                 const res = await fetch("/api/sync");
                 if (res.ok) {
                     const data = await res.json();
+                    console.log("AppStateContext: Sync success, data received.");
                     setTasks(data.tasks || []);
                     setTransactions(data.transactions || []);
                     setNotes(data.notes || []);
@@ -338,6 +340,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     };
 
     const addTask = async (task: Omit<Task, "id">) => {
+        console.log("AppStateContext: addTask called with", task);
         try {
             const res = await fetch("/api/tasks", {
                 method: "POST",
@@ -346,11 +349,16 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             });
             if (res.ok) {
                 const newTask = await res.json();
+                console.log("AppStateContext: addTask success, new task:", newTask);
                 setTasks(prev => [newTask, ...prev]);
                 syncToGoogleCalendar(newTask);
+            } else {
+                console.error("AppStateContext: addTask failed with status", res.status);
+                const errorText = await res.text();
+                console.error("Error details:", errorText);
             }
         } catch (error) {
-            console.error("Failed to add task", error);
+            console.error("AppStateContext: Failed to add task", error);
         }
     };
 

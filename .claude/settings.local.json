@@ -3,7 +3,14 @@
     "allow": [
       "Bash(sudo apt update:*)",
       "WebSearch",
-      "WebFetch(domain:ai.google.dev)"
+      "WebFetch(domain:ai.google.dev)",
+      "Bash(npm install @prisma/extension-accelerate)",
+      "Bash(npm run build)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(head:*)",
+      "Bash(python3:*)"
     ]
   }
 }
