@@ -119,12 +119,16 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
                     {/* Amount Input - Large */}
                     <div className="flex items-center gap-4 bg-secondary/50 p-5 rounded-2xl border border-border">
                         <Input
-                            type="number"
-                            step="1000"
+                            type="text"
+                            inputMode="numeric"
                             placeholder="0"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            className="bg-transparent border-none text-5xl p-0 focus-visible:ring-0 h-auto font-bold placeholder:text-muted-foreground/30 flex-1"
+                            value={amount ? Number(amount).toLocaleString('vi-VN') : ''}
+                            onChange={(e) => {
+                                // Remove all non-numeric characters and parse
+                                const rawValue = e.target.value.replace(/[^\d]/g, '');
+                                setAmount(rawValue);
+                            }}
+                            className="bg-transparent border-none text-5xl p-0 focus-visible:ring-0 h-auto font-bold placeholder:text-muted-foreground/30 flex-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         />
                         <span className="text-4xl font-bold text-muted-foreground">đ</span>
                     </div>
