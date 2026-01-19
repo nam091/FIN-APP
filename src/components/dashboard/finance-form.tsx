@@ -116,21 +116,24 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
                 </div>
 
                 <div className="space-y-5">
-                    {/* Amount Input - Large */}
-                    <div className="flex items-center gap-4 bg-secondary/50 p-5 rounded-2xl border border-border">
-                        <Input
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="0"
-                            value={amount ? Number(amount).toLocaleString('vi-VN') : ''}
-                            onChange={(e) => {
-                                // Remove all non-numeric characters and parse
-                                const rawValue = e.target.value.replace(/[^\d]/g, '');
-                                setAmount(rawValue);
-                            }}
-                            className="bg-transparent border-none text-5xl p-0 focus-visible:ring-0 h-auto font-bold placeholder:text-muted-foreground/30 flex-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
-                        <span className="text-4xl font-bold text-muted-foreground">đ</span>
+                    {/* Amount Input */}
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">Amount</label>
+                        <div className="relative">
+                            <Input
+                                type="text"
+                                inputMode="numeric"
+                                placeholder="0"
+                                value={amount ? Number(amount).toLocaleString('vi-VN') : ''}
+                                onChange={(e) => {
+                                    // Remove all non-numeric characters and parse
+                                    const rawValue = e.target.value.replace(/[^\d]/g, '');
+                                    setAmount(rawValue);
+                                }}
+                                className="bg-secondary/50 border-border rounded-2xl h-14 px-5 pr-12 focus-visible:ring-indigo-500/30 text-xl font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            />
+                            <span className="absolute right-5 top-1/2 -translate-y-1/2 text-xl font-bold text-muted-foreground">đ</span>
+                        </div>
                     </div>
 
                     {/* Title */}
