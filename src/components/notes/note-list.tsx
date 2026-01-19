@@ -196,21 +196,72 @@ export function NoteList() {
                         </div>
 
                         {/* Recent Notes Panel */}
-                        <div className="bg-secondary/40 backdrop-blur-xl border border-border p-5 rounded-3xl group hover:border-purple-500/30 transition-all cursor-move">
+                        <div className="bg-secondary/40 backdrop-blur-xl border border-border p-5 rounded-3xl group hover:border-purple-500/30 transition-all md:col-span-2 lg:col-span-3">
                             <h3 className="font-semibold text-foreground flex items-center gap-2 mb-4">
                                 <FileText className="w-4 h-4 text-purple-500" />
                                 Recent Notes
+                                <span className="text-xs text-muted-foreground ml-auto">{sortedNotes.length} notes</span>
                             </h3>
-                            <div className="space-y-3">
-                                {sortedNotes.map(note => (
-                                    <SwipeToReveal key={note.id} onDelete={() => deleteNote(note.id)}>
-                                        <div className="p-4 bg-background/50 rounded-2xl hover:bg-background/80 transition-colors cursor-pointer border border-border/50"
-                                            onClick={() => handleOpenEdit(note)}>
-                                            <div className="font-medium text-base text-foreground">{note.title}</div>
-                                            <div className="text-xs text-muted-foreground mt-1">{note.date}</div>
-                                        </div>
-                                    </SwipeToReveal>
-                                ))}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                {sortedNotes.length === 0 ? (
+                                    <div className="col-span-full text-center py-8 text-muted-foreground">
+                                        <FileText className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                        <p className="text-sm">No notes yet. Create your first note!</p>
+                                    </div>
+                                ) : (
+                                    sortedNotes.map(note => {
+                                        // Format relative date
+                                        const noteDate = new Date(note.date);
+                                        const today = new Date();
+                                        const diffDays = Math.floor((today.getTime() - noteDate.getTime()) / (1000 * 60 * 60 * 24));
+                                        let dateLabel = note.date;
+                                        if (diffDays === 0) dateLabel = "Today";
+                                        else if (diffDays === 1) dateLabel = "Yesterday";
+                                        else if (diffDays < 7) dateLabel = `${diffDays} days ago`;
+
+                                        // Category colors
+                                        const categoryColors: Record<string, string> = {
+                                            "Work": "bg-blue-500/20 text-blue-400",
+                                            "Personal": "bg-green-500/20 text-green-400",
+                                            "Ideas": "bg-yellow-500/20 text-yellow-400",
+                                            "Study": "bg-purple-500/20 text-purple-400",
+                                            "default": "bg-zinc-500/20 text-zinc-400"
+                                        };
+                                        const categoryClass = categoryColors[note.category] || categoryColors["default"];
+
+                                        return (
+                                            <SwipeToReveal key={note.id} onDelete={() => deleteNote(note.id)}>
+                                                <div
+                                                    className="p-4 bg-background/50 rounded-2xl hover:bg-background/80 transition-all cursor-pointer border border-border/50 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/5 group/note"
+                                                    onClick={() => handleOpenEdit(note)}
+                                                >
+                                                    <div className="flex items-start justify-between gap-2 mb-2">
+                                                        <h4 className="font-semibold text-foreground truncate flex-1 group-hover/note:text-purple-400 transition-colors">
+                                                            {note.title}
+                                                        </h4>
+                                                        {note.category && (
+                                                            <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full shrink-0 ${categoryClass}`}>
+                                                                {note.category}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
+                                                        {note.content || "No content"}
+                                                    </p>
+                                                    <div className="flex items-center justify-between text-xs text-muted-foreground/60">
+                                                        <span>{dateLabel}</span>
+                                                        {note.tags && note.tags.length > 0 && (
+                                                            <span className="flex items-center gap-1">
+                                                                <Sparkles className="w-3 h-3" />
+                                                                {note.tags.length} tags
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </SwipeToReveal>
+                                        );
+                                    })
+                                )}
                             </div>
                         </div>
                     </div>
