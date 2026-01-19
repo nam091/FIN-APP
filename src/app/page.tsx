@@ -6,6 +6,7 @@ import { FinanceDashboard } from "@/components/dashboard/finance-dashboard";
 import { TaskList } from "@/components/tasks/task-list";
 import { NoteList } from "@/components/notes/note-list";
 import { AIChat } from "@/components/ai/ai-chat";
+import { TrackingView } from "@/components/tracking/tracking-view";
 import { SettingsView } from "@/components/dashboard/settings-view";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Sidebar } from "@/components/layout/sidebar";
@@ -26,6 +27,7 @@ export default function Home() {
           {activeTab === "finance" && <FinanceDashboard />}
           {activeTab === "tasks" && <TaskList />}
           {activeTab === "notes" && <NoteList />}
+          {activeTab === "tracking" && <TrackingView />}
           {activeTab === "ai" && <AIChat />}
           {activeTab === "settings" && <SettingsView />}
         </div>

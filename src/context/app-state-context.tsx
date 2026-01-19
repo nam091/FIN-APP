@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
-type TabType = "home" | "finance" | "tasks" | "notes" | "ai" | "settings" | "add";
+type TabType = "home" | "finance" | "tasks" | "notes" | "tracking" | "ai" | "settings" | "add";
 
 export interface Transaction {
     id: string;

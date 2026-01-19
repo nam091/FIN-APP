@@ -11,7 +11,8 @@ import {
     ChevronLeft,
     ChevronRight,
     LayoutDashboard,
-    Wallet
+    Wallet,
+    Activity
 } from "lucide-react";
 import { useAppState } from "@/context/app-state-context";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ export function Sidebar() {
         { id: "finance", label: "Finance", icon: Wallet },
         { id: "tasks", label: "Tasks", icon: ListTodo },
         { id: "notes", label: "Notes", icon: BookOpen },
+        { id: "tracking", label: "Tracking", icon: Activity },
         { id: "ai", label: "AI Assistant", icon: MessageSquare },
     ];
 
