@@ -3,38 +3,38 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_URL")
+  provider = "postgresql"
+  url      = env("PRISMA_DATABASE_URL")
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String?
-  image         String?
-  tasks         Task[]
-  transactions  Transaction[]
-  notes         Note[]
-  settings      Settings?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String?
+  image        String?
+  tasks        Task[]
+  transactions Transaction[]
+  notes        Note[]
+  settings     Settings?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Task {
-  id            Int       @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   title         String
   project       String
-  type          String    @default("task")
-  completed     Boolean   @default(false)
+  type          String   @default("task")
+  completed     Boolean  @default(false)
   dueDate       String?
   dueTime       String?
   reminder      String?
   repeat        String?
   googleEventId String?
   userId        String
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Transaction {
@@ -43,7 +43,7 @@ model Transaction {
   title     String
   category  String
   amount    Float
-  type      String   // "income" | "expense"
+  type      String // "income" | "expense"
   iconName  String
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -65,10 +65,10 @@ model Note {
 }
 
 model Settings {
-  id        String  @id @default(cuid())
-  userId    String  @unique
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  theme     String  @default("dark")
-  data      Json?   // Stores complex settings like notification hooks and AI config
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme     String   @default("dark")
+  data      Json? // Stores complex settings like notification hooks and AI config
   updatedAt DateTime @updatedAt
 }
