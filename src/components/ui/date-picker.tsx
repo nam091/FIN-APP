@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -19,19 +19,40 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     const today = new Date();
-    const selectedDate = value ? new Date(value) : null;
 
-    const [viewMonth, setViewMonth] = useState(selectedDate?.getMonth() ?? today.getMonth());
-    const [viewYear, setViewYear] = useState(selectedDate?.getFullYear() ?? today.getFullYear());
+    // Parse date string safely (avoid timezone issues)
+    const parseDate = (dateStr?: string) => {
+        if (!dateStr) return null;
+        const [year, month, day] = dateStr.split('-').map(Number);
+        return { year, month: month - 1, day }; // month is 0-indexed
+    };
 
-    const formatDate = (date: Date) => {
-        return date.toISOString().split('T')[0];
+    const selectedParsed = parseDate(value);
+
+    const [viewMonth, setViewMonth] = useState(selectedParsed?.month ?? today.getMonth());
+    const [viewYear, setViewYear] = useState(selectedParsed?.year ?? today.getFullYear());
+
+    // Update view when value changes
+    useEffect(() => {
+        if (value) {
+            const parsed = parseDate(value);
+            if (parsed) {
+                setViewMonth(parsed.month);
+                setViewYear(parsed.year);
+            }
+        }
+    }, [value]);
+
+    const formatDateToString = (year: number, month: number, day: number) => {
+        // Format as YYYY-MM-DD
+        return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     };
 
     const formatDisplayDate = (dateStr?: string) => {
         if (!dateStr) return 'Chọn ngày';
-        const date = new Date(dateStr);
-        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        const parsed = parseDate(dateStr);
+        if (!parsed) return 'Chọn ngày';
+        return `${parsed.day}/${parsed.month + 1}/${parsed.year}`;
     };
 
     const getDaysInMonth = (month: number, year: number) => {
@@ -42,7 +63,9 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
         return new Date(year, month, 1).getDay();
     };
 
-    const handlePrevMonth = () => {
+    const handlePrevMonth = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
         if (viewMonth === 0) {
             setViewMonth(11);
             setViewYear(viewYear - 1);
@@ -51,7 +74,9 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
         }
     };
 
-    const handleNextMonth = () => {
+    const handleNextMonth = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
         if (viewMonth === 11) {
             setViewMonth(0);
             setViewYear(viewYear + 1);
@@ -61,8 +86,26 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
     };
 
     const handleSelectDate = (day: number) => {
-        const date = new Date(viewYear, viewMonth, day);
-        onChange(formatDate(date));
+        const dateString = formatDateToString(viewYear, viewMonth, day);
+        onChange(dateString);
+        setIsOpen(false);
+    };
+
+    const handleTodayClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const dateString = formatDateToString(today.getFullYear(), today.getMonth(), today.getDate());
+        onChange(dateString);
+        setIsOpen(false);
+    };
+
+    const handleTomorrowClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const dateString = formatDateToString(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate());
+        onChange(dateString);
         setIsOpen(false);
     };
 
@@ -72,19 +115,26 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
 
     // Empty cells before first day
     for (let i = 0; i < firstDay; i++) {
-        days.push(<div key={`empty-${i}`} />);
+        days.push(<div key={`empty-${i}`} className="w-9 h-9" />);
     }
 
     // Days of month
     for (let day = 1; day <= daysInMonth; day++) {
         const isToday = day === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
-        const isSelected = selectedDate && day === selectedDate.getDate() && viewMonth === selectedDate.getMonth() && viewYear === selectedDate.getFullYear();
+        const isSelected = selectedParsed &&
+            day === selectedParsed.day &&
+            viewMonth === selectedParsed.month &&
+            viewYear === selectedParsed.year;
 
         days.push(
             <button
                 key={day}
                 type="button"
-                onClick={() => handleSelectDate(day)}
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSelectDate(day);
+                }}
                 className={cn(
                     "w-9 h-9 rounded-lg text-sm font-medium transition-all",
                     isSelected
@@ -103,7 +153,11 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
         <div className={cn("relative", className)}>
             <button
                 type="button"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsOpen(!isOpen);
+                }}
                 className="flex items-center gap-2 px-4 py-3 bg-secondary/50 border border-border rounded-2xl hover:border-primary/50 transition-all w-full h-14"
             >
                 <Calendar className="w-5 h-5 text-muted-foreground" />
@@ -116,7 +170,10 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
             </button>
 
             {isOpen && (
-                <div className="absolute top-full mt-2 left-0 right-0 bg-card border border-border rounded-2xl p-4 shadow-xl z-50 min-w-[280px]">
+                <div
+                    className="absolute top-full mt-2 left-0 right-0 bg-card border border-border rounded-2xl p-4 shadow-xl z-50 min-w-[280px]"
+                    onClick={(e) => e.stopPropagation()}
+                >
                     {/* Month/Year Header */}
                     <div className="flex items-center justify-between mb-4">
                         <Button
@@ -162,10 +219,7 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => {
-                                onChange(formatDate(today));
-                                setIsOpen(false);
-                            }}
+                            onClick={handleTodayClick}
                             className="flex-1"
                         >
                             Hôm nay
@@ -174,12 +228,7 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => {
-                                const tomorrow = new Date(today);
-                                tomorrow.setDate(today.getDate() + 1);
-                                onChange(formatDate(tomorrow));
-                                setIsOpen(false);
-                            }}
+                            onClick={handleTomorrowClick}
                             className="flex-1"
                         >
                             Ngày mai
