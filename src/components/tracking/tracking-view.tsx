@@ -1,17 +1,27 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Plus, Activity } from "lucide-react";
+import { Plus, Activity, ListTodo } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TrackerCard } from "./tracker-card";
+import { DailyTaskCard } from "./daily-task-card";
 import { useSession } from "next-auth/react";
 import { NewTrackerModal } from "./new-tracker-modal";
+import { useAppState } from "@/context/app-state-context";
 
 export function TrackingView() {
     const { data: session } = useSession();
+    const { tasks, toggleTask } = useAppState();
     const [trackers, setTrackers] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+
+    // Filter daily repeating tasks
+    const dailyTasks = tasks.filter(task =>
+        task.repeat?.toLowerCase() === 'daily' ||
+        task.repeat?.toLowerCase() === 'everyday' ||
+        task.repeat?.toLowerCase() === 'hằng ngày'
+    );
 
     useEffect(() => {
         const fetchTrackers = async () => {
@@ -59,10 +69,8 @@ export function TrackingView() {
             let newEntries = [...t.entries];
 
             if (existingEntryIndex >= 0) {
-                // Toggle off if it's a simple boolean habit (value >= goal)
-                // For now assuming habit toggle
                 if (newEntries[existingEntryIndex].value >= t.goal) {
-                    newEntries[existingEntryIndex].value = 0; // or remove
+                    newEntries[existingEntryIndex].value = 0;
                 } else {
                     newEntries[existingEntryIndex].value = t.goal;
                 }
@@ -77,12 +85,14 @@ export function TrackingView() {
             await fetch(`/api/trackers/${trackerId}/entries`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ date, value: 1 }), // Assuming simple toggle for now
+                body: JSON.stringify({ date, value: 1 }),
             });
         } catch (error) {
             console.error("Failed to log entry", error);
         }
     };
+
+    const totalItems = trackers.length + dailyTasks.length;
 
     return (
         <div className="flex flex-col h-full bg-background text-foreground overflow-hidden relative cursor-default w-full">
@@ -109,41 +119,69 @@ export function TrackingView() {
 
             <div className="flex-1 overflow-y-auto no-scrollbar px-6 z-10 pb-20">
                 <div className="max-w-6xl mx-auto w-full pt-4">
-                    {/* Summary Stats Placeholder */}
+                    {/* Summary Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                         <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Active Streak</div>
-                            <div className="text-2xl font-bold text-foreground">12 days</div>
-                        </div>
-                        <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Completion Rate</div>
-                            <div className="text-2xl font-bold text-foreground">85%</div>
-                        </div>
-                        <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Total Habits</div>
+                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Habits</div>
                             <div className="text-2xl font-bold text-foreground">{trackers.length}</div>
                         </div>
                         <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Perfect Days</div>
-                            <div className="text-2xl font-bold text-foreground">5</div>
+                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Daily Tasks</div>
+                            <div className="text-2xl font-bold text-cyan-500">{dailyTasks.length}</div>
+                        </div>
+                        <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
+                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Total Items</div>
+                            <div className="text-2xl font-bold text-foreground">{totalItems}</div>
+                        </div>
+                        <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
+                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Tasks Done</div>
+                            <div className="text-2xl font-bold text-green-500">{dailyTasks.filter(t => t.completed).length}</div>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {trackers.map(tracker => (
-                            <TrackerCard
-                                key={tracker.id}
-                                tracker={tracker}
-                                onToggle={(date) => handleToggle(tracker.id, date)}
-                            />
-                        ))}
-                    </div>
+                    {/* Daily Tasks Section */}
+                    {dailyTasks.length > 0 && (
+                        <div className="mb-8">
+                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-cyan-500">
+                                <ListTodo className="w-5 h-5" />
+                                Daily Tasks ({dailyTasks.length})
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {dailyTasks.map(task => (
+                                    <DailyTaskCard
+                                        key={task.id}
+                                        task={task}
+                                        onToggle={() => toggleTask(task.id)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
-                    {trackers.length === 0 && !isLoading && (
+                    {/* Habits Section */}
+                    {trackers.length > 0 && (
+                        <div className="mb-8">
+                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-indigo-500">
+                                <Activity className="w-5 h-5" />
+                                Habits ({trackers.length})
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {trackers.map(tracker => (
+                                    <TrackerCard
+                                        key={tracker.id}
+                                        tracker={tracker}
+                                        onToggle={(date) => handleToggle(tracker.id, date)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {totalItems === 0 && !isLoading && (
                         <div className="text-center py-20 opacity-50">
                             <Activity className="w-16 h-16 mx-auto mb-4" />
-                            <p className="text-xl font-medium">No habits tracked yet.</p>
-                            <p className="text-sm">Start building your streak today!</p>
+                            <p className="text-xl font-medium">No habits or daily tasks yet.</p>
+                            <p className="text-sm">Create a habit or add a daily repeating task!</p>
                         </div>
                     )}
                 </div>
