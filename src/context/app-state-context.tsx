@@ -36,6 +36,7 @@ export interface Task {
     reminder?: string;
     repeat?: string;
     googleEventId?: string;
+    createdAt?: string; // Added for tracking completion history
 }
 
 export interface Note {
