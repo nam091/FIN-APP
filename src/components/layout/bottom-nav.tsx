@@ -1,64 +1,48 @@
 "use client";
 
 import React from "react";
-import { Home, ListTodo, Plus, BookOpen, MessageSquare, Wallet, Settings } from "lucide-react";
+import { Home, ListTodo, BookOpen, MessageSquare, Wallet, Activity } from "lucide-react";
 import { useAppState } from "@/context/app-state-context";
 import { cn } from "@/lib/utils";
 
 export function BottomNav() {
     const { activeTab, setActiveTab } = useAppState();
 
+    // 6 items total: Finance, Tasks, Tracking, Notes, AI, Home
+    // Layout: row of 6 equally spaced items
+    const navItems = [
+        { id: "finance", icon: Wallet, label: "Finance" },
+        { id: "tasks", icon: ListTodo, label: "Tasks" },
+        { id: "tracking", icon: Activity, label: "Tracking" },
+        { id: "home", icon: Home, label: "Home" },
+        { id: "notes", icon: BookOpen, label: "Notes" },
+        { id: "ai", icon: MessageSquare, label: "AI" },
+    ];
+
     return (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 px-6 pb-8 pt-4 bg-gradient-to-t from-background via-background/95 to-transparent backdrop-blur-sm z-50">
-            <div className="flex items-center justify-between gap-2 max-w-lg mx-auto">
-                <NavButton
-                    active={activeTab === "finance"}
-                    onClick={() => setActiveTab("finance")}
-                    icon={<Wallet className="w-7 h-7" />}
-                />
-                <NavButton
-                    active={activeTab === "tasks"}
-                    onClick={() => setActiveTab("tasks")}
-                    icon={<ListTodo className="w-7 h-7" />}
-                />
-
-                <button
-                    className={cn(
-                        "w-20 h-12 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-black/20",
-                        activeTab === "home" ? "bg-indigo-600" : "bg-secondary hover:bg-accent"
-                    )}
-                    onClick={() => setActiveTab("home")}
-                >
-                    <Home className={cn("w-7 h-7", activeTab === "home" ? "text-white" : "text-muted-foreground")} />
-                </button>
-
-                <NavButton
-                    active={activeTab === "notes"}
-                    onClick={() => setActiveTab("notes")}
-                    icon={<BookOpen className="w-7 h-7" />}
-                />
-                <NavButton
-                    active={activeTab === "ai"}
-                    onClick={() => setActiveTab("ai")}
-                    icon={<MessageSquare className="w-7 h-7" />}
-                />
+        <div className="md:hidden fixed bottom-0 left-0 right-0 px-4 pb-6 pt-3 bg-gradient-to-t from-background via-background/95 to-transparent backdrop-blur-sm z-50">
+            <div className="flex items-center justify-between gap-1 max-w-lg mx-auto bg-secondary/80 backdrop-blur-xl rounded-2xl p-2 border border-border/50">
+                {navItems.map((item) => (
+                    <button
+                        key={item.id}
+                        className={cn(
+                            "flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-xl transition-all duration-200",
+                            activeTab === item.id
+                                ? "bg-primary text-primary-foreground"
+                                : "text-muted-foreground hover:text-foreground"
+                        )}
+                        onClick={() => setActiveTab(item.id as any)}
+                    >
+                        <item.icon className="w-5 h-5" />
+                        <span className={cn(
+                            "text-[10px] font-medium truncate",
+                            activeTab === item.id ? "opacity-100" : "opacity-70"
+                        )}>
+                            {item.label}
+                        </span>
+                    </button>
+                ))}
             </div>
         </div>
-    );
-}
-
-function NavButton({ active, icon, onClick }: { active: boolean, icon: React.ReactNode, onClick: () => void }) {
-    return (
-        <button
-            className={cn(
-                "flex-1 flex justify-center py-2 transition-all duration-200",
-                active ? "text-foreground scale-110" : "text-muted-foreground hover:text-foreground"
-            )}
-            onClick={onClick}
-        >
-            <div className="active:scale-90 transition-transform">
-                {icon}
-            </div>
-        </button>
     );
 }
