@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Transaction, useAppState } from "@/context/app-state-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
     Utensils,
     ShoppingBag,
@@ -180,17 +181,12 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
                         </div>
                     </div>
 
-                    {/* Date */}
+                    {/* Date - Custom DatePicker */}
                     <div className="space-y-2">
                         <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1 flex items-center gap-1.5">
                             <Calendar className="w-3.5 h-3.5" /> Date
                         </label>
-                        <Input
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            className="bg-secondary/50 border-border rounded-2xl h-14 px-5 focus-visible:ring-indigo-500/30 focus-visible:border-indigo-500 text-base cursor-pointer hover:border-indigo-500/50 transition-all [color-scheme:dark]"
-                        />
+                        <DatePicker value={date} onChange={setDate} />
                     </div>
                 </div>
 
