@@ -11,10 +11,10 @@ export function BottomNav() {
     // 6 items total: Finance, Tasks, Tracking, Notes, AI, Home
     // Layout: row of 6 equally spaced items
     const navItems = [
+        { id: "home", icon: Home, label: "Home" },
         { id: "finance", icon: Wallet, label: "Finance" },
         { id: "tasks", icon: ListTodo, label: "Tasks" },
         { id: "tracking", icon: Activity, label: "Tracking" },
-        { id: "home", icon: Home, label: "Home" },
         { id: "notes", icon: BookOpen, label: "Notes" },
         { id: "ai", icon: MessageSquare, label: "AI" },
     ];
