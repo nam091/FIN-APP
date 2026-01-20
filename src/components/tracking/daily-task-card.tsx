@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Check, ListTodo, Repeat, Clock } from "lucide-react";
+import { Check, ListTodo, Repeat, Clock, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -19,34 +19,71 @@ interface DailyTaskCardProps {
 
 export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogCompletion }: DailyTaskCardProps) {
     const isCompletedToday = task.completed;
+    const today = new Date().toISOString().split('T')[0];
 
-    // Get the last 14 days
+    // Get the last 14 days for chart
     const getLast14Days = () => {
         const days = [];
-        const today = new Date();
+        const todayDate = new Date();
         for (let i = 13; i >= 0; i--) {
-            const date = new Date(today);
-            date.setDate(today.getDate() - i);
+            const date = new Date(todayDate);
+            date.setDate(todayDate.getDate() - i);
             days.push(date.toISOString().split('T')[0]);
         }
         return days;
     };
 
     const last14Days = getLast14Days();
-    const today = new Date().toISOString().split('T')[0];
 
     // Create a map of completed dates
     const completedDates = new Set(
         completionLogs.filter(log => log.completed).map(log => log.date)
     );
 
-    // Calculate completion rate
-    const taskCreatedAt = task.createdAt ? new Date(task.createdAt).toISOString().split('T')[0] : last14Days[0];
-    const relevantDays = last14Days.filter(date => date >= taskCreatedAt && date <= today);
-    const completedCount = relevantDays.filter(date => completedDates.has(date)).length;
-    const completionRate = relevantDays.length > 0
-        ? Math.round((completedCount / relevantDays.length) * 100)
-        : 0;
+    // Calculate total days from creation to today
+    const taskCreatedAt = task.createdAt
+        ? new Date(task.createdAt).toISOString().split('T')[0]
+        : today;
+
+    const getAllDaysFromCreation = () => {
+        const days = [];
+        const startDate = new Date(taskCreatedAt);
+        const endDate = new Date(today);
+        const current = new Date(startDate);
+
+        while (current <= endDate) {
+            days.push(current.toISOString().split('T')[0]);
+            current.setDate(current.getDate() + 1);
+        }
+        return days;
+    };
+
+    const allDaysFromCreation = getAllDaysFromCreation();
+    const totalDays = allDaysFromCreation.length;
+    const completedCount = allDaysFromCreation.filter(date => completedDates.has(date)).length;
+    const completionRate = totalDays > 0 ? Math.round((completedCount / totalDays) * 100) : 0;
+
+    // Calculate current streak (consecutive days ending today or yesterday)
+    const calculateStreak = () => {
+        let streak = 0;
+        const sortedDays = [...allDaysFromCreation].reverse(); // Most recent first
+
+        for (let i = 0; i < sortedDays.length; i++) {
+            const date = sortedDays[i];
+            // Skip today if not completed yet (allow for in-progress day)
+            if (i === 0 && date === today && !completedDates.has(date)) {
+                continue;
+            }
+            if (completedDates.has(date)) {
+                streak++;
+            } else {
+                break; // Streak broken
+            }
+        }
+        return streak;
+    };
+
+    const streak = calculateStreak();
 
     // Handle toggle and log to database
     const handleToggle = async () => {
@@ -80,8 +117,17 @@ export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogComple
                         </p>
                     </div>
                 </div>
+                {/* Streak Badge (like Habits) */}
+                <div className="flex items-center gap-1 text-orange-500 font-bold bg-orange-500/10 px-2 py-1 rounded-lg text-xs">
+                    <Flame className="w-3 h-3 fill-orange-500" />
+                    {streak}
+                </div>
+            </div>
+
+            {/* Stats Row */}
+            <div className="flex items-center gap-3 mb-4 text-xs">
                 <div className={cn(
-                    "flex items-center gap-1 font-bold px-2 py-1 rounded-lg text-xs",
+                    "flex items-center gap-1 font-bold px-2 py-1 rounded-lg",
                     completionRate >= 70
                         ? "text-green-500 bg-green-500/10"
                         : completionRate >= 40
@@ -90,11 +136,14 @@ export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogComple
                 )}>
                     {completionRate}%
                 </div>
+                <span className="text-muted-foreground">
+                    {completedCount}/{totalDays} ngày
+                </span>
             </div>
 
             {/* 14-Day Completion Chart */}
             <div className="flex gap-0.5 h-8 mb-4 items-end">
-                {last14Days.map((date, i) => {
+                {last14Days.map((date) => {
                     const isToday = date === today;
                     const isBeforeCreation = date < taskCreatedAt;
                     const isCompleted = completedDates.has(date);
