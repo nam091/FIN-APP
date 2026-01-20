@@ -13,33 +13,82 @@ export function TrackingView() {
     const { data: session } = useSession();
     const { tasks, toggleTask } = useAppState();
     const [trackers, setTrackers] = useState<any[]>([]);
+    const [dailyTasksWithHistory, setDailyTasksWithHistory] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isNewModalOpen, setIsNewModalOpen] = useState(false);
 
-    // Filter daily repeating tasks
+    // Filter daily repeating tasks from app state
     const dailyTasks = tasks.filter(task =>
         task.repeat?.toLowerCase() === 'daily' ||
         task.repeat?.toLowerCase() === 'everyday' ||
         task.repeat?.toLowerCase() === 'hằng ngày'
     );
 
+    // Fetch trackers and completion history
     useEffect(() => {
-        const fetchTrackers = async () => {
+        const fetchData = async () => {
             if (!session?.user?.email) return;
             try {
-                const res = await fetch("/api/trackers");
-                if (res.ok) {
-                    const data = await res.json();
+                // Fetch trackers
+                const trackersRes = await fetch("/api/trackers");
+                if (trackersRes.ok) {
+                    const data = await trackersRes.json();
                     setTrackers(data);
                 }
+
+                // Fetch completion history for daily tasks
+                const historyRes = await fetch("/api/tasks/completions");
+                if (historyRes.ok) {
+                    const historyData = await historyRes.json();
+                    setDailyTasksWithHistory(historyData);
+                }
             } catch (error) {
-                console.error("Failed to fetch trackers", error);
+                console.error("Failed to fetch data", error);
             } finally {
                 setIsLoading(false);
             }
         };
-        fetchTrackers();
+        fetchData();
     }, [session]);
+
+    // Merge app state tasks with database history
+    const getMergedDailyTasks = () => {
+        return dailyTasks.map(task => {
+            const dbTask = dailyTasksWithHistory.find((t: any) => t.id === task.id);
+            return {
+                ...task,
+                completionLogs: dbTask?.completionLogs || [],
+                createdAt: dbTask?.createdAt || task.createdAt
+            };
+        });
+    };
+
+    const mergedDailyTasks = getMergedDailyTasks();
+
+    // Log completion to database
+    const handleLogCompletion = async (taskId: number, date: string, completed: boolean) => {
+        try {
+            await fetch("/api/tasks/completions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ taskId, date, completed })
+            });
+            // Update local state
+            setDailyTasksWithHistory(prev => prev.map(t => {
+                if (t.id !== taskId) return t;
+                const existingLogIndex = t.completionLogs?.findIndex((l: any) => l.date === date) ?? -1;
+                const newLogs = [...(t.completionLogs || [])];
+                if (existingLogIndex >= 0) {
+                    newLogs[existingLogIndex] = { ...newLogs[existingLogIndex], completed };
+                } else {
+                    newLogs.push({ date, completed });
+                }
+                return { ...t, completionLogs: newLogs };
+            }));
+        } catch (error) {
+            console.error("Failed to log completion", error);
+        }
+    };
 
     const handleCreateTracker = async (trackerData: any) => {
         setIsLoading(true);
@@ -140,18 +189,20 @@ export function TrackingView() {
                     </div>
 
                     {/* Daily Tasks Section */}
-                    {dailyTasks.length > 0 && (
+                    {mergedDailyTasks.length > 0 && (
                         <div className="mb-8">
                             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-cyan-500">
                                 <ListTodo className="w-5 h-5" />
-                                Daily Tasks ({dailyTasks.length})
+                                Daily Tasks ({mergedDailyTasks.length})
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {dailyTasks.map(task => (
+                                {mergedDailyTasks.map(task => (
                                     <DailyTaskCard
                                         key={task.id}
                                         task={task}
+                                        completionLogs={task.completionLogs}
                                         onToggle={() => toggleTask(task.id)}
+                                        onLogCompletion={handleLogCompletion}
                                     />
                                 ))}
                             </div>

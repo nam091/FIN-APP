@@ -22,20 +22,21 @@ model User {
 }
 
 model Task {
-  id            Int      @id @default(autoincrement())
-  title         String
-  project       String
-  type          String   @default("task")
-  completed     Boolean  @default(false)
-  dueDate       String?
-  dueTime       String?
-  reminder      String?
-  repeat        String?
-  googleEventId String?
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             Int                 @id @default(autoincrement())
+  title          String
+  project        String
+  type           String              @default("task")
+  completed      Boolean             @default(false)
+  dueDate        String?
+  dueTime        String?
+  reminder       String?
+  repeat         String?
+  googleEventId  String?
+  userId         String
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  completionLogs TaskCompletionLog[]
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
 }
 
 model Transaction {
@@ -101,4 +102,15 @@ model TrackingEntry {
   updatedAt DateTime @updatedAt
 
   @@unique([trackerId, date])
+}
+
+model TaskCompletionLog {
+  id        String   @id @default(cuid())
+  taskId    Int
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  date      String // YYYY-MM-DD
+  completed Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@unique([taskId, date])
 }
