@@ -17,6 +17,7 @@ export function TrackingView() {
     const [dailyTasksWithHistory, setDailyTasksWithHistory] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+    const [editingTracker, setEditingTracker] = useState<any>(null);
 
     // Filter daily repeating tasks from app state
     const dailyTasks = tasks.filter(task =>
@@ -91,22 +92,47 @@ export function TrackingView() {
         }
     };
 
-    const handleCreateTracker = async (trackerData: any) => {
+    const handleSaveTracker = async (trackerData: any) => {
         setIsLoading(true);
         try {
-            const res = await fetch("/api/trackers", {
-                method: "POST",
+            const isEditing = !!trackerData.id;
+            const url = isEditing ? `/api/trackers/${trackerData.id}` : "/api/trackers";
+            const method = isEditing ? "PUT" : "POST";
+
+            const res = await fetch(url, {
+                method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(trackerData),
             });
+
             if (res.ok) {
-                const newTracker = await res.json();
-                setTrackers([newTracker, ...trackers]);
+                const savedTracker = await res.json();
+                if (isEditing) {
+                    setTrackers(prev => prev.map(t => t.id === savedTracker.id ? { ...t, ...savedTracker } : t));
+                } else {
+                    setTrackers([savedTracker, ...trackers]);
+                }
+                setEditingTracker(null);
             }
         } catch (error) {
-            console.error("Failed to create tracker", error);
+            console.error("Failed to save tracker", error);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleDeleteTracker = async (trackerId: string) => {
+        if (!confirm("Are you sure you want to delete this habit? History will be lost.")) return;
+
+        try {
+            const res = await fetch(`/api/trackers/${trackerId}`, {
+                method: "DELETE",
+            });
+            if (res.ok) {
+                setTrackers(prev => prev.filter(t => t.id !== trackerId));
+            }
+        } catch (error) {
+            console.error("Failed to delete tracker", error);
         }
     };
 
@@ -160,7 +186,10 @@ export function TrackingView() {
                     Habit Tracking
                 </h1>
                 <Button
-                    onClick={() => setIsNewModalOpen(true)}
+                    onClick={() => {
+                        setEditingTracker(null);
+                        setIsNewModalOpen(true);
+                    }}
                     className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full transition-all shadow-lg shadow-indigo-500/20"
                 >
                     <Plus className="w-4 h-4 mr-2" /> New Habit
@@ -223,6 +252,11 @@ export function TrackingView() {
                                         key={tracker.id}
                                         tracker={tracker}
                                         onToggle={(date) => handleToggle(tracker.id, date)}
+                                        onEdit={() => {
+                                            setEditingTracker(tracker);
+                                            setIsNewModalOpen(true);
+                                        }}
+                                        onDelete={() => handleDeleteTracker(tracker.id)}
                                     />
                                 ))}
                             </div>
@@ -241,8 +275,12 @@ export function TrackingView() {
 
             <NewTrackerModal
                 open={isNewModalOpen}
-                onOpenChange={setIsNewModalOpen}
-                onSave={handleCreateTracker}
+                editingTracker={editingTracker}
+                onOpenChange={(open) => {
+                    setIsNewModalOpen(open);
+                    if (!open) setEditingTracker(null);
+                }}
+                onSave={handleSaveTracker}
             />
         </div>
     );

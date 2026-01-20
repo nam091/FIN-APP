@@ -22,6 +22,7 @@ interface NewTrackerModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onSave: (tracker: any) => void;
+    editingTracker?: any;
 }
 
 const ICONS = [
@@ -44,16 +45,33 @@ const COLORS = [
     { name: "orange", class: "bg-orange-500" },
 ];
 
-export function NewTrackerModal({ open, onOpenChange, onSave }: NewTrackerModalProps) {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [selectedIcon, setSelectedIcon] = useState("Activity");
-    const [selectedColor, setSelectedColor] = useState("blue");
-    const [goal, setGoal] = useState(1);
+export function NewTrackerModal({ open, onOpenChange, onSave, editingTracker }: NewTrackerModalProps) {
+    const [title, setTitle] = React.useState("");
+    const [description, setDescription] = React.useState("");
+    const [selectedIcon, setSelectedIcon] = React.useState("Activity");
+    const [selectedColor, setSelectedColor] = React.useState("blue");
+    const [goal, setGoal] = React.useState(1);
+
+    React.useEffect(() => {
+        if (editingTracker) {
+            setTitle(editingTracker.title || "");
+            setDescription(editingTracker.description || "");
+            setSelectedIcon(editingTracker.icon || "Activity");
+            setSelectedColor(editingTracker.color || "blue");
+            setGoal(editingTracker.goal || 1);
+        } else {
+            setTitle("");
+            setDescription("");
+            setSelectedIcon("Activity");
+            setSelectedColor("blue");
+            setGoal(1);
+        }
+    }, [editingTracker, open]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSave({
+            id: editingTracker?.id,
             title,
             description,
             icon: selectedIcon,
@@ -62,16 +80,13 @@ export function NewTrackerModal({ open, onOpenChange, onSave }: NewTrackerModalP
             type: "habit" // Default for now
         });
         onOpenChange(false);
-        // Reset form
-        setTitle("");
-        setDescription("");
     };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px] bg-card border-border">
                 <DialogHeader>
-                    <DialogTitle>Create New Habit</DialogTitle>
+                    <DialogTitle>{editingTracker ? "Edit Habit" : "Create New Habit"}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 py-4">
                     <div className="space-y-2">
@@ -137,7 +152,9 @@ export function NewTrackerModal({ open, onOpenChange, onSave }: NewTrackerModalP
                     </div>
 
                     <DialogFooter>
-                        <Button type="submit" disabled={!title}>Create Habit</Button>
+                        <Button type="submit" disabled={!title}>
+                            {editingTracker ? "Save Changes" : "Create Habit"}
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
