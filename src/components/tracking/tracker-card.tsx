@@ -4,6 +4,7 @@ import React from "react";
 import { Check, Flame, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { getLocalDateString } from "@/lib/date-utils";
 
 interface TrackerCardProps {
     tracker: any;
@@ -20,12 +21,12 @@ export function TrackerCard({ tracker, onToggle }: TrackerCardProps) {
     };
 
     const isCompletedToday = () => {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getLocalDateString();
         return tracker.entries.some((e: any) => e.date === today && e.value >= (tracker.goal || 1));
     };
 
     const handleToggleToday = () => {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getLocalDateString();
         onToggle(today);
     };
 

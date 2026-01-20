@@ -12,6 +12,7 @@ import {
     Coffee
 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { getLocalDateString } from "@/lib/date-utils";
 
 type TabType = "home" | "finance" | "tasks" | "notes" | "tracking" | "ai" | "settings" | "add";
 
@@ -496,12 +497,12 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     };
 
     const financeSummary = useMemo(() => {
-        const now = new Date("2026-01-10"); // Reference current time from metadata
-        const todayStr = "2026-01-10";
+        const now = new Date();
+        const todayStr = getLocalDateString(now);
 
-        // Simple week logic: last 7 days from reference
-        const weekAgo = new Date(now);
-        weekAgo.setDate(weekAgo.getDate() - 7);
+        // Simple week logic: last 7 days from now
+        const weekAgoStr = getLocalDateString(new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000));
+        const weekAgo = new Date(weekAgoStr);
 
         // Simple month logic: current month
         const currentMonth = now.getMonth();

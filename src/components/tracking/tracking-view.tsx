@@ -8,6 +8,7 @@ import { DailyTaskCard } from "./daily-task-card";
 import { useSession } from "next-auth/react";
 import { NewTrackerModal } from "./new-tracker-modal";
 import { useAppState } from "@/context/app-state-context";
+import { getLocalDateString } from "@/lib/date-utils";
 
 export function TrackingView() {
     const { data: session } = useSession();

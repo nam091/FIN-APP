@@ -4,6 +4,7 @@ import React from "react";
 import { Check, ListTodo, Repeat, Clock, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { getLocalDateString } from "@/lib/date-utils";
 
 interface CompletionLog {
     date: string;
@@ -18,8 +19,14 @@ interface DailyTaskCardProps {
 }
 
 export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogCompletion }: DailyTaskCardProps) {
-    const isCompletedToday = task.completed;
-    const today = new Date().toISOString().split('T')[0];
+    const today = getLocalDateString();
+
+    // Create a map of completed dates
+    const completedDates = new Set(
+        completionLogs.filter(log => log.completed).map(log => log.date)
+    );
+
+    const isCompletedToday = completedDates.has(today);
 
     // Get the last 14 days for chart
     const getLast14Days = () => {
@@ -28,31 +35,28 @@ export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogComple
         for (let i = 13; i >= 0; i--) {
             const date = new Date(todayDate);
             date.setDate(todayDate.getDate() - i);
-            days.push(date.toISOString().split('T')[0]);
+            days.push(getLocalDateString(date));
         }
         return days;
     };
 
     const last14Days = getLast14Days();
 
-    // Create a map of completed dates
-    const completedDates = new Set(
-        completionLogs.filter(log => log.completed).map(log => log.date)
-    );
-
     // Calculate total days from creation to today
     const taskCreatedAt = task.createdAt
-        ? new Date(task.createdAt).toISOString().split('T')[0]
+        ? getLocalDateString(new Date(task.createdAt))
         : today;
 
     const getAllDaysFromCreation = () => {
         const days = [];
-        const startDate = new Date(taskCreatedAt);
-        const endDate = new Date(today);
-        const current = new Date(startDate);
+        const [sy, sm, sd] = taskCreatedAt.split('-').map(Number);
+        const [ey, em, ed] = today.split('-').map(Number);
 
-        while (current <= endDate) {
-            days.push(current.toISOString().split('T')[0]);
+        const current = new Date(sy, sm - 1, sd);
+        const end = new Date(ey, em - 1, ed);
+
+        while (current <= end) {
+            days.push(getLocalDateString(current));
             current.setDate(current.getDate() + 1);
         }
         return days;

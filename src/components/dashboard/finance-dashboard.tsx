@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useAppState, Transaction } from "@/context/app-state-context";
 import { cn } from "@/lib/utils";
+import { getLocalDateString } from "@/lib/date-utils";
 import {
     Drawer,
     DrawerContent,
@@ -82,7 +83,7 @@ export function FinanceDashboard() {
     });
 
     const sortedDates = Object.keys(groupedTransactions).sort((a, b) => b.localeCompare(a));
-    const todayStr = "2026-01-10";
+    const todayStr = getLocalDateString();
 
     return (
         <div className="flex flex-col h-full bg-background text-foreground overflow-hidden relative w-full">
