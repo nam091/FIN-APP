@@ -1,17 +1,25 @@
 "use client";
 
 import React from "react";
-import { Check, ListTodo, Repeat } from "lucide-react";
+import { Check, ListTodo, Repeat, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 interface DailyTaskCardProps {
     task: any;
+    completionHistory?: boolean[]; // Last 14 days of completion
     onToggle: () => void;
 }
 
-export function DailyTaskCard({ task, onToggle }: DailyTaskCardProps) {
+export function DailyTaskCard({ task, completionHistory, onToggle }: DailyTaskCardProps) {
     const isCompleted = task.completed;
+
+    // Generate mock completion history if not provided
+    // In real implementation, this would come from historical task data
+    const history = completionHistory || Array.from({ length: 14 }, () => Math.random() > 0.4);
+
+    // Calculate completion rate
+    const completionRate = Math.round((history.filter(Boolean).length / history.length) * 100);
 
     return (
         <div className="bg-secondary/40 backdrop-blur-xl border border-border p-5 rounded-3xl group hover:border-cyan-500/30 transition-all">
@@ -25,14 +33,45 @@ export function DailyTaskCard({ task, onToggle }: DailyTaskCardProps) {
                         <p className="text-xs text-muted-foreground flex items-center gap-1">
                             <Repeat className="w-3 h-3" />
                             Daily Task
+                            {task.dueTime && (
+                                <>
+                                    <span className="mx-1">•</span>
+                                    <Clock className="w-3 h-3" />
+                                    {task.dueTime}
+                                </>
+                            )}
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-1 text-cyan-500 font-bold bg-cyan-500/10 px-2 py-1 rounded-lg text-xs">
-                    <ListTodo className="w-3 h-3" />
-                    Task
+                    {completionRate}%
                 </div>
             </div>
+
+            {/* Completion Chart - Last 14 days */}
+            <div className="flex gap-1 h-8 mb-4 items-end">
+                {history.map((completed, i) => (
+                    <div
+                        key={i}
+                        className={cn(
+                            "flex-1 rounded-sm transition-all",
+                            completed
+                                ? "bg-cyan-500/60 h-full"
+                                : "bg-secondary h-2"
+                        )}
+                        title={`Day ${i + 1}: ${completed ? 'Completed' : 'Missed'}`}
+                    />
+                ))}
+            </div>
+
+            {/* Time Picker Display */}
+            {task.dueTime && (
+                <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-cyan-500/5 border border-cyan-500/10 rounded-xl text-sm">
+                    <Clock className="w-4 h-4 text-cyan-500" />
+                    <span className="text-muted-foreground">Scheduled:</span>
+                    <span className="text-foreground font-medium">{task.dueTime}</span>
+                </div>
+            )}
 
             <Button
                 onClick={onToggle}
