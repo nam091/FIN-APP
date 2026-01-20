@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useAppState, Task } from "@/context/app-state-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
+import { TimePicker } from "@/components/ui/time-picker";
 import { X, ListTodo, Briefcase, Clock, Bell, Calendar, Repeat, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -147,28 +149,24 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                     </div>
                 </div>
 
-                {/* Date & Time Row */}
+                {/* Date & Time Row - Custom Pickers */}
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1 flex items-center gap-1.5">
                             <Calendar className="w-3.5 h-3.5" /> Due Date
                         </label>
-                        <Input
-                            type="date"
+                        <DatePicker
                             value={dueDate}
-                            onChange={(e) => setDueDate(e.target.value)}
-                            className="bg-secondary/50 border-border rounded-2xl h-14 px-4 focus-visible:ring-violet-500/30 focus-visible:border-violet-500 text-base cursor-pointer hover:border-violet-500/50 transition-all [color-scheme:dark]"
+                            onChange={setDueDate}
                         />
                     </div>
                     <div className="space-y-2">
                         <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1 flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5" /> Time
                         </label>
-                        <Input
-                            type="time"
+                        <TimePicker
                             value={dueTime}
-                            onChange={(e) => setDueTime(e.target.value)}
-                            className="bg-secondary/50 border-border rounded-2xl h-14 px-4 focus-visible:ring-violet-500/30 focus-visible:border-violet-500 text-base cursor-pointer hover:border-violet-500/50 transition-all [color-scheme:dark]"
+                            onChange={setDueTime}
                         />
                     </div>
                 </div>
