@@ -124,6 +124,11 @@ interface AppState {
     chatHistory: ChatMessage[];
     setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
     trackers: any[];
+    setTrackers: React.Dispatch<React.SetStateAction<any[]>>;
+    addTracker: (tracker: any) => Promise<void>;
+    updateTracker: (id: string, tracker: any) => Promise<void>;
+    deleteTracker: (id: string) => Promise<void>;
+    toggleTrackerEntry: (id: string, date: string) => Promise<void>;
     t: (key: TranslationKey) => string;
 }
 
@@ -557,6 +562,74 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         return summary;
     }, [transactions]);
 
+    // Tracker management functions
+    const addTracker = async (tracker: any) => {
+        try {
+            const res = await fetch("/api/trackers", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(tracker),
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setTrackers(prev => [data, ...prev]);
+            }
+        } catch (error) { console.error(error); }
+    };
+
+    const updateTracker = async (id: string, tracker: any) => {
+        try {
+            const res = await fetch(`/api/trackers/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(tracker),
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setTrackers(prev => prev.map(t => t.id === id ? { ...t, ...data } : t));
+            }
+        } catch (error) { console.error(error); }
+    };
+
+    const deleteTracker = async (id: string) => {
+        try {
+            const res = await fetch(`/api/trackers/${id}`, { method: "DELETE" });
+            if (res.ok) {
+                setTrackers(prev => prev.filter(t => t.id !== id));
+            }
+        } catch (error) { console.error(error); }
+    };
+
+    const toggleTrackerEntry = async (id: string, date: string) => {
+        // Optimistic update
+        setTrackers(prev => prev.map(t => {
+            if (t.id !== id) return t;
+            const entries = t.entries || [];
+            const existingEntryIndex = entries.findIndex((e: any) => e.date === date);
+            let newEntries = [...entries];
+            const goal = t.goal || 1;
+
+            if (existingEntryIndex >= 0) {
+                if (newEntries[existingEntryIndex].value >= goal) {
+                    newEntries[existingEntryIndex].value = 0;
+                } else {
+                    newEntries[existingEntryIndex].value = goal;
+                }
+            } else {
+                newEntries.push({ date, value: goal });
+            }
+            return { ...t, entries: newEntries };
+        }));
+
+        try {
+            await fetch(`/api/trackers/${id}/entries`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ date })
+            });
+        } catch (error) { console.error(error); }
+    };
+
     return (
         <AppStateContext.Provider value={{
             activeTab,
@@ -596,6 +669,11 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             chatHistory,
             setChatHistory,
             trackers,
+            setTrackers,
+            addTracker,
+            updateTracker,
+            deleteTracker,
+            toggleTrackerEntry,
             t: (key: TranslationKey) => {
                 const lang = (userSettings.language as "en" | "vi") || "en";
                 return translations[lang][key] || translations.en[key] || key;
