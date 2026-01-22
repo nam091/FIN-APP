@@ -5,6 +5,7 @@ import { Check, ListTodo, Repeat, Clock, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { getLocalDateString } from "@/lib/date-utils";
+import { useAppState } from "@/context/app-state-context";
 
 interface CompletionLog {
     date: string;
@@ -19,6 +20,7 @@ interface DailyTaskCardProps {
 }
 
 export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogCompletion }: DailyTaskCardProps) {
+    const { t } = useAppState();
     const today = getLocalDateString();
 
     // Create a map of completed dates
@@ -110,7 +112,7 @@ export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogComple
                         <h3 className="font-semibold text-foreground">{task.title}</h3>
                         <p className="text-xs text-muted-foreground flex items-center gap-1">
                             <Repeat className="w-3 h-3" />
-                            Daily Task
+                            {t("dailyTask")}
                             {task.dueTime && (
                                 <>
                                     <span className="mx-1">•</span>
@@ -141,7 +143,7 @@ export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogComple
                     {completionRate}%
                 </div>
                 <span className="text-muted-foreground">
-                    {completedCount}/{totalDays} ngày
+                    {completedCount}/{totalDays} {t("days")}
                 </span>
             </div>
 
@@ -164,7 +166,7 @@ export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogComple
                                 !isBeforeCreation && !isFuture && !isCompleted && "bg-secondary h-2",
                                 isToday && "ring-1 ring-cyan-500 ring-offset-1 ring-offset-background"
                             )}
-                            title={`${date}: ${isBeforeCreation ? 'Not tracked' : isCompleted ? 'Completed' : 'Missed'}`}
+                            title={`${date}: ${isBeforeCreation ? t("notTracked") : isCompleted ? t("completed") : t("missed")}`}
                         />
                     );
                 })}
@@ -174,7 +176,7 @@ export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogComple
             {task.dueTime && (
                 <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-cyan-500/5 border border-cyan-500/10 rounded-xl text-sm">
                     <Clock className="w-4 h-4 text-cyan-500" />
-                    <span className="text-muted-foreground">Scheduled:</span>
+                    <span className="text-muted-foreground">{t("scheduled")}</span>
                     <span className="text-foreground font-medium">{task.dueTime}</span>
                 </div>
             )}
@@ -191,10 +193,10 @@ export function DailyTaskCard({ task, completionLogs = [], onToggle, onLogComple
                 {isCompletedToday ? (
                     <>
                         <Check className="w-5 h-5 mr-2" />
-                        Completed
+                        {t("completed")}
                     </>
                 ) : (
-                    "Mark as Done"
+                    t("markAsDone")
                 )}
             </Button>
         </div>

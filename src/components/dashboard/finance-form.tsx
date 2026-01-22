@@ -36,7 +36,7 @@ interface FinanceFormProps {
 }
 
 export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
-    const { addTransaction, updateTransaction } = useAppState();
+    const { addTransaction, updateTransaction, t } = useAppState();
 
     const [title, setTitle] = useState("");
     const [amount, setAmount] = useState("");
@@ -81,7 +81,7 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
         <div className="flex flex-col h-[85vh] md:h-full bg-background rounded-t-[32px] md:rounded-3xl border border-border overflow-hidden">
             {/* Fixed Header */}
             <div className="flex justify-between items-center p-6 pb-4 border-b border-border/50">
-                <h2 className="text-2xl font-bold text-foreground">{editingTransaction ? "Edit Transaction" : "New Transaction"}</h2>
+                <h2 className="text-2xl font-bold text-foreground">{editingTransaction ? t("editTransaction") : t("newTransaction")}</h2>
                 <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-secondary">
                     <X className="w-6 h-6 text-muted-foreground" />
                 </Button>
@@ -102,7 +102,7 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
                             type === "expense" ? "bg-background text-rose-500 shadow-lg" : "text-muted-foreground"
                         )}
                     >
-                        Expense
+                        {t("expense")}
                     </button>
                     <button
                         type="button"
@@ -112,14 +112,14 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
                             type === "income" ? "bg-background text-emerald-500 shadow-lg" : "text-muted-foreground"
                         )}
                     >
-                        Income
+                        {t("income")}
                     </button>
                 </div>
 
                 <div className="space-y-5">
                     {/* Amount Input */}
                     <div className="space-y-2">
-                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">Amount</label>
+                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">{t("amount")}</label>
                         <div className="relative">
                             <Input
                                 type="text"
@@ -139,9 +139,9 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
 
                     {/* Title */}
                     <div className="space-y-2">
-                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">Title</label>
+                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">{t("title")}</label>
                         <Input
-                            placeholder="What was this for?"
+                            placeholder={t("transactionPlaceholder")}
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             className="bg-secondary/50 border-border rounded-2xl h-14 px-5 focus-visible:ring-indigo-500/30 text-base"
@@ -150,9 +150,9 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
 
                     {/* Category */}
                     <div className="space-y-2">
-                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">Category</label>
+                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">{t("category")}</label>
                         <Input
-                            placeholder="e.g. Food, Transport, Rent"
+                            placeholder={t("categoryPlaceholder")}
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                             className="bg-secondary/50 border-border rounded-2xl h-14 px-5 focus-visible:ring-indigo-500/30 text-base"
@@ -161,7 +161,7 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
 
                     {/* Icon Selection */}
                     <div className="space-y-3">
-                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">Icon</label>
+                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">{t("icon")}</label>
                         <div className="flex flex-wrap gap-3">
                             {ICONS.map((item) => (
                                 <button
@@ -184,7 +184,7 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
                     {/* Date - Custom DatePicker */}
                     <div className="space-y-2">
                         <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1 flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5" /> Date
+                            <Calendar className="w-3.5 h-3.5" /> {t("date")}
                         </label>
                         <DatePicker value={date} onChange={setDate} />
                     </div>
@@ -196,7 +196,7 @@ export function FinanceForm({ editingTransaction, onClose }: FinanceFormProps) {
                         type="submit"
                         className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold h-16 rounded-2xl text-lg shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
-                        {editingTransaction ? "Save Changes" : "Create Transaction"}
+                        {editingTransaction ? t("saveChanges") : t("addTransaction")}
                     </Button>
                 </div>
             </form>

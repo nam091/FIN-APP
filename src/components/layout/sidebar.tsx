@@ -19,15 +19,15 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function Sidebar() {
-    const { activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen } = useAppState();
+    const { activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen, t } = useAppState();
 
     const navItems = [
-        { id: "home", label: "Home", icon: Home },
-        { id: "finance", label: "Finance", icon: Wallet },
-        { id: "tasks", label: "Tasks", icon: ListTodo },
-        { id: "notes", label: "Notes", icon: BookOpen },
-        { id: "tracking", label: "Tracking", icon: Activity },
-        { id: "ai", label: "AI Assistant", icon: MessageSquare },
+        { id: "home", label: t("home"), icon: Home },
+        { id: "finance", label: t("finance"), icon: Wallet },
+        { id: "tasks", label: t("tasks"), icon: ListTodo },
+        { id: "tracking", label: t("tracking"), icon: Activity },
+        { id: "notes", label: t("notes"), icon: BookOpen },
+        { id: "ai", label: t("aiAssistant"), icon: MessageSquare },
     ];
 
     return (
@@ -75,7 +75,7 @@ export function Sidebar() {
                         !isSidebarOpen && "justify-center text-center"
                     )}>
                         <Bell className="w-5 h-5 shrink-0" />
-                        {isSidebarOpen && <span className="ml-4 text-sm font-medium">Notifications</span>}
+                        {isSidebarOpen && <span className="ml-4 text-sm font-medium">{t("notifications")}</span>}
                     </button>
                     <button
                         onClick={() => setActiveTab("settings")}
@@ -88,7 +88,7 @@ export function Sidebar() {
                         )}
                     >
                         <Settings className="w-5 h-5 shrink-0" />
-                        {isSidebarOpen && <span className="ml-4 text-sm font-medium">Settings</span>}
+                        {isSidebarOpen && <span className="ml-4 text-sm font-medium">{t("settings")}</span>}
                     </button>
                 </div>
             </div>

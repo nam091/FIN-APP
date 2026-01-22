@@ -10,7 +10,7 @@ import {
     Sparkles,
     User,
     Bot,
-    MoreHorizontal,
+    Settings,
     ChevronLeft,
     CheckCircle2,
     Wallet,
@@ -49,19 +49,27 @@ export function AIChat() {
         notes,
         userSettings,
         chatHistory,
-        setChatHistory
+        setChatHistory,
+        t
     } = useAppState();
 
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [chatHistory]);
+
+    if (!isMounted) return <div className="flex-1 bg-background" />;
 
     const parseMarkdown = (text: string) => {
         // Enhanced markdown parsing for bold, italics, lists, and code
@@ -116,7 +124,7 @@ export function AIChat() {
             setChatHistory(prev => [...prev, {
                 id: Date.now(),
                 role: "assistant",
-                content: "Sorry, I had trouble processing that request. Please try again."
+                content: t("chatError")
             }]);
         } finally {
             setIsLoading(false);
@@ -144,18 +152,18 @@ export function AIChat() {
         const confirmMsg: ChatMessage = {
             id: Date.now(),
             role: "assistant",
-            content: "Done! I've added it to your records."
+            content: t("addedSuccessfully")
         };
         setChatHistory(prev => [...prev, confirmMsg]);
     };
 
     const handleClearChat = () => {
-        if (confirm("Are you sure you want to clear chat history?")) {
+        if (confirm(t("clearHistoryConfirm"))) {
             setChatHistory([
                 {
                     id: Date.now(),
                     role: "assistant",
-                    content: "History cleared. How can I help you today?"
+                    content: t("historyCleared")
                 }
             ]);
             setShowMoreMenu(false);
@@ -180,7 +188,7 @@ export function AIChat() {
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
                                 <Sparkles className="w-4 h-4 text-white" />
                             </div>
-                            FinApp AI
+                            {t("finAppAi")}
                         </h1>
                     </div>
                 </div>
@@ -191,7 +199,7 @@ export function AIChat() {
                         className="w-10 h-10 rounded-full bg-secondary"
                         onClick={() => setShowMoreMenu(!showMoreMenu)}
                     >
-                        <MoreHorizontal className="text-muted-foreground w-5 h-5" />
+                        <Settings className="text-muted-foreground w-5 h-5" />
                     </Button>
 
                     {showMoreMenu && (
@@ -205,7 +213,7 @@ export function AIChat() {
                                     className="w-full text-left p-3 text-sm font-medium text-popover-foreground hover:bg-accent rounded-xl transition-colors"
                                     onClick={handleClearChat}
                                 >
-                                    Clear History
+                                    {t("clearHistory")}
                                 </button>
                                 <button
                                     className="w-full text-left p-3 text-sm font-medium text-popover-foreground hover:bg-accent rounded-xl transition-colors"
@@ -214,7 +222,7 @@ export function AIChat() {
                                         setShowMoreMenu(false);
                                     }}
                                 >
-                                    AI Settings
+                                    {t("aiSettings")}
                                 </button>
                             </Card>
                         </>
@@ -236,14 +244,14 @@ export function AIChat() {
                                     : "bg-gradient-to-br from-indigo-500 to-purple-600"
                             )}>
                                 {msg.role === "user" ? (
-                                    userSettings.ai.userAvatar ? <img src={userSettings.ai.userAvatar} className="w-full h-full object-cover" alt="User" /> : <User className="w-5 h-5 text-white" />
+                                    userSettings.ai.userAvatar ? <img src={userSettings.ai.userAvatar} className="w-full h-full object-cover" alt={t("user")} /> : <User className="w-5 h-5 text-white" />
                                 ) : (
-                                    userSettings.ai.aiAvatar ? <img src={userSettings.ai.aiAvatar} className="w-full h-full object-cover" alt="AI" /> : <Zap className="w-5 h-5 text-white" />
+                                    userSettings.ai.aiAvatar ? <img src={userSettings.ai.aiAvatar} className="w-full h-full object-cover" alt={t("ai")} /> : <Zap className="w-5 h-5 text-white" />
                                 )}
                             </div>
                             <div className="space-y-3">
                                 <div className={cn(
-                                    "px-7 py-4 rounded-[32px] text-[15px] leading-[1.6] shadow-xl",
+                                    "px-7 py-4 rounded-[32px] text-sm leading-[1.6] shadow-xl",
                                     msg.role === "user"
                                         ? "bg-primary text-primary-foreground rounded-br-lg font-medium"
                                         : "bg-card text-card-foreground rounded-bl-lg border border-border/50"
@@ -274,7 +282,7 @@ export function AIChat() {
                                                 onClick={() => handleActionConfirm(msg.id)}
                                                 className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-full px-5 h-9"
                                             >
-                                                <CheckCircle2 className="w-4 h-4 mr-2" /> Confirm
+                                                <CheckCircle2 className="w-4 h-4 mr-2" /> {t("confirm")}
                                             </Button>
                                         </div>
                                     </Card>
@@ -290,14 +298,14 @@ export function AIChat() {
                                                 </div>
                                                 <div>
                                                     <p className="font-semibold text-white">{msg.action.data.title}</p>
-                                                    <p className="text-xs text-zinc-500">New Task</p>
+                                                    <p className="text-xs text-zinc-500">{t("addTask")}</p>
                                                 </div>
                                             </div>
                                             <Button
                                                 onClick={() => handleActionConfirm(msg.id)}
                                                 className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-full px-5 h-9"
                                             >
-                                                <CheckCircle2 className="w-4 h-4 mr-2" /> Create
+                                                <CheckCircle2 className="w-4 h-4 mr-2" /> {t("new")}
                                             </Button>
                                         </div>
                                     </Card>
@@ -305,7 +313,7 @@ export function AIChat() {
 
                                 {msg.action && msg.action.status === "completed" && (
                                     <div className="flex items-center gap-2 text-emerald-500 text-xs font-medium">
-                                        <CheckCircle2 className="w-4 h-4" /> Added successfully
+                                        <CheckCircle2 className="w-4 h-4" /> {t("addedSuccessfully")}
                                     </div>
                                 )}
 
@@ -313,19 +321,19 @@ export function AIChat() {
                                 {msg.action && msg.action.type === "show_summary" && (
                                     <Card className="bg-card/80 border-border rounded-2xl p-4 backdrop-blur-sm grid grid-cols-3 gap-4">
                                         <div className="text-center">
-                                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mb-1">Hôm nay</p>
+                                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mb-1">{t("today")}</p>
                                             <p className={cn("text-lg font-bold", financeSummary.today.balance >= 0 ? "text-emerald-400" : "text-rose-400")}>
                                                 {financeSummary.today.balance >= 0 ? "+" : ""}{formatVND(financeSummary.today.balance)}
                                             </p>
                                         </div>
                                         <div className="text-center border-x border-zinc-800">
-                                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mb-1">Tuần</p>
+                                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mb-1">{t("thisWeek")}</p>
                                             <p className={cn("text-lg font-bold", financeSummary.week.balance >= 0 ? "text-emerald-400" : "text-rose-400")}>
                                                 {financeSummary.week.balance >= 0 ? "+" : ""}{formatVND(financeSummary.week.balance)}
                                             </p>
                                         </div>
                                         <div className="text-center">
-                                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mb-1">Tháng</p>
+                                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mb-1">{t("thisMonth")}</p>
                                             <p className={cn("text-lg font-bold", financeSummary.month.balance >= 0 ? "text-emerald-400" : "text-rose-400")}>
                                                 {financeSummary.month.balance >= 0 ? "+" : ""}{formatVND(financeSummary.month.balance)}
                                             </p>
@@ -351,14 +359,14 @@ export function AIChat() {
                         </div>
                     </div>
                 )}
-                <div className="h-40 md:h-20" />
+                <div className="h-28 md:h-20" />
             </div>
 
-            <div className="absolute bottom-32 left-0 right-0 px-6 z-20 md:bottom-8">
+            <div className="absolute bottom-8 left-0 right-0 px-6 z-20 md:bottom-8">
                 <div className="max-w-4xl mx-auto flex items-center gap-3 bg-secondary/90 backdrop-blur-2xl p-3 px-8 rounded-full border border-border/50 shadow-[0_20px_60px_rgba(0,0,0,0.4)] transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/20">
                     <input
                         className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-[15px] h-11 p-0 placeholder:text-zinc-600 font-medium text-foreground w-full"
-                        placeholder="Ask about your finances or create a task..."
+                        placeholder={t("chatPlaceholder")}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && handleSend()}

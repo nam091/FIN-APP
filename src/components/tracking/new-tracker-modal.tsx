@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { useAppState } from "@/context/app-state-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,6 +47,7 @@ const COLORS = [
 ];
 
 export function NewTrackerModal({ open, onOpenChange, onSave, editingTracker }: NewTrackerModalProps) {
+    const { t } = useAppState();
     const [title, setTitle] = React.useState("");
     const [description, setDescription] = React.useState("");
     const [selectedIcon, setSelectedIcon] = React.useState("Activity");
@@ -86,32 +88,32 @@ export function NewTrackerModal({ open, onOpenChange, onSave, editingTracker }: 
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px] bg-card border-border">
                 <DialogHeader>
-                    <DialogTitle>{editingTracker ? "Edit Habit" : "Create New Habit"}</DialogTitle>
+                    <DialogTitle>{editingTracker ? t("editHabit") : t("newHabit")}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 py-4">
                     <div className="space-y-2">
-                        <Label htmlFor="title">Habit Name</Label>
+                        <Label htmlFor="title">{t("habitName")}</Label>
                         <Input
                             id="title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            placeholder="e.g. Morning Jog"
+                            placeholder={t("habitPlaceholder")}
                             required
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="description">Description (Optional)</Label>
+                        <Label htmlFor="description">{t("descriptionOptional")}</Label>
                         <Input
                             id="description"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Keep it up!"
+                            placeholder={t("descriptionPlaceholder")}
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Icon</Label>
+                        <Label>{t("icon")}</Label>
                         <div className="flex flex-wrap gap-2">
                             {ICONS.map((item) => (
                                 <button
@@ -132,7 +134,7 @@ export function NewTrackerModal({ open, onOpenChange, onSave, editingTracker }: 
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Color</Label>
+                        <Label>{t("color")}</Label>
                         <div className="flex flex-wrap gap-2">
                             {COLORS.map((item) => (
                                 <button
@@ -153,7 +155,7 @@ export function NewTrackerModal({ open, onOpenChange, onSave, editingTracker }: 
 
                     <DialogFooter>
                         <Button type="submit" disabled={!title}>
-                            {editingTracker ? "Save Changes" : "Create Habit"}
+                            {editingTracker ? t("saveChanges") : t("createHabit")}
                         </Button>
                     </DialogFooter>
                 </form>

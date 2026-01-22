@@ -5,23 +5,25 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
     ChevronLeft,
-    MoreHorizontal,
-    Wallet,
-    Search,
+    Trash2,
+    Edit2,
+    Settings,
+    ChevronDown,
+    ChevronUp,
     Utensils,
     ShoppingBag,
     Briefcase,
     Car,
     Dumbbell,
+    Heart,
+    Zap,
+    Coffee,
+    Search,
+    Wallet,
     Plus,
     ArrowUpRight,
     ArrowDownLeft,
-    Calendar,
-    Coffee,
-    Heart,
-    Zap,
-    Trash2,
-    Edit2
+    Calendar
 } from "lucide-react";
 import { useAppState, Transaction } from "@/context/app-state-context";
 import { cn } from "@/lib/utils";
@@ -53,11 +55,13 @@ export function FinanceDashboard() {
         setActiveTab,
         transactions,
         financeSummary,
-        deleteTransaction
+        deleteTransaction,
+        t
     } = useAppState();
 
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingTx, setEditingTx] = useState<Transaction | null>(null);
+    const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
 
     const handleEdit = (tx: Transaction) => {
         setEditingTx(tx);
@@ -104,10 +108,10 @@ export function FinanceDashboard() {
                         onClick={handleAdd}
                         className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-full px-5 h-10 flex items-center gap-2"
                     >
-                        <Plus className="w-4 h-4" /> New
+                        <Plus className="w-4 h-4" /> {t("new")}
                     </Button>
                     <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-secondary" onClick={() => setActiveTab("settings")}>
-                        <MoreHorizontal className="text-muted-foreground w-5 h-5" />
+                        <Settings className="text-muted-foreground w-5 h-5" />
                     </Button>
                 </div>
             </header>
@@ -115,20 +119,20 @@ export function FinanceDashboard() {
             <div className="flex-1 overflow-y-auto no-scrollbar px-6">
                 <div className="max-w-4xl mx-auto w-full pb-64 md:pb-32">
                     <div className="flex flex-col mt-2 mb-8">
-                        <h1 className="text-5xl font-bold tracking-tight text-foreground">Today</h1>
+                        <h1 className="text-5xl font-bold tracking-tight text-foreground">{t("today")}</h1>
                         <div className="flex items-center gap-4 mt-4">
                             <div className="flex flex-col">
-                                <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest">Income</span>
+                                <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest">{t("income")}</span>
                                 <span className="text-emerald-500 text-xl font-bold">{formatVND(financeSummary.today.income)}</span>
                             </div>
                             <div className="w-px h-8 bg-border" />
                             <div className="flex flex-col">
-                                <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest">Expense</span>
+                                <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest">{t("expense")}</span>
                                 <span className="text-rose-500 text-xl font-bold">-{formatVND(financeSummary.today.expense)}</span>
                             </div>
                             <div className="w-px h-8 bg-border ml-auto" />
                             <div className="flex flex-col items-end">
-                                <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest">Balance</span>
+                                <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest">{t("balance")}</span>
                                 <span className={cn("text-xl font-bold", financeSummary.today.balance >= 0 ? "text-foreground" : "text-rose-500")}>
                                     {financeSummary.today.balance < 0 ? "-" : ""}{formatVND(Math.abs(financeSummary.today.balance))}
                                 </span>
@@ -136,39 +140,54 @@ export function FinanceDashboard() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                        <AggregationCard
-                            title="This Week"
-                            inflow={financeSummary.week.income}
-                            outflow={financeSummary.week.expense}
-                            balance={financeSummary.week.balance}
-                            accent="indigo"
-                        />
-                        <AggregationCard
-                            title="This Month"
-                            inflow={financeSummary.month.income}
-                            outflow={financeSummary.month.expense}
-                            balance={financeSummary.month.balance}
-                            accent="purple"
-                        />
+                    <div className="mb-4">
+                        <Button
+                            variant="ghost"
+                            className="text-muted-foreground flex items-center gap-2 p-0 h-auto hover:bg-transparent"
+                            onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
+                        >
+                            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60">
+                                {isSummaryExpanded ? t("hideSummary") : t("showSummary")}
+                            </span>
+                            {isSummaryExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                        </Button>
                     </div>
+
+                    {isSummaryExpanded && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <AggregationCard
+                                title={t("thisWeek")}
+                                inflow={financeSummary.week.income}
+                                outflow={financeSummary.week.expense}
+                                balance={financeSummary.week.balance}
+                                accent="indigo"
+                            />
+                            <AggregationCard
+                                title={t("thisMonth")}
+                                inflow={financeSummary.month.income}
+                                outflow={financeSummary.month.expense}
+                                balance={financeSummary.month.balance}
+                                accent="purple"
+                            />
+                        </div>
+                    )}
 
                     <div className="flex space-x-2 mb-8 overflow-x-auto no-scrollbar pb-2">
                         <Button variant="ghost" size="icon" className="shrink-0 w-10 h-10 bg-secondary rounded-full">
                             <Search className="w-4 h-4 text-muted-foreground" />
                         </Button>
                         <FilterButton
-                            label="All transactions"
+                            label={t("allTransactions")}
                             active={financeFilter === "All"}
                             onClick={() => setFinanceFilter("All")}
                         />
                         <FilterButton
-                            label="Income"
+                            label={t("income")}
                             active={financeFilter === "Income"}
                             onClick={() => setFinanceFilter("Income")}
                         />
                         <FilterButton
-                            label="Savings"
+                            label={t("tracking")}
                             active={financeFilter === "Savings"}
                             onClick={() => setFinanceFilter("Savings")}
                         />
@@ -179,10 +198,10 @@ export function FinanceDashboard() {
                             <div key={date}>
                                 <div className="flex items-center justify-between mb-4 px-1">
                                     <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60">
-                                        {date === todayStr ? "Today" : date}
+                                        {date === todayStr ? t("today") : date}
                                     </h3>
                                     <span className="text-[10px] text-muted-foreground/40 font-medium">
-                                        {groupedTransactions[date].length} activities
+                                        {groupedTransactions[date].length} {t("activities")}
                                     </span>
                                 </div>
                                 <div className="space-y-1">

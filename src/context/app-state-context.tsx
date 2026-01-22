@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { getLocalDateString } from "@/lib/date-utils";
+import { translations, TranslationKey } from "@/lib/translations";
 
 type TabType = "home" | "finance" | "tasks" | "notes" | "tracking" | "ai" | "settings" | "add";
 
@@ -86,6 +87,8 @@ interface UserSettings {
         userAvatar?: string;
         aiAvatar?: string;
     };
+    language: string;
+    t: (key: TranslationKey) => string;
 }
 
 interface AppState {
@@ -187,10 +190,11 @@ const initialSettings: UserSettings = {
     ai: {
         endpoint: "http://159.223.33.155:8317/v1",
         apiKey: "proxypal-apikey",
-        model: "gpt-4o",
+        model: "gemini-3-flash-preview",
         userAvatar: "",
         aiAvatar: ""
-    }
+    },
+    language: "en"
 };
 
 export function AppStateProvider({ children }: { children: ReactNode }) {
@@ -217,6 +221,13 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
                     setTasks(data.tasks || []);
                     setTransactions(data.transactions || []);
                     setNotes(data.notes || []);
+                    // Load from localStorage as fallback/priority
+                    const localLang = localStorage.getItem("finapp_language");
+                    if (localLang) {
+                        setUserSettings(prev => ({ ...prev, language: localLang }));
+                        document.documentElement.lang = localLang;
+                    }
+
                     if (data.settings) {
                         const parsedData = typeof data.settings.data === 'string'
                             ? JSON.parse(data.settings.data)
@@ -580,7 +591,11 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             addNotificationHook,
             removeNotificationHook,
             chatHistory,
-            setChatHistory
+            setChatHistory,
+            t: (key: TranslationKey) => {
+                const lang = (userSettings.language as "en" | "vi") || "en";
+                return translations[lang][key] || translations.en[key] || key;
+            }
         }}>
             {children}
         </AppStateContext.Provider>

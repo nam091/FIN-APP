@@ -22,7 +22,8 @@ import {
     Share2,
     RefreshCw,
     Pencil,
-    Trash2
+    Trash2,
+    Settings
 } from "lucide-react";
 import { useAppState, Task } from "@/context/app-state-context";
 import { cn } from "@/lib/utils";
@@ -36,7 +37,7 @@ import { useRef } from "react";
 import { BackgroundDots } from "@/components/ui/background-dots";
 
 export function TaskList() {
-    const { setActiveTab, tasks, toggleTask, deleteTask, dismissedItems, dismissItem, userSettings } = useAppState();
+    const { setActiveTab, tasks, toggleTask, deleteTask, dismissedItems, dismissItem, userSettings, t } = useAppState();
     const [filter, setFilter] = useState("All");
     const [sortBy, setSortBy] = useState<"created" | "name" | "date">("created");
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -73,9 +74,9 @@ export function TaskList() {
     };
 
     const getSortLabel = () => {
-        if (sortBy === "name") return "Name";
-        if (sortBy === "date") return "Date";
-        return "Created";
+        if (sortBy === "name") return t("name");
+        if (sortBy === "date") return t("date");
+        return t("created");
     };
 
 
@@ -114,14 +115,14 @@ export function TaskList() {
                         onClick={handleAddTask}
                         className="bg-violet-600 hover:bg-violet-500 text-white font-bold rounded-full px-5 h-10 flex items-center gap-2"
                     >
-                        <Plus className="w-4 h-4" /> New Task
+                        <Plus className="w-4 h-4" /> {t("addTask")}
                     </Button>
                     <Button variant="ghost" className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-muted-foreground h-10" onClick={cycleSortBy}>
                         <ArrowUpAz className="w-4 h-4 text-violet-500" />
                         <span className="text-sm font-medium hidden md:inline">{getSortLabel()}</span>
                     </Button>
                     <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-secondary" onClick={() => setActiveTab("settings")}>
-                        <MoreHorizontal className="text-muted-foreground w-5 h-5" />
+                        <Settings className="text-muted-foreground w-5 h-5" />
                     </Button>
                 </div>
             </header>
@@ -129,17 +130,17 @@ export function TaskList() {
             {/* Replaced ScrollArea with a native scrollable div */}
             <div className="flex-1 overflow-y-auto no-scrollbar px-6">
                 <div className="max-w-4xl mx-auto w-full pb-72 md:pb-20">
-                    <h1 className="text-5xl font-extrabold tracking-tight mb-6 mt-4">Tasks</h1>
+                    <h1 className="text-5xl font-extrabold tracking-tight mb-6 mt-4">{t("tasks")}</h1>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                         {isTaskInfoVisible && (
-                            <div className="bg-secondary/80 border border-border p-6 rounded-[24px] flex flex-col justify-between transition-all animate-in fade-in slide-in-from-top-4">
+                            <div className="bg-secondary/80 border border-border p-6 rounded-[32px] flex flex-col justify-between transition-all animate-in fade-in slide-in-from-top-4">
                                 <div className="flex gap-4 mb-6">
                                     <div className="shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-violet-500/10 text-violet-500">
                                         <Library className="w-7 h-7" />
                                     </div>
                                     <p className="text-muted-foreground text-lg leading-snug">
-                                        View, sort, and access all of your tasks in one place
+                                        {t("overview")}
                                     </p>
                                 </div>
                                 <div className="flex gap-3">
@@ -148,24 +149,24 @@ export function TaskList() {
                                         className="flex-1 py-3 px-4 rounded-full bg-background border border-border text-muted-foreground font-semibold text-sm h-12"
                                         onClick={() => alert("Task management tips: Use swipe gestures to reveal more options!")}
                                     >
-                                        Learn more
+                                        {t("learnMore")}
                                     </Button>
                                     <Button
                                         variant="ghost"
                                         className="flex-1 py-3 px-4 rounded-full bg-background border border-border text-muted-foreground font-semibold text-sm h-12"
                                         onClick={() => dismissItem("task-info-card")}
                                     >
-                                        Dismiss
+                                        {t("dismiss")}
                                     </Button>
                                 </div>
                             </div>
                         )}
 
                         <div className={cn("hidden lg:grid grid-cols-2 gap-4", !isTaskInfoVisible && "lg:col-span-2 lg:grid-cols-4")}>
-                            <TaskStatCard label="Completed" value={tasks.filter(t => t.completed).length.toString()} color="text-emerald-500" />
-                            <TaskStatCard label="Pending" value={tasks.filter(t => !t.completed).length.toString()} color="text-amber-500" />
-                            <TaskStatCard label="High Priority" value="3" color="text-rose-500" />
-                            <TaskStatCard label="Projects" value="4" color="text-indigo-500" />
+                            <TaskStatCard label={t("completed")} value={tasks.filter(t => t.completed).length.toString()} color="text-emerald-500" />
+                            <TaskStatCard label={t("pending")} value={tasks.filter(t => !t.completed).length.toString()} color="text-amber-500" />
+                            <TaskStatCard label={t("highPriority")} value="3" color="text-rose-500" />
+                            <TaskStatCard label={t("projects")} value="4" color="text-indigo-500" />
                         </div>
                     </div>
 
@@ -189,14 +190,14 @@ export function TaskList() {
                                 </div>
                             )}
                         </div>
-                        <FilterTab label="All" active={filter === "All"} onClick={() => setFilter("All")} />
-                        <FilterTab label="Tasks for me" active={filter === "Tasks for me"} onClick={() => setFilter("Tasks for me")} />
-                        <FilterTab label="Others" active={filter === "Others"} onClick={() => setFilter("Others")} />
-                        <FilterTab label="Upcoming" active={filter === "Upcoming"} onClick={() => setFilter("Upcoming")} />
+                        <FilterTab label={t("all")} active={filter === "All"} onClick={() => setFilter("All")} />
+                        <FilterTab label={t("tasksForMe")} active={filter === "Tasks for me"} onClick={() => setFilter("Tasks for me")} />
+                        <FilterTab label={t("tasksOthers")} active={filter === "Others"} onClick={() => setFilter("Others")} />
+                        <FilterTab label={t("tasksUpcoming")} active={filter === "Upcoming"} onClick={() => setFilter("Upcoming")} />
                     </div>
 
                     <div className="space-y-2">
-                        {sortedTasks.map((task) => (
+                        {sortedTasks.length > 0 ? sortedTasks.map((task) => (
                             <SwipeToReveal
                                 key={task.id}
                                 onDelete={() => deleteTask(task.id)}
@@ -230,7 +231,7 @@ export function TaskList() {
                                             <span className="text-sm">{task.project}</span>
                                         </div>
                                     </div>
-                                    <div className="shrink-0 hidden md:block">
+                                    <div className="shrink-0 hidden md:block relative">
                                         <Button
                                             variant="ghost"
                                             size="icon"
@@ -254,13 +255,17 @@ export function TaskList() {
                                     </div>
                                 </div>
                             </SwipeToReveal>
-                        ))}
+                        )) : (
+                            <div className="text-center py-12 px-4 bg-secondary/20 rounded-[32px] border border-dashed border-border">
+                                <p className="text-muted-foreground">{t("noTasks")}</p>
+                            </div>
+                        )}
                     </div>
 
                     {!isTaskInfoVisible && (
                         <div className="mt-12 text-center">
                             <Button variant="ghost" className="text-muted-foreground text-sm hover:text-foreground" onClick={() => window.location.reload()}>
-                                Reset View
+                                {t("resetView")}
                             </Button>
                         </div>
                     )}
@@ -296,7 +301,7 @@ export function TaskList() {
                                 setMenuPosition(null);
                             }}
                         >
-                            <Pencil className="w-4 h-4" /> Edit
+                            <Pencil className="w-4 h-4" /> {t("edit")}
                         </button>
                         <button
                             className="w-full px-4 py-2 text-sm text-left hover:bg-secondary flex items-center gap-2 text-rose-500"
@@ -306,7 +311,7 @@ export function TaskList() {
                                 setMenuPosition(null);
                             }}
                         >
-                            <Trash2 className="w-4 h-4" /> Delete
+                            <Trash2 className="w-4 h-4" /> {t("delete")}
                         </button>
                     </div>
                 </>

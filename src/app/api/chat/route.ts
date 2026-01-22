@@ -5,10 +5,15 @@ export async function POST(req: Request) {
         const { messages, context, aiSettings } = await req.json();
 
         // Use provided settings or defaults
-        const endpoint = aiSettings?.endpoint || "http://proxy.allforpeople.ninja/v1/chat/completions";
-        const apiKey = aiSettings?.apiKey || "proxypal-local";
+        let endpoint = aiSettings?.endpoint || "http://159.223.33.155:8317/v1/chat/completions";
+        const apiKey = aiSettings?.apiKey || "proxypal-apikey";
         const model = aiSettings?.model || "gemini-3-flash-preview";
         const useDirectGemini = aiSettings?.useDirectGemini || false;
+
+        // Ensure endpoint ends with /chat/completions if it's not a direct Gemini endpoint
+        if (!endpoint.includes("/chat/completions") && !useDirectGemini) {
+            endpoint = endpoint.endsWith("/") ? `${endpoint}chat/completions` : `${endpoint}/chat/completions`;
+        }
 
         // Analyze financial behavior for personality adjustment
         const todayExpense = context.financeSummary?.today?.expense || 0;
@@ -120,20 +125,37 @@ VÍ DỤ CỤ THỂ:
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error("AI API Error:", errorText);
+            console.error("AI API Error. Endpoint:", endpoint);
+            console.error("Error Status:", response.status);
+            console.error("Error Body:", errorText);
             return NextResponse.json({
-                content: "I'm having trouble connecting to my brain right now. Please check your AI Configuration in Settings.",
+                content: "I'm having trouble connecting to my brain right now. Please check your AI Configuration in Settings. Error: " + errorText,
                 error: true
             }, { status: 500 });
         }
 
         const data = await response.json();
+        console.log("AI API Success. Data:", JSON.stringify(data).slice(0, 200) + "...");
+
+        if (!data.choices?.[0]?.message?.content) {
+            console.error("AI API returned unexpected format:", data);
+            throw new Error("Invalid response format from AI provider");
+        }
+
         const aiMessage = data.choices[0].message.content;
 
-        return NextResponse.json(JSON.parse(aiMessage));
+        try {
+            return NextResponse.json(JSON.parse(aiMessage));
+        } catch (e) {
+            console.error("Failed to parse AI message as JSON. Content:", aiMessage);
+            return NextResponse.json({
+                content: aiMessage,
+                error: false // Fallback to raw text if JSON parsing fails
+            });
+        }
 
     } catch (error: any) {
-        console.error("Chat API Error:", error);
+        console.error("Chat API Critical Error:", error);
         return NextResponse.json({
             content: "Something went wrong in the chat processing. " + error.message,
             error: true

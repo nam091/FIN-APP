@@ -15,30 +15,30 @@ interface TaskFormProps {
 }
 
 const TASK_TYPES = [
-    { id: "me", label: "My Tasks", icon: ListTodo },
-    { id: "others", label: "Delegated", icon: Briefcase },
-    { id: "upcoming", label: "Upcoming", icon: Clock },
-];
+    { id: "me", labelKey: "myTasks", icon: ListTodo },
+    { id: "others", labelKey: "delegated", icon: Briefcase },
+    { id: "upcoming", labelKey: "tasksUpcoming", icon: Clock },
+] as const;
 
 const REPEAT_OPTIONS = [
-    { id: "none", label: "No Repeat" },
-    { id: "daily", label: "Daily" },
-    { id: "weekly", label: "Weekly" },
-    { id: "monthly", label: "Monthly" },
-    { id: "yearly", label: "Yearly" },
-];
+    { id: "none", labelKey: "noRepeat" },
+    { id: "daily", labelKey: "daily" },
+    { id: "weekly", labelKey: "weekly" },
+    { id: "monthly", labelKey: "monthly" },
+    { id: "yearly", labelKey: "yearly" },
+] as const;
 
 const REMINDER_OPTIONS = [
-    { id: "none", label: "No Reminder" },
+    { id: "none", labelKey: "noReminder" },
     { id: "5min", label: "5 min" },
     { id: "15min", label: "15 min" },
     { id: "30min", label: "30 min" },
     { id: "1hour", label: "1 hour" },
     { id: "1day", label: "1 day" },
-];
+] as const;
 
 export function TaskForm({ onClose, editingTask }: TaskFormProps) {
-    const { addTask, updateTask } = useAppState();
+    const { addTask, updateTask, t } = useAppState();
 
     const [title, setTitle] = useState("");
     const [project, setProject] = useState("");
@@ -91,7 +91,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
         <div className="flex flex-col h-[85vh] md:h-full bg-background rounded-t-[32px] md:rounded-3xl border border-border overflow-hidden">
             {/* Fixed Header */}
             <div className="flex justify-between items-center p-6 pb-4 border-b border-border/50">
-                <h2 className="text-2xl font-bold text-foreground">{isEditing ? "Edit Task" : "New Task"}</h2>
+                <h2 className="text-2xl font-bold text-foreground">{isEditing ? t("editTask") : t("newTask")}</h2>
                 <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-secondary">
                     <X className="w-6 h-6 text-muted-foreground" />
                 </Button>
@@ -105,9 +105,9 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
             >
                 {/* Title */}
                 <div className="space-y-2">
-                    <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">Title</label>
+                    <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">{t("title")}</label>
                     <Input
-                        placeholder="What do you need to do?"
+                        placeholder={t("taskPlaceholder")}
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         className="bg-secondary/50 border-border rounded-2xl h-16 px-5 focus-visible:ring-primary/30 text-lg"
@@ -117,9 +117,9 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
 
                 {/* Project */}
                 <div className="space-y-2">
-                    <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">Project</label>
+                    <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">{t("project")}</label>
                     <Input
-                        placeholder="e.g. Work, Personal, Study"
+                        placeholder={t("projectPlaceholder")}
                         value={project}
                         onChange={(e) => setProject(e.target.value)}
                         className="bg-secondary/50 border-border rounded-2xl h-14 px-5 focus-visible:ring-primary/30 text-base"
@@ -128,7 +128,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
 
                 {/* Task Type */}
                 <div className="space-y-3">
-                    <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">Type</label>
+                    <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1">{t("type")}</label>
                     <div className="grid grid-cols-3 gap-3">
                         {TASK_TYPES.map((item) => (
                             <button
@@ -143,7 +143,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                                 )}
                             >
                                 <item.icon className="w-5 h-5" />
-                                <span className="text-xs font-semibold">{item.label}</span>
+                                <span className="text-xs font-semibold">{t(item.labelKey)}</span>
                             </button>
                         ))}
                     </div>
@@ -153,7 +153,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1 flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5" /> Due Date
+                            <Calendar className="w-3.5 h-3.5" /> {t("dueDate")}
                         </label>
                         <DatePicker
                             value={dueDate}
@@ -162,7 +162,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                     </div>
                     <div className="space-y-2">
                         <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1 flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5" /> Time
+                            <Clock className="w-3.5 h-3.5" /> {t("time")}
                         </label>
                         <TimePicker
                             value={dueTime}
@@ -178,7 +178,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                     className="flex items-center gap-2 text-muted-foreground text-sm font-medium hover:text-foreground transition-colors py-2"
                 >
                     <ChevronDown className={cn("w-4 h-4 transition-transform", showAdvanced && "rotate-180")} />
-                    Advanced Options
+                    {t("advancedOptions")}
                 </button>
 
                 {showAdvanced && (
@@ -186,7 +186,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                         {/* Reminder */}
                         <div className="space-y-3">
                             <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1 flex items-center gap-1.5">
-                                <Bell className="w-3.5 h-3.5" /> Reminder
+                                <Bell className="w-3.5 h-3.5" /> {t("reminder")}
                             </label>
                             <div className="flex flex-wrap gap-2">
                                 {REMINDER_OPTIONS.map((opt) => (
@@ -201,7 +201,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                                                 : "bg-secondary border-border text-muted-foreground hover:border-accent"
                                         )}
                                     >
-                                        {opt.label}
+                                        {"labelKey" in opt ? t(opt.labelKey as any) : opt.label}
                                     </button>
                                 ))}
                             </div>
@@ -210,7 +210,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                         {/* Repeat */}
                         <div className="space-y-3">
                             <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground ml-1 flex items-center gap-1.5">
-                                <Repeat className="w-3.5 h-3.5" /> Repeat
+                                <Repeat className="w-3.5 h-3.5" /> {t("repeat")}
                             </label>
                             <div className="flex flex-wrap gap-2">
                                 {REPEAT_OPTIONS.map((opt) => (
@@ -225,7 +225,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                                                 : "bg-secondary border-border text-muted-foreground hover:border-accent"
                                         )}
                                     >
-                                        {opt.label}
+                                        {"labelKey" in opt ? t(opt.labelKey as any) : opt.label}
                                     </button>
                                 ))}
                             </div>
@@ -238,7 +238,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                         type="submit"
                         className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-bold h-16 rounded-2xl text-lg shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
-                        {isEditing ? "Save Changes" : "Create Task"}
+                        {isEditing ? t("saveChanges") : t("addTask")}
                     </Button>
                 </div>
             </form>

@@ -30,8 +30,8 @@ export default function Home() {
             {activeTab === "home" && <HomeDashboard />}
             {activeTab === "finance" && <FinanceDashboard />}
             {activeTab === "tasks" && <TaskList />}
-            {activeTab === "notes" && <NoteList />}
             {activeTab === "tracking" && <TrackingView />}
+            {activeTab === "notes" && <NoteList />}
             {activeTab === "ai" && <AIChat />}
             {activeTab === "settings" && <SettingsView />}
           </div>

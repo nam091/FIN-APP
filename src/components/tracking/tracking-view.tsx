@@ -13,7 +13,7 @@ import { BackgroundDots } from "@/components/ui/background-dots";
 
 export function TrackingView() {
     const { data: session } = useSession();
-    const { tasks, toggleTask } = useAppState();
+    const { tasks, toggleTask, t } = useAppState();
     const [trackers, setTrackers] = useState<any[]>([]);
     const [dailyTasksWithHistory, setDailyTasksWithHistory] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -123,7 +123,7 @@ export function TrackingView() {
     };
 
     const handleDeleteTracker = async (trackerId: string) => {
-        if (!confirm("Are you sure you want to delete this habit? History will be lost.")) return;
+        if (!confirm(t("deleteHabitConfirm"))) return;
 
         try {
             const res = await fetch(`/api/trackers/${trackerId}`, {
@@ -179,7 +179,7 @@ export function TrackingView() {
             <header className="px-6 py-4 flex justify-between items-center shrink-0">
                 <h1 className="text-2xl font-bold flex items-center gap-3">
                     <Activity className="w-6 h-6 text-indigo-500" />
-                    Habit Tracking
+                    {t("habitTracking")}
                 </h1>
                 <Button
                     onClick={() => {
@@ -188,7 +188,7 @@ export function TrackingView() {
                     }}
                     className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full transition-all shadow-lg shadow-indigo-500/20"
                 >
-                    <Plus className="w-4 h-4 mr-2" /> New Habit
+                    <Plus className="w-4 h-4 mr-2" /> {t("newHabit")}
                 </Button>
             </header>
 
@@ -197,19 +197,19 @@ export function TrackingView() {
                     {/* Summary Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                         <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Habits</div>
+                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">{t("habits")}</div>
                             <div className="text-2xl font-bold text-foreground">{trackers.length}</div>
                         </div>
                         <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Daily Tasks</div>
+                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">{t("dailyTasks")}</div>
                             <div className="text-2xl font-bold text-cyan-500">{dailyTasks.length}</div>
                         </div>
                         <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Total Items</div>
+                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">{t("totalItems")}</div>
                             <div className="text-2xl font-bold text-foreground">{totalItems}</div>
                         </div>
                         <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">Tasks Done</div>
+                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">{t("tasksDone")}</div>
                             <div className="text-2xl font-bold text-green-500">{dailyTasks.filter(t => t.completed).length}</div>
                         </div>
                     </div>
@@ -219,7 +219,7 @@ export function TrackingView() {
                         <div className="mb-8">
                             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-cyan-500">
                                 <ListTodo className="w-5 h-5" />
-                                Daily Tasks ({mergedDailyTasks.length})
+                                {t("dailyTasks")} ({mergedDailyTasks.length})
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {mergedDailyTasks.map(task => (
@@ -240,7 +240,7 @@ export function TrackingView() {
                         <div className="mb-8">
                             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-indigo-500">
                                 <Activity className="w-5 h-5" />
-                                Habits ({trackers.length})
+                                {t("habits")} ({trackers.length})
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {trackers.map(tracker => (
@@ -262,8 +262,8 @@ export function TrackingView() {
                     {totalItems === 0 && !isLoading && (
                         <div className="text-center py-20 opacity-50">
                             <Activity className="w-16 h-16 mx-auto mb-4" />
-                            <p className="text-xl font-medium">No habits or daily tasks yet.</p>
-                            <p className="text-sm">Create a habit or add a daily repeating task!</p>
+                            <p className="text-xl font-medium">{t("noHabits")}</p>
+                            <p className="text-sm">{t("createHabitDesc")}</p>
                         </div>
                     )}
                 </div>

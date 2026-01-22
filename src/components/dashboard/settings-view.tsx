@@ -24,7 +24,9 @@ import {
     Cloud,
     Save,
     CheckCircle2,
-    RefreshCw
+    RefreshCw,
+    Eye,
+    EyeOff
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CalendarConnectButton, CalendarSyncStatus } from "@/components/calendar/calendar-connect-button";
@@ -32,7 +34,7 @@ import { CustomSelect } from "@/components/ui/select-custom";
 import { BackgroundDots } from "@/components/ui/background-dots";
 
 export function SettingsView() {
-    const { setActiveTab, userSettings, updateSettings, addNotificationHook, removeNotificationHook } = useAppState();
+    const { setActiveTab, userSettings, updateSettings, addNotificationHook, removeNotificationHook, t } = useAppState();
     const [newHookName, setNewHookName] = useState("");
     const [newHookUrl, setNewHookUrl] = useState("");
     const [newHookType, setNewHookType] = useState<"discord" | "telegram" | "gmail" | "webhook">("discord");
@@ -50,6 +52,7 @@ export function SettingsView() {
     const [showSuccess, setShowSuccess] = useState(false);
     const [availableModels, setAvailableModels] = useState<string[]>([]);
     const [isFetchingModels, setIsFetchingModels] = useState(false);
+    const [showApiKey, setShowApiKey] = useState(false);
 
     // Timer ref for debounced fetching
     const fetchTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -121,9 +124,9 @@ export function SettingsView() {
     }, [localAiConfig.endpoint, localAiConfig.apiKey, fetchModels]);
 
     const themes = [
-        { id: "light", label: "Light", icon: Sun },
-        { id: "dark", label: "Dark", icon: Moon },
-        { id: "system", label: "System", icon: Monitor },
+        { id: "light", label: t("themeLight"), icon: Sun },
+        { id: "dark", label: t("themeDark"), icon: Moon },
+        { id: "system", label: t("themeSystem"), icon: Monitor },
     ];
 
     const handleSaveAiConfig = async () => {
@@ -164,48 +167,73 @@ export function SettingsView() {
                     <ChevronLeft className="text-muted-foreground w-5 h-5" />
                 </Button>
                 <div>
-                    <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">Settings</h1>
-                    <p className="text-muted-foreground mt-1 text-base md:text-lg">Manage your preferences and integrations.</p>
+                    <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">{t("settings")}</h1>
+                    <p className="text-muted-foreground mt-1 text-base md:text-lg">{t("managePreferences")}</p>
                 </div>
             </header>
 
             <div className="flex-1 overflow-y-auto no-scrollbar px-6 md:px-12 pb-32">
                 <div className="max-w-4xl mx-auto space-y-10">
 
-                    {/* Compact Theme Section */}
-                    <section className="space-y-4">
-                        <div className="flex items-center gap-3">
-                            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Appearance</h2>
-                        </div>
-                        <div className="bg-secondary/30 p-1.5 rounded-2xl border border-border inline-flex w-full sm:w-auto min-w-[300px] shadow-inner">
-                            {themes.map((theme) => {
-                                const Icon = theme.icon;
-                                const isActive = userSettings.theme === theme.id;
-                                return (
-                                    <button
-                                        key={theme.id}
-                                        onClick={() => updateSettings({ theme: theme.id as any })}
-                                        className={cn(
-                                            "flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl transition-all duration-300 relative",
-                                            isActive
-                                                ? "bg-primary text-primary-foreground shadow-md scale-[1.02] z-10"
-                                                : "text-muted-foreground hover:text-foreground hover:bg-white/5"
-                                        )}
-                                    >
-                                        <Icon className="w-4 h-4" />
-                                        <span className="text-xs font-bold">{theme.label}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </section>
+                    {/* Compact Appearance & Language Section */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <section className="space-y-4">
+                            <div className="flex items-center gap-3">
+                                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{t("appearance")}</h2>
+                            </div>
+                            <div className="bg-secondary/30 p-1.5 rounded-2xl border border-border flex w-full shadow-inner">
+                                {themes.map((theme) => {
+                                    const Icon = theme.icon;
+                                    const isActive = userSettings.theme === theme.id;
+                                    return (
+                                        <button
+                                            key={theme.id}
+                                            onClick={() => updateSettings({ theme: theme.id as any })}
+                                            className={cn(
+                                                "flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl transition-all duration-300 relative",
+                                                isActive
+                                                    ? "bg-primary text-primary-foreground shadow-md scale-[1.02] z-10"
+                                                    : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                                            )}
+                                        >
+                                            <Icon className="w-4 h-4" />
+                                            <span className="text-xs font-bold">{theme.label}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </section>
+
+                        <section className="space-y-4">
+                            <div className="flex items-center gap-3">
+                                <Globe className="w-4 h-4 text-indigo-500" />
+                                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{t("language")}</h2>
+                            </div>
+                            <div className="relative group">
+                                <CustomSelect
+                                    options={[
+                                        { label: "English (US)", value: "en" },
+                                        { label: "Tiếng Việt", value: "vi" },
+                                    ]}
+                                    value={userSettings.language || "en"}
+                                    onChange={(val) => {
+                                        updateSettings({ language: val });
+                                        // Also save to localStorage for immediate persistence on load
+                                        localStorage.setItem("finapp_language", val);
+                                        document.documentElement.lang = val;
+                                    }}
+                                    placeholder={t("selectLanguage")}
+                                />
+                            </div>
+                        </section>
+                    </div>
 
                     {/* AI Configuration Section */}
                     <section className="space-y-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <Bot className="w-5 h-5 text-indigo-500" />
-                                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">AI Assistant</h2>
+                                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{t("aiAssistant")}</h2>
                             </div>
                             <Button
                                 onClick={handleSaveAiConfig}
@@ -222,40 +250,50 @@ export function SettingsView() {
                                 ) : (
                                     <Save className="w-4 h-4" />
                                 )}
-                                {showSuccess ? "Saved" : "Save Changes"}
+                                {showSuccess ? t("saved") : t("saveChanges")}
                             </Button>
                         </div>
 
                         <Card className="bg-secondary/40 border-border rounded-3xl p-6 md:p-8 space-y-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">API Endpoint</label>
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">{t("apiEndpoint")}</label>
                                     <Input
-                                        placeholder="https://your-api-proxy.com/v1"
+                                        placeholder={t("apiEndpointPlaceholder")}
                                         value={localAiConfig.endpoint}
                                         onChange={(e) => setLocalAiConfig({ ...localAiConfig, endpoint: e.target.value })}
                                         className="bg-background border-border rounded-2xl h-12 text-sm"
                                     />
                                 </div>
 
-                                <div className="space-y-2 md:col-span-2">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">API Key</label>
-                                    <Input
-                                        type="password"
-                                        placeholder="sk-..."
-                                        value={localAiConfig.apiKey}
-                                        onChange={(e) => setLocalAiConfig({ ...localAiConfig, apiKey: e.target.value })}
-                                        className="bg-background border-border rounded-2xl h-12 text-sm"
-                                    />
+                                <div className="space-y-2 md:col-span-2 relative">
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">{t("apiKey")}</label>
+                                    <div className="relative">
+                                        <Input
+                                            type={showApiKey ? "text" : "password"}
+                                            placeholder={t("apiKeyPlaceholder")}
+                                            value={localAiConfig.apiKey}
+                                            onChange={(e) => setLocalAiConfig({ ...localAiConfig, apiKey: e.target.value })}
+                                            className="bg-background border-border rounded-2xl h-12 text-sm pr-12"
+                                        />
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => setShowApiKey(!showApiKey)}
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full text-muted-foreground hover:text-foreground"
+                                        >
+                                            {showApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                        </Button>
+                                    </div>
                                 </div>
 
                                 <div className="space-y-2 md:col-span-2">
                                     <div className="flex items-center justify-between mb-1">
-                                        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Model Name</label>
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">{t("modelName")}</label>
                                         <div className="flex items-center gap-2">
                                             {isFetchingModels && <RefreshCw className="w-3 h-3 animate-spin text-primary" />}
                                             <span className="text-[10px] text-muted-foreground font-medium">
-                                                {availableModels.length > 0 ? `${availableModels.length} models found` : "Auto-fetching..."}
+                                                {availableModels.length > 0 ? `${availableModels.length} ${t("modelsFound")}` : t("autoFetching")}
                                             </span>
                                         </div>
                                     </div>
@@ -266,11 +304,11 @@ export function SettingsView() {
                                                 options={availableModels.map(m => ({ label: m, value: m }))}
                                                 value={localAiConfig.model}
                                                 onChange={(val) => setLocalAiConfig({ ...localAiConfig, model: val })}
-                                                placeholder="Select AI Model"
+                                                placeholder={t("selectAiModel")}
                                             />
                                         ) : (
                                             <Input
-                                                placeholder="Model (e.g. gpt-4o)"
+                                                placeholder={t("modelNamePlaceholder")}
                                                 value={localAiConfig.model}
                                                 onChange={(e) => setLocalAiConfig({ ...localAiConfig, model: e.target.value })}
                                                 className="bg-background border-border rounded-2xl h-12 text-sm"
@@ -282,7 +320,7 @@ export function SettingsView() {
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">User Avatar</label>
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">{t("userAvatar")}</label>
                                     <div className="flex items-center gap-4 bg-background/50 p-4 rounded-3xl border border-border group">
                                         <div className="w-16 h-16 rounded-2xl bg-secondary border border-border overflow-hidden flex items-center justify-center shrink-0 shadow-inner">
                                             {localAiConfig.userAvatar ? (
@@ -314,21 +352,21 @@ export function SettingsView() {
                                                 className="w-full rounded-xl bg-secondary border-border hover:bg-accent text-xs font-bold h-9"
                                                 onClick={() => document.getElementById('userAvatarInput')?.click()}
                                             >
-                                                Upload
+                                                {t("upload")}
                                             </Button>
                                             {localAiConfig.userAvatar && (
                                                 <button
                                                     onClick={() => setLocalAiConfig({ ...localAiConfig, userAvatar: "" })}
                                                     className="text-[10px] text-muted-foreground hover:text-rose-500 w-full font-bold uppercase tracking-tighter"
                                                 >
-                                                    Remove
+                                                    {t("remove")}
                                                 </button>
                                             )}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">AI Avatar</label>
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">{t("aiAvatar")}</label>
                                     <div className="flex items-center gap-4 bg-background/50 p-4 rounded-3xl border border-border group">
                                         <div className="w-16 h-16 rounded-2xl bg-secondary border border-border overflow-hidden flex items-center justify-center shrink-0 shadow-inner">
                                             {localAiConfig.aiAvatar ? (
@@ -360,14 +398,14 @@ export function SettingsView() {
                                                 className="w-full rounded-xl bg-secondary border-border hover:bg-accent text-xs font-bold h-9"
                                                 onClick={() => document.getElementById('aiAvatarInput')?.click()}
                                             >
-                                                Upload
+                                                {t("upload")}
                                             </Button>
                                             {localAiConfig.aiAvatar && (
                                                 <button
                                                     onClick={() => setLocalAiConfig({ ...localAiConfig, aiAvatar: "" })}
                                                     className="text-[10px] text-muted-foreground hover:text-rose-500 w-full font-bold uppercase tracking-tighter"
                                                 >
-                                                    Remove
+                                                    {t("remove")}
                                                 </button>
                                             )}
                                         </div>
@@ -382,7 +420,7 @@ export function SettingsView() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <Bell className="w-5 h-5 text-indigo-500" />
-                                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Notifications</h2>
+                                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{t("notifications")}</h2>
                             </div>
                             <button
                                 onClick={() => updateSettings({
@@ -427,10 +465,10 @@ export function SettingsView() {
                             ))}
 
                             <div className="p-6 bg-secondary/15 space-y-4">
-                                <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Connect New Handler</h4>
+                                <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">{t("connectNewHandler")}</h4>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <Input
-                                        placeholder="Channel Name"
+                                        placeholder={t("channelName")}
                                         value={newHookName}
                                         onChange={(e) => setNewHookName(e.target.value)}
                                         className="bg-background border-border rounded-2xl h-12 text-sm text-center"
@@ -445,11 +483,11 @@ export function SettingsView() {
                                         ]}
                                         value={newHookType}
                                         onChange={(val) => setNewHookType(val as any)}
-                                        placeholder="Select Channel Type"
+                                        placeholder={t("selectChannelType")}
                                     />
                                 </div>
                                 <Input
-                                    placeholder="Connection URL"
+                                    placeholder={t("connectionUrl")}
                                     value={newHookUrl}
                                     onChange={(e) => setNewHookUrl(e.target.value)}
                                     className="bg-background border-border rounded-2xl h-12 text-sm text-center"
@@ -458,7 +496,7 @@ export function SettingsView() {
                                     onClick={handleAddHook}
                                     className="w-full bg-secondary hover:bg-accent text-foreground font-bold h-12 rounded-2xl border border-border"
                                 >
-                                    <Plus className="w-4 h-4 mr-2" /> Connect
+                                    <Plus className="w-4 h-4 mr-2" /> {t("connect")}
                                 </Button>
                             </div>
                         </Card>
@@ -468,7 +506,7 @@ export function SettingsView() {
                     <section className="space-y-4">
                         <div className="flex items-center gap-3">
                             <Cloud className="w-5 h-5 text-indigo-500" />
-                            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Integrations</h2>
+                            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{t("integrations")}</h2>
                         </div>
 
                         <Card className="bg-secondary/40 border-border rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -477,8 +515,8 @@ export function SettingsView() {
                                     <Calendar className="w-6 h-6 text-indigo-400" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-lg text-foreground text-sm md:text-base">Google Calendar</h3>
-                                    <p className="text-xs text-muted-foreground">Sync your tasks and financial deadlines.</p>
+                                    <h3 className="font-bold text-lg text-foreground text-sm md:text-base">{t("googleCalendar")}</h3>
+                                    <p className="text-xs text-muted-foreground">{t("calendarSyncDesc")}</p>
                                 </div>
                             </div>
                             <div className="shrink-0 scale-90 md:scale-100">
@@ -494,9 +532,9 @@ export function SettingsView() {
                     <section className="pt-6 pb-20">
                         <Card className="bg-secondary/20 border-border border-dashed rounded-3xl p-8 flex flex-col items-center text-center">
                             <ShieldCheck className="w-10 h-10 text-muted-foreground/30 mb-4" />
-                            <h3 className="font-bold text-base text-muted-foreground italic tracking-widest">PREMIUM SECURITY</h3>
+                            <h3 className="font-bold text-base text-muted-foreground italic tracking-widest">{t("premiumSecurity")}</h3>
                             <p className="text-[11px] text-muted-foreground/50 max-w-xs mt-1 leading-relaxed">
-                                End-to-end encryption for all webhooks and data exports is currently in development.
+                                {t("securityDesc")}
                             </p>
                         </Card>
                     </section>

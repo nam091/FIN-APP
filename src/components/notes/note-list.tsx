@@ -7,15 +7,16 @@ import {
     Search,
     ArrowLeft,
     Filter,
-    MoreHorizontal,
+    LayoutGrid,
+    Trello,
+    ChevronLeft,
+    Settings,
     CheckCircle,
     Wallet,
     Pin,
     FileText,
     Sparkles,
-    LayoutGrid,
-    Trello,
-    ChevronLeft
+    Lightbulb
 } from "lucide-react";
 import { useAppState, Note } from "@/context/app-state-context";
 import {
@@ -27,10 +28,17 @@ import { SwipeToReveal } from "@/components/ui/swipe-to-reveal";
 import { BackgroundDots } from "@/components/ui/background-dots";
 
 export function NoteList() {
-    const { setActiveTab, dismissedItems, dismissItem, notes, addNote, updateNote, deleteNote } = useAppState();
+    const { setActiveTab, dismissedItems, dismissItem, notes, addNote, updateNote, deleteNote, t } = useAppState();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingNote, setEditingNote] = useState<Note | null>(null);
     const [sortBy, setSortBy] = useState<"date" | "title">("date");
+    const [isMounted, setIsMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) return <div className="flex-1 bg-background" />;
 
     const isTodayInfoVisible = !dismissedItems.includes("note-today-hub");
 
@@ -45,7 +53,7 @@ export function NoteList() {
     };
 
     const getSortLabel = () => {
-        return sortBy === "title" ? "Title" : "Date";
+        return sortBy === "title" ? t("title") : t("date");
     };
 
     const handleOpenCreate = () => {
@@ -88,26 +96,26 @@ export function NoteList() {
                         onClick={handleOpenCreate}
                         className="bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-full px-5 h-10 flex items-center gap-2"
                     >
-                        <Plus className="w-4 h-4" /> New Note
+                        <Plus className="w-4 h-4" /> {t("newNote")}
                     </Button>
                     <Button variant="ghost" className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-muted-foreground h-10" onClick={cycleSortBy}>
                         <Filter className="w-4 h-4 text-purple-400" />
                         <span className="text-sm font-medium hidden md:inline">{getSortLabel()}</span>
                     </Button>
                     <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-secondary" onClick={() => setActiveTab("settings")}>
-                        <MoreHorizontal className="text-muted-foreground w-5 h-5" />
+                        <Settings className="text-muted-foreground w-5 h-5" />
                     </Button>
                 </div>
             </header>
             <div className="flex-1 overflow-y-auto no-scrollbar px-6 z-10">
                 <div className="max-w-6xl mx-auto w-full pb-72 md:pb-20">
                     <div className="mb-8 ml-2 mt-8">
-                        <h2 className="text-5xl font-bold mb-6">Today</h2>
+                        <h2 className="text-5xl font-bold mb-6">{t("today")}</h2>
 
                         {isTodayInfoVisible && (
                             <div className="border-2 border-dashed border-border rounded-3xl p-6 mb-8 max-w-md transition-all animate-in fade-in zoom-in-95">
                                 <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-                                    Transform your Today view into a meeting hub: see your schedule, join video calls, and take notes for any meeting.
+                                    {t("overview")}
                                 </p>
                                 <div className="flex gap-3">
                                     <Button
@@ -122,7 +130,7 @@ export function NoteList() {
                                         className="px-4 py-2.5 rounded-2xl text-sm font-medium border border-border text-muted-foreground h-10"
                                         onClick={() => dismissItem("note-today-hub")}
                                     >
-                                        No thanks
+                                        {t("dismiss")}
                                     </Button>
                                 </div>
                             </div>
@@ -131,7 +139,7 @@ export function NoteList() {
                         {!isTodayInfoVisible && (
                             <div className="mb-8 ml-2">
                                 <Button variant="ghost" size="sm" className="text-zinc-700 hover:text-zinc-500 p-0" onClick={() => window.location.reload()}>
-                                    Reveal hidden hub
+                                    {t("resetView")}
                                 </Button>
                             </div>
                         )}
@@ -139,13 +147,13 @@ export function NoteList() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* Active Tasks Panel */}
-                        <div className="bg-secondary/40 backdrop-blur-xl border border-border p-5 rounded-3xl group hover:border-blue-500/30 transition-all cursor-move">
+                        <div className="bg-secondary/40 backdrop-blur-xl border border-border p-5 rounded-[32px] group hover:border-blue-500/30 transition-all cursor-move">
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="font-semibold text-foreground flex items-center gap-2">
                                     <CheckCircle className="w-4 h-4 text-blue-500" />
-                                    Active Tasks
+                                    {t("activeTasks")}
                                 </h3>
-                                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Today</span>
+                                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">{t("today")}</span>
                             </div>
                             <div className="space-y-4">
                                 <div className="flex items-center gap-3">
@@ -164,7 +172,7 @@ export function NoteList() {
                         <div className="bg-amber-500/10 border border-amber-500/20 p-6 rounded-xl rotate-1 shadow-lg hover:rotate-0 transition-all cursor-move">
                             <div className="flex items-center gap-2 mb-2 text-amber-500/50">
                                 <Pin className="w-3 h-3" />
-                                <span className="text-[10px] font-bold uppercase tracking-wider">Brainstorm</span>
+                                <span className="text-[10px] font-bold uppercase tracking-wider">{t("summary")}</span>
                             </div>
                             <p className="text-amber-100/90 text-base font-medium leading-relaxed italic">
                                 "The best way to predict the future is to create it." - Note: Remember to finalize the UI/UX workshop notes by Friday morning.
@@ -172,17 +180,17 @@ export function NoteList() {
                         </div>
 
                         {/* Recent Notes Panel */}
-                        <div className="bg-secondary/40 backdrop-blur-xl border border-border p-5 rounded-3xl group hover:border-purple-500/30 transition-all md:col-span-2 lg:col-span-3">
+                        <div className="bg-secondary/40 backdrop-blur-xl border border-border p-5 rounded-[32px] group hover:border-purple-500/30 transition-all md:col-span-2 lg:col-span-3">
                             <h3 className="font-semibold text-foreground flex items-center gap-2 mb-4">
                                 <FileText className="w-4 h-4 text-purple-500" />
-                                Recent Notes
-                                <span className="text-xs text-muted-foreground ml-auto">{sortedNotes.length} notes</span>
+                                {t("recentNotes")}
+                                <span className="text-xs text-muted-foreground ml-auto">{sortedNotes.length} {t("notes")}</span>
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                 {sortedNotes.length === 0 ? (
                                     <div className="col-span-full text-center py-8 text-muted-foreground">
                                         <FileText className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                                        <p className="text-sm">No notes yet. Create your first note!</p>
+                                        <p className="text-sm">{t("noNotes")}</p>
                                     </div>
                                 ) : (
                                     sortedNotes.map(note => {
@@ -191,9 +199,9 @@ export function NoteList() {
                                         const today = new Date();
                                         const diffDays = Math.floor((today.getTime() - noteDate.getTime()) / (1000 * 60 * 60 * 24));
                                         let dateLabel = note.date;
-                                        if (diffDays === 0) dateLabel = "Today";
-                                        else if (diffDays === 1) dateLabel = "Yesterday";
-                                        else if (diffDays < 7) dateLabel = `${diffDays} days ago`;
+                                        if (diffDays === 0) dateLabel = t("today");
+                                        else if (diffDays === 1) dateLabel = t("yesterday");
+                                        else if (diffDays < 7) dateLabel = `${diffDays} ${t("daysAgo")}`;
 
                                         // Category colors
                                         const categoryColors: Record<string, string> = {
@@ -222,14 +230,14 @@ export function NoteList() {
                                                         )}
                                                     </div>
                                                     <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
-                                                        {note.content || "No content"}
+                                                        {note.content || t("noContent")}
                                                     </p>
                                                     <div className="flex items-center justify-between text-xs text-muted-foreground/60">
                                                         <span>{dateLabel}</span>
                                                         {note.tags && note.tags.length > 0 && (
                                                             <span className="flex items-center gap-1">
                                                                 <Sparkles className="w-3 h-3" />
-                                                                {note.tags.length} tags
+                                                                {note.tags.length} {t("tags")}
                                                             </span>
                                                         )}
                                                     </div>
