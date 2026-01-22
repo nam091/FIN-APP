@@ -100,23 +100,23 @@ export function SwipeToReveal({ children, onDelete, onEdit, className }: SwipeTo
     const buttonOpacity = Math.min(1, translateX / (actionZoneWidth * 0.5));
 
     return (
-        <div className={cn("relative overflow-hidden rounded-2xl", className)} data-swipe-to-reveal="true">
+        <div className={cn("relative overflow-hidden rounded-3xl", className)} data-swipe-to-reveal="true">
             {/* Action Buttons Background */}
             <div
-                className="absolute inset-y-0 right-0 flex items-center justify-end"
+                className="absolute inset-y-0 right-0 flex items-center justify-end gap-2 pr-2"
                 style={{
-                    width: actionZoneWidth + 10,
+                    width: actionZoneWidth + 16,
                     opacity: buttonOpacity,
                 }}
             >
                 {onEdit && (
                     <button
                         onClick={handleEdit}
-                        className="h-full flex items-center justify-center active:scale-90 transition-transform bg-blue-500 text-white"
+                        className="h-[calc(100%-16px)] flex items-center justify-center active:scale-95 transition-all bg-blue-500 hover:bg-blue-400 text-white rounded-2xl shadow-lg"
                         aria-label="Edit"
                         style={{
-                            width: 70,
-                            transform: `scale(${0.6 + buttonScale * 0.4})`,
+                            width: 56,
+                            transform: `scale(${0.7 + buttonScale * 0.3})`,
                             opacity: buttonScale,
                         }}
                     >
@@ -125,11 +125,11 @@ export function SwipeToReveal({ children, onDelete, onEdit, className }: SwipeTo
                 )}
                 <button
                     onClick={handleDelete}
-                    className="h-full flex items-center justify-center active:scale-90 transition-transform bg-gradient-to-l from-rose-500 to-rose-600 text-white rounded-r-2xl"
+                    className="h-[calc(100%-16px)] flex items-center justify-center active:scale-95 transition-all bg-rose-500 hover:bg-rose-400 text-white rounded-2xl shadow-lg"
                     aria-label="Delete"
                     style={{
-                        width: 70,
-                        transform: `scale(${0.6 + buttonScale * 0.4})`,
+                        width: 56,
+                        transform: `scale(${0.7 + buttonScale * 0.3})`,
                         opacity: buttonScale,
                     }}
                 >
