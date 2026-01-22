@@ -35,8 +35,19 @@ model Task {
   userId         String
   user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   completionLogs TaskCompletionLog[]
+  reminders      TaskReminder[]
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
+}
+
+model TaskReminder {
+  id      String   @id @default(cuid())
+  taskId  Int
+  task    Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  channel String // "discord", "telegram", "webhook", etc.
+  sentAt  DateTime @default(now())
+
+  @@unique([taskId, channel])
 }
 
 model Transaction {
