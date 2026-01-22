@@ -64,20 +64,20 @@ export function TrackerCard({ tracker, onToggle, onEdit, onDelete }: TrackerCard
                 </div>
 
                 {/* Edit/Delete Actions */}
-                <div className="absolute top-4 right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100 z-20">
+                <div className="absolute top-4 right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100 z-20 pointer-events-none group-hover:pointer-events-auto">
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={(e) => { e.stopPropagation(); onEdit?.(); }}
-                        className="w-8 h-8 rounded-full bg-secondary/80 hover:bg-accent text-muted-foreground"
+                        onClick={(e) => { e.stopPropagation(); e.preventDefault(); onEdit?.(); }}
+                        className="w-8 h-8 rounded-full bg-secondary/80 hover:bg-accent text-muted-foreground pointer-events-auto"
                     >
                         <Edit2 className="w-3.5 h-3.5" />
                     </Button>
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={(e) => { e.stopPropagation(); onDelete?.(); }}
-                        className="w-8 h-8 rounded-full bg-secondary/80 hover:bg-rose-500/20 text-rose-500"
+                        onClick={(e) => { e.stopPropagation(); e.preventDefault(); onDelete?.(); }}
+                        className="w-8 h-8 rounded-full bg-secondary/80 hover:bg-rose-500/20 text-rose-500 pointer-events-auto"
                     >
                         <Trash2 className="w-3.5 h-3.5" />
                     </Button>

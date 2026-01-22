@@ -206,11 +206,11 @@ export function TaskList() {
                                     setIsFormOpen(true);
                                 }}
                             >
-                                <div className="flex items-center gap-4 group cursor-pointer hover:bg-secondary/40 p-3 rounded-2xl transition-colors"
+                                <div className="flex items-center gap-4 group cursor-pointer bg-secondary/40 backdrop-blur-xl border border-border hover:border-foreground/20 p-4 rounded-3xl transition-all"
                                     onClick={() => toggleTask(task.id)}>
                                     <div className="shrink-0">
                                         <div className={cn(
-                                            "w-6 h-6 rounded-full border-2 transition-all flex items-center justify-center group-active:scale-90",
+                                            "w-7 h-7 rounded-xl border-2 transition-all flex items-center justify-center group-active:scale-90",
                                             task.completed
                                                 ? "bg-violet-500 border-violet-500"
                                                 : "border-border group-hover:border-violet-500"
@@ -235,7 +235,7 @@ export function TaskList() {
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                            className="opacity-0 group-hover:opacity-100 transition-opacity pointer-events-auto"
                                             ref={(el) => {
                                                 if (el) menuButtonRefs.current.set(task.id, el);
                                             }}

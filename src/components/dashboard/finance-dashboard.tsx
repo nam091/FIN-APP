@@ -288,12 +288,15 @@ function TransactionItem({ item, onEdit, onDelete }: {
     const isIncome = item.type === "income";
 
     return (
-        <div className="flex items-center group cursor-pointer hover:bg-secondary/40 p-2 py-3 rounded-2xl transition-all relative">
-            <div className="w-11 h-11 rounded-full border border-border flex items-center justify-center mr-4 shrink-0 transition-transform group-active:scale-95 bg-secondary/40">
-                <Icon className="w-5 h-5 text-muted-foreground" />
+        <div className="flex items-center group cursor-pointer bg-secondary/40 backdrop-blur-xl border border-border hover:border-foreground/20 p-4 rounded-3xl transition-all relative">
+            <div className={cn(
+                "w-11 h-11 rounded-xl flex items-center justify-center mr-4 shrink-0 transition-transform group-active:scale-95",
+                isIncome ? "bg-emerald-500/10 border border-emerald-500/20" : "bg-secondary border border-border"
+            )}>
+                <Icon className={cn("w-5 h-5", isIncome ? "text-emerald-500" : "text-muted-foreground")} />
             </div>
             <div className="flex-1 min-w-0" onClick={onEdit}>
-                <h4 className="text-base font-medium leading-tight truncate">{item.title}</h4>
+                <h4 className="text-base font-medium leading-tight truncate text-foreground">{item.title}</h4>
                 <p className="text-[10px] text-muted-foreground/60 font-bold uppercase tracking-widest mt-1">{item.category}</p>
             </div>
             <div className="flex items-center gap-4">
@@ -303,11 +306,11 @@ function TransactionItem({ item, onEdit, onDelete }: {
                 )}>
                     {isIncome ? "+" : "-"}{formatVND(Math.abs(item.amount))}
                 </span>
-                <div className="absolute right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">
-                    <Button variant="ghost" size="icon" onClick={onEdit} className="w-9 h-9 rounded-full bg-secondary hover:bg-accent text-muted-foreground">
+                <div className="absolute right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto">
+                    <Button variant="ghost" size="icon" onClick={onEdit} className="w-9 h-9 rounded-full bg-secondary hover:bg-accent text-muted-foreground pointer-events-auto">
                         <MoreHorizontal className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); onDelete(); }} className="w-9 h-9 rounded-full bg-secondary hover:bg-rose-500/20 text-rose-500">
+                    <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); onDelete(); }} className="w-9 h-9 rounded-full bg-secondary hover:bg-rose-500/20 text-rose-500 pointer-events-auto">
                         <Trash2 className="w-4 h-4" />
                     </Button>
                 </div>
