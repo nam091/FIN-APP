@@ -174,8 +174,6 @@ export function FinanceDashboard() {
 
                     )}
 
-
-
                     <div className="flex space-x-2 mb-8 overflow-x-auto no-scrollbar pb-2">
                         <Button variant="ghost" size="icon" className="shrink-0 w-10 h-10 bg-secondary rounded-full">
                             <Search className="w-4 h-4 text-muted-foreground" />

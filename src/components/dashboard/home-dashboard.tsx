@@ -78,11 +78,6 @@ export function HomeDashboard() {
             <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-32">
                 <div className="max-w-4xl mx-auto w-full space-y-8">
 
-                    {/* Activity Chart */}
-                    <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <ActivityChart tasks={tasks} notes={notes} trackers={trackers} />
-                    </section>
-
                     {/* Finance Overview */}
                     <section>
                         <div className="flex items-center justify-between mb-4">
@@ -123,6 +118,11 @@ export function HomeDashboard() {
                                 </span>
                             </Card>
                         </div>
+                    </section>
+
+                    {/* Activity Overview Chart */}
+                    <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <ActivityChart tasks={tasks} notes={notes} trackers={trackers} />
                     </section>
 
                     {/* Tasks Overview */}
