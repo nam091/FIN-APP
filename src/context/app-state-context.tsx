@@ -124,6 +124,7 @@ interface AppState {
     removeNotificationHook: (id: string) => void;
     chatHistory: ChatMessage[];
     setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+    t: (key: TranslationKey) => string;
 }
 
 const AppStateContext = createContext<AppState | undefined>(undefined);
