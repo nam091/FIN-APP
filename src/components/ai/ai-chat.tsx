@@ -369,17 +369,28 @@ export function AIChat() {
             </div>
 
             <div className="absolute bottom-8 left-0 right-0 px-6 z-20 md:bottom-8">
-                <div className="max-w-4xl mx-auto flex items-center gap-3 bg-secondary/90 backdrop-blur-2xl p-3 px-8 rounded-full border border-border/50 shadow-[0_20px_60px_rgba(0,0,0,0.4)] transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/20">
-                    <input
-                        className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-[15px] h-11 p-0 placeholder:text-zinc-600 font-medium text-foreground w-full"
+                <div className="max-w-4xl mx-auto flex items-end gap-3 bg-secondary/90 backdrop-blur-2xl p-3 px-5 rounded-3xl border border-border/50 shadow-[0_20px_60px_rgba(0,0,0,0.4)] transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/20">
+                    <textarea
+                        className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-[15px] py-2 px-0 placeholder:text-zinc-600 font-medium text-foreground w-full resize-none min-h-[40px] max-h-[120px] overflow-y-auto no-scrollbar"
                         placeholder={t("chatPlaceholder")}
                         value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                        rows={1}
+                        onChange={(e) => {
+                            setInput(e.target.value);
+                            // Auto-resize
+                            e.target.style.height = 'auto';
+                            e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSend();
+                            }
+                        }}
                     />
                     <Button
                         size="icon"
-                        className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white shrink-0 shadow-lg shadow-indigo-500/20"
+                        className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white shrink-0 shadow-lg shadow-indigo-500/20 mb-0.5"
                         onClick={handleSend}
                         disabled={isLoading}
                     >

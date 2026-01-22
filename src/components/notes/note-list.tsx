@@ -18,7 +18,7 @@ import {
     Sparkles,
     Lightbulb
 } from "lucide-react";
-import { useAppState, Note } from "@/context/app-state-context";
+import { useAppState, Note, Task } from "@/context/app-state-context";
 import {
     Drawer,
     DrawerContent,
@@ -26,6 +26,40 @@ import {
 import { NoteForm } from "./note-form";
 import { SwipeToReveal } from "@/components/ui/swipe-to-reveal";
 import { BackgroundDots } from "@/components/ui/background-dots";
+
+// Active Tasks Panel Component
+function ActiveTasksPanel() {
+    const { tasks, toggleTask, t } = useAppState();
+    const pendingTasks = tasks.filter(t => !t.completed).slice(0, 5);
+
+    return (
+        <div className="bg-secondary/40 backdrop-blur-xl border border-border p-5 rounded-[32px] group hover:border-blue-500/30 transition-all">
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="font-semibold text-foreground flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-blue-500" />
+                    {t("activeTasks")}
+                </h3>
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">{pendingTasks.length}</span>
+            </div>
+            <div className="space-y-3 max-h-[200px] overflow-y-auto no-scrollbar">
+                {pendingTasks.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">{t("noTasks")}</p>
+                ) : (
+                    pendingTasks.map(task => (
+                        <div
+                            key={task.id}
+                            className="flex items-center gap-3 cursor-pointer hover:bg-secondary/50 p-2 rounded-xl transition-colors"
+                            onClick={() => toggleTask(task.id)}
+                        >
+                            <div className="w-5 h-5 rounded-full border-2 border-blue-500/50 hover:border-blue-500 transition-colors flex-shrink-0"></div>
+                            <span className="text-sm text-foreground truncate">{task.title}</span>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+}
 
 export function NoteList() {
     const { setActiveTab, dismissedItems, dismissItem, notes, addNote, updateNote, deleteNote, t } = useAppState();
@@ -147,34 +181,16 @@ export function NoteList() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* Active Tasks Panel */}
-                        <div className="bg-secondary/40 backdrop-blur-xl border border-border p-5 rounded-[32px] group hover:border-blue-500/30 transition-all cursor-move">
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="font-semibold text-foreground flex items-center gap-2">
-                                    <CheckCircle className="w-4 h-4 text-blue-500" />
-                                    {t("activeTasks")}
-                                </h3>
-                                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">{t("today")}</span>
-                            </div>
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-5 h-5 rounded-full border-2 border-border"></div>
-                                    <div className="h-4 bg-secondary rounded w-3/4 animate-pulse"></div>
-                                </div>
-                                <div className="flex items-center gap-3 opacity-60">
-                                    <div className="w-5 h-5 rounded-full border-2 border-border"></div>
-                                    <div className="h-4 bg-secondary rounded w-1/2"></div>
-                                </div>
-                            </div>
-                        </div>
+                        <ActiveTasksPanel />
 
 
                         {/* Sticky Note */}
                         <div className="bg-amber-500/10 border border-amber-500/20 p-6 rounded-xl rotate-1 shadow-lg hover:rotate-0 transition-all cursor-move">
-                            <div className="flex items-center gap-2 mb-2 text-amber-500/50">
+                            <div className="flex items-center gap-2 mb-2 text-amber-600 dark:text-amber-500/70">
                                 <Pin className="w-3 h-3" />
                                 <span className="text-[10px] font-bold uppercase tracking-wider">{t("summary")}</span>
                             </div>
-                            <p className="text-amber-100/90 text-base font-medium leading-relaxed italic">
+                            <p className="text-foreground text-base font-medium leading-relaxed italic">
                                 "The best way to predict the future is to create it." - Note: Remember to finalize the UI/UX workshop notes by Friday morning.
                             </p>
                         </div>
