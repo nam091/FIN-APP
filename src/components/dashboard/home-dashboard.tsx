@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { formatVND, formatVNDShort } from "@/lib/currency";
 import { BackgroundDots } from "@/components/ui/background-dots";
 import { ActivityChart } from "./activity-chart";
+import { FinanceChart } from "./finance-chart";
 
 export function HomeDashboard() {
     const {
@@ -29,6 +30,7 @@ export function HomeDashboard() {
         financeSummary,
         tasks,
         trackers,
+        transactions,
         t
     } = useAppState();
 
@@ -123,6 +125,11 @@ export function HomeDashboard() {
                     {/* Activity Overview Chart */}
                     <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <ActivityChart tasks={tasks} notes={notes} trackers={trackers} />
+                    </section>
+
+                    {/* Finance Overview Chart */}
+                    <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <FinanceChart transactions={transactions} />
                     </section>
 
                     {/* Tasks Overview */}

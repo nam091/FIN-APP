@@ -199,7 +199,7 @@ const initialSettings: UserSettings = {
 };
 
 export function AppStateProvider({ children }: { children: ReactNode }) {
-    const [activeTab, setActiveTab] = useState<TabType>("finance");
+    const [activeTab, setActiveTab] = useState<TabType>("home");
     const [financeFilter, setFinanceFilter] = useState("All");
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [tasks, setTasks] = useState<Task[]>([]);
