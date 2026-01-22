@@ -5,7 +5,6 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useAppState, Task, Note } from "@/context/app-state-context";
 import { format, subDays, isSameDay, parseISO } from "date-fns";
 import { Card } from "@/components/ui/card";
-import { useTheme } from "next-themes";
 
 interface ActivityChartProps {
     tasks: Task[];
