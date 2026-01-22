@@ -446,14 +446,40 @@ export function SettingsView() {
                                             <p className="text-[10px] text-muted-foreground truncate max-w-[150px]">{hook.url}</p>
                                         </div>
                                     </div>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => removeNotificationHook(hook.id)}
-                                        className="w-8 h-8 rounded-full hover:bg-rose-500/10 hover:text-rose-500 text-muted-foreground"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={async () => {
+                                                try {
+                                                    const res = await fetch("/api/notifications/send", {
+                                                        method: "POST",
+                                                        headers: { "Content-Type": "application/json" },
+                                                        body: JSON.stringify({
+                                                            type: hook.type,
+                                                            url: hook.url,
+                                                            testMessage: "Test notification from FinApp! 🎉"
+                                                        }),
+                                                    });
+                                                    const data = await res.json();
+                                                    alert(data.success ? "✅ Notification sent!" : `❌ Failed: ${data.message}`);
+                                                } catch (e: any) {
+                                                    alert(`❌ Error: ${e.message}`);
+                                                }
+                                            }}
+                                            className="h-8 px-3 rounded-full text-xs font-bold hover:bg-primary/10 hover:text-primary"
+                                        >
+                                            Test
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => removeNotificationHook(hook.id)}
+                                            className="w-8 h-8 rounded-full hover:bg-rose-500/10 hover:text-rose-500 text-muted-foreground"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </Button>
+                                    </div>
                                 </div>
                             ))}
 
