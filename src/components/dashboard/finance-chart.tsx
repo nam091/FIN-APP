@@ -113,8 +113,8 @@ export function FinanceChart({ transactions }: FinanceChartProps) {
                                 key={p}
                                 onClick={() => setPeriod(p)}
                                 className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${period === p
-                                        ? "bg-primary text-primary-foreground"
-                                        : "text-muted-foreground hover:text-foreground"
+                                    ? "bg-primary text-primary-foreground"
+                                    : "text-muted-foreground hover:text-foreground"
                                     }`}
                             >
                                 {p === "day" ? "7D" : p === "week" ? "4W" : "6M"}
@@ -127,8 +127,8 @@ export function FinanceChart({ transactions }: FinanceChartProps) {
                         <button
                             onClick={() => setDisplayType("all")}
                             className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${displayType === "all"
-                                    ? "bg-primary text-primary-foreground"
-                                    : "text-muted-foreground hover:text-foreground"
+                                ? "bg-primary text-primary-foreground"
+                                : "text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             All
@@ -136,8 +136,8 @@ export function FinanceChart({ transactions }: FinanceChartProps) {
                         <button
                             onClick={() => setDisplayType("income")}
                             className={`px-3 py-1 text-xs font-medium rounded-full transition-all flex items-center gap-1 ${displayType === "income"
-                                    ? "bg-emerald-500 text-white"
-                                    : "text-muted-foreground hover:text-foreground"
+                                ? "bg-emerald-500 text-white"
+                                : "text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             <TrendingUp className="w-3 h-3" />
@@ -145,8 +145,8 @@ export function FinanceChart({ transactions }: FinanceChartProps) {
                         <button
                             onClick={() => setDisplayType("expense")}
                             className={`px-3 py-1 text-xs font-medium rounded-full transition-all flex items-center gap-1 ${displayType === "expense"
-                                    ? "bg-rose-500 text-white"
-                                    : "text-muted-foreground hover:text-foreground"
+                                ? "bg-rose-500 text-white"
+                                : "text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             <TrendingDown className="w-3 h-3" />
@@ -201,7 +201,7 @@ export function FinanceChart({ transactions }: FinanceChartProps) {
                                 border: "none",
                                 boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
                             }}
-                            formatter={(value: number, name: string) => [formatVND(value), name === "income" ? "Income" : "Expense"]}
+                            formatter={(value: any, name: string) => [formatVND(Number(value) || 0), name === "income" ? "Income" : "Expense"]}
                         />
                         {(displayType === "all" || displayType === "income") && (
                             <Bar

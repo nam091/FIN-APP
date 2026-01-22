@@ -46,7 +46,8 @@ export function BottomNav() {
                         className="absolute top-1.5 bottom-1.5 rounded-xl bg-primary shadow-lg shadow-primary/30 transition-all duration-500 ease-out"
                         style={{
                             width: `calc((100% - 12px) / ${navItems.length})`,
-                            left: `calc(6px + ${activeIndex} * ((100% - 12px) / ${navItems.length}))`,
+                            left: 6,
+                            transform: `translateX(calc(${activeIndex} * 100%))`,
                             opacity: activeIndex === -1 ? 0 : 1,
                         }}
                     />
@@ -73,7 +74,7 @@ export function BottomNav() {
                                 {/* Shared Indicator Dot */}
                                 <div
                                     className={cn(
-                                        "absolute bottom-0 w-1 h-1 rounded-full bg-primary-foreground transition-all duration-500",
+                                        "absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary-foreground transition-all duration-500",
                                         isActive ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-0 translate-y-2"
                                     )}
                                 />
