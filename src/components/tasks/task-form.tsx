@@ -225,7 +225,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                                                 : "bg-secondary border-border text-muted-foreground hover:border-accent"
                                         )}
                                     >
-                                        {"labelKey" in opt ? t(opt.labelKey as any) : opt.label}
+                                        {t(opt.labelKey as any)}
                                     </button>
                                 ))}
                             </div>
