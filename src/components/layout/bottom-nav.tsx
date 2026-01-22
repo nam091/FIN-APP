@@ -45,9 +45,8 @@ export function BottomNav() {
                     <div
                         className="absolute top-1.5 bottom-1.5 rounded-xl bg-primary shadow-lg shadow-primary/30 transition-all duration-500 ease-out"
                         style={{
-                            width: `calc(${100 / navItems.length}% - 6px)`,
-                            left: 3,
-                            transform: `translateX(calc(${activeIndex * 100}% + ${activeIndex * 6 / navItems.length}px))`,
+                            width: `calc((100% - 12px) / ${navItems.length})`,
+                            left: `calc(6px + ${activeIndex} * ((100% - 12px) / ${navItems.length}))`,
                             opacity: activeIndex === -1 ? 0 : 1,
                         }}
                     />
