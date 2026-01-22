@@ -175,7 +175,7 @@ export function FinanceDashboard() {
                                 accent="purple"
                             />
                         </div>
-                        </div>
+
                     )}
 
                     <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
