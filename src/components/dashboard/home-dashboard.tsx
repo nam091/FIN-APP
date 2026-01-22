@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatVND, formatVNDShort } from "@/lib/currency";
+import { getLocalDateString } from "@/lib/date-utils";
 import { BackgroundDots } from "@/components/ui/background-dots";
 import { ActivityChart } from "./activity-chart";
 import { FinanceChart } from "./finance-chart";
@@ -53,7 +54,7 @@ export function HomeDashboard() {
 
     // Notes summary
     const totalNotes = notes?.length ?? 0;
-    const ideasNotes = notes?.filter(n => n.category === "Ideas").length ?? 0;
+    const notesToday = notes?.filter(n => n.date === getLocalDateString(new Date())).length ?? 0;
 
     return (
         <div className="flex flex-col h-full w-full bg-background text-foreground overflow-hidden relative">
@@ -72,7 +73,7 @@ export function HomeDashboard() {
                             <Settings className="w-5 h-5 text-muted-foreground" />
                         </Button>
                     </div>
-                    <p className="text-muted-foreground text-sm">{t("overview")}</p>
+                    <p className="text-muted-foreground/80 text-sm font-medium">{t("overview")}</p>
                 </div>
             </header>
 
@@ -96,24 +97,24 @@ export function HomeDashboard() {
                             </Button>
                         </div>
                         <div className="grid grid-cols-3 gap-4">
-                            <Card className="bg-secondary/50 border-border rounded-[32px] p-4">
+                            <Card className="bg-secondary/50 border-border rounded-[32px] p-4 shadow-sm hover:shadow-md transition-shadow">
                                 <div className="flex items-center gap-2 mb-2">
                                     <TrendingUp className="w-4 h-4 text-emerald-500" />
-                                    <span className="text-muted-foreground text-xs uppercase font-bold">{t("income")}</span>
+                                    <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-wider">{t("income")}</span>
                                 </div>
                                 <span className="text-xl font-bold text-emerald-500">{formatVNDShort(todayIncome)}</span>
                             </Card>
-                            <Card className="bg-secondary/50 border-border rounded-[32px] p-4">
+                            <Card className="bg-secondary/50 border-border rounded-[32px] p-4 shadow-sm hover:shadow-md transition-shadow">
                                 <div className="flex items-center gap-2 mb-2">
                                     <TrendingDown className="w-4 h-4 text-rose-500" />
-                                    <span className="text-muted-foreground text-xs uppercase font-bold">{t("expense")}</span>
+                                    <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-wider">{t("expense")}</span>
                                 </div>
                                 <span className="text-xl font-bold text-rose-500">-{formatVNDShort(todayExpense)}</span>
                             </Card>
-                            <Card className="bg-secondary/50 border-border rounded-[32px] p-4">
+                            <Card className="bg-secondary/50 border-border rounded-[32px] p-4 shadow-sm hover:shadow-md transition-shadow">
                                 <div className="flex items-center gap-2 mb-2">
                                     <Wallet className="w-4 h-4 text-indigo-500" />
-                                    <span className="text-muted-foreground text-xs uppercase font-bold">{t("balance")}</span>
+                                    <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-wider">{t("balance")}</span>
                                 </div>
                                 <span className={cn("text-xl font-bold", balance >= 0 ? "text-foreground" : "text-rose-500")}>
                                     {balance < 0 ? "-" : ""}{formatVNDShort(Math.abs(balance))}
@@ -141,32 +142,32 @@ export function HomeDashboard() {
                             </h2>
                             <Button
                                 variant="ghost"
-                                className="text-zinc-500 hover:text-white text-sm flex items-center gap-1"
+                                className="text-muted-foreground hover:text-foreground text-sm flex items-center gap-1"
                                 onClick={() => setActiveTab("tasks")}
                             >
                                 {t("viewAll")} <ArrowRight className="w-4 h-4" />
                             </Button>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <Card className="bg-emerald-500/10 border-emerald-500/30 rounded-[32px] p-5">
+                            <Card className="bg-emerald-500/10 border-emerald-500/30 rounded-[32px] p-5 shadow-sm hover:shadow-md transition-all">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center">
+                                    <div className="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
                                         <CheckCircle2 className="w-6 h-6 text-emerald-500" />
                                     </div>
                                     <div>
-                                        <span className="text-3xl font-bold text-emerald-500">{completedTasks}</span>
-                                        <p className="text-muted-foreground text-sm">{t("completed")}</p>
+                                        <span className="text-3xl font-extrabold text-emerald-500">{completedTasks}</span>
+                                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">{t("completed")}</p>
                                     </div>
                                 </div>
                             </Card>
-                            <Card className="bg-amber-500/10 border-amber-500/30 rounded-[32px] p-5">
+                            <Card className="bg-amber-500/10 border-amber-500/30 rounded-[32px] p-5 shadow-sm hover:shadow-md transition-all">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-amber-500/20 rounded-full flex items-center justify-center">
+                                    <div className="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center">
                                         <Clock className="w-6 h-6 text-amber-500" />
                                     </div>
                                     <div>
-                                        <span className="text-3xl font-bold text-amber-500">{pendingTasks}</span>
-                                        <p className="text-muted-foreground text-sm">{t("pending")}</p>
+                                        <span className="text-3xl font-extrabold text-amber-500">{pendingTasks}</span>
+                                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">{t("pending")}</p>
                                     </div>
                                 </div>
                             </Card>
@@ -182,32 +183,32 @@ export function HomeDashboard() {
                             </h2>
                             <Button
                                 variant="ghost"
-                                className="text-zinc-500 hover:text-white text-sm flex items-center gap-1"
+                                className="text-muted-foreground hover:text-foreground text-sm flex items-center gap-1"
                                 onClick={() => setActiveTab("notes")}
                             >
                                 {t("viewAll")} <ArrowRight className="w-4 h-4" />
                             </Button>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <Card className="bg-purple-500/10 border-purple-500/30 rounded-[32px] p-5">
+                            <Card className="bg-purple-500/10 border-purple-500/30 rounded-[32px] p-5 shadow-sm hover:shadow-md transition-all">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
+                                    <div className="w-12 h-12 bg-purple-500/20 rounded-2xl flex items-center justify-center">
                                         <FileText className="w-6 h-6 text-purple-500" />
                                     </div>
                                     <div>
-                                        <span className="text-3xl font-bold text-purple-500">{totalNotes}</span>
-                                        <p className="text-zinc-500 text-sm">{t("totalNotes")}</p>
+                                        <span className="text-3xl font-extrabold text-purple-500">{totalNotes}</span>
+                                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">{t("totalNotes")}</p>
                                     </div>
                                 </div>
                             </Card>
-                            <Card className="bg-pink-500/10 border-pink-500/30 rounded-[32px] p-5">
+                            <Card className="bg-pink-500/10 border-pink-500/30 rounded-[32px] p-5 shadow-sm hover:shadow-md transition-all">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center">
+                                    <div className="w-12 h-12 bg-pink-500/20 rounded-2xl flex items-center justify-center">
                                         <Lightbulb className="w-6 h-6 text-pink-500" />
                                     </div>
                                     <div>
-                                        <span className="text-3xl font-bold text-pink-500">{ideasNotes}</span>
-                                        <p className="text-muted-foreground text-sm">{t("ideaNotes")}</p>
+                                        <span className="text-3xl font-extrabold text-pink-500">{notesToday}</span>
+                                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">{t("today")}</p>
                                     </div>
                                 </div>
                             </Card>

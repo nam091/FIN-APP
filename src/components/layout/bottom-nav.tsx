@@ -38,15 +38,15 @@ export function BottomNav() {
             <div className="absolute inset-0 backdrop-blur-2xl bg-background/60" />
 
             {/* Content */}
-            <div className="relative px-4 pb-3 pt-4 pointer-events-auto">
-                <div className="relative flex items-center max-w-md mx-auto bg-secondary/50 backdrop-blur-xl rounded-2xl p-1.5 border border-white/10 shadow-lg shadow-black/20 overflow-hidden">
+            <div className="relative px-6 pb-6 pt-4 pointer-events-auto flex justify-center">
+                <div className="relative flex items-center w-full max-w-[400px] bg-secondary/80 backdrop-blur-2xl rounded-[28px] p-2 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden">
 
                     {/* Sliding Highlight Pill */}
                     <div
-                        className="absolute top-1.5 bottom-1.5 rounded-xl bg-primary shadow-lg shadow-primary/30 transition-all duration-500 ease-out"
+                        className="absolute top-2 bottom-2 rounded-2xl bg-primary shadow-lg shadow-primary/30 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
                         style={{
-                            width: `calc((100% - 12px) / ${navItems.length})`,
-                            left: 6,
+                            width: `calc((100% - 16px) / ${navItems.length})`,
+                            left: 8,
                             transform: `translateX(calc(${activeIndex} * 100%))`,
                             opacity: activeIndex === -1 ? 0 : 1,
                         }}
@@ -59,8 +59,8 @@ export function BottomNav() {
                             <button
                                 key={item.id}
                                 className={cn(
-                                    "relative flex-1 flex items-center justify-center h-12 rounded-xl transition-all duration-300 z-10 p-0",
-                                    isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                                    "relative flex-1 flex items-center justify-center h-12 rounded-2xl transition-all duration-300 z-10 p-0 outline-none",
+                                    isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground active:scale-90"
                                 )}
                                 onClick={() => setActiveTab(item.id as any)}
                             >
@@ -68,14 +68,6 @@ export function BottomNav() {
                                     className={cn(
                                         "w-5 h-5 transition-all duration-300",
                                         isActive ? "scale-110" : "scale-100"
-                                    )}
-                                />
-
-                                {/* Shared Indicator Dot */}
-                                <div
-                                    className={cn(
-                                        "absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary-foreground transition-all duration-500",
-                                        isActive ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-0 translate-y-2"
                                     )}
                                 />
                             </button>

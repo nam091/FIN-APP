@@ -103,37 +103,36 @@ export function SwipeToReveal({ children, onDelete, onEdit, className }: SwipeTo
         <div className={cn("relative overflow-hidden rounded-3xl", className)} data-swipe-to-reveal="true">
             {/* Action Buttons Background */}
             <div
-                className="absolute inset-y-0 right-0 flex items-center justify-end gap-2 pr-2"
+                className="absolute inset-y-0 right-0 flex items-center justify-end gap-2.5 pr-3 shadow-inner"
                 style={{
-                    width: actionZoneWidth + 16,
+                    width: actionZoneWidth + 32,
                     opacity: buttonOpacity,
+                    background: `linear-gradient(to left, ${onEdit ? '#3b82f620' : '#f43f5e20'}, transparent)`,
                 }}
             >
                 {onEdit && (
                     <button
                         onClick={handleEdit}
-                        className="h-[calc(100%-16px)] flex items-center justify-center active:scale-95 transition-all bg-blue-500 hover:bg-blue-400 text-white rounded-2xl shadow-lg"
+                        className="h-12 w-12 flex items-center justify-center active:scale-90 transition-all bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-400/20"
                         aria-label="Edit"
                         style={{
-                            width: 56,
-                            transform: `scale(${0.7 + buttonScale * 0.3})`,
+                            transform: `scale(${0.6 + buttonScale * 0.4})`,
                             opacity: buttonScale,
                         }}
                     >
-                        <Pencil className="w-5 h-5" />
+                        <Pencil className="w-5 h-5 drop-shadow-sm" />
                     </button>
                 )}
                 <button
                     onClick={handleDelete}
-                    className="h-[calc(100%-16px)] flex items-center justify-center active:scale-95 transition-all bg-rose-500 hover:bg-rose-400 text-white rounded-2xl shadow-lg"
+                    className="h-12 w-12 flex items-center justify-center active:scale-90 transition-all bg-gradient-to-br from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white rounded-2xl shadow-lg shadow-rose-500/20 border border-rose-400/20"
                     aria-label="Delete"
                     style={{
-                        width: 56,
-                        transform: `scale(${0.7 + buttonScale * 0.3})`,
+                        transform: `scale(${0.6 + buttonScale * 0.4})`,
                         opacity: buttonScale,
                     }}
                 >
-                    <Trash2 className="w-5 h-5" />
+                    <Trash2 className="w-5 h-5 drop-shadow-sm" />
                 </button>
             </div>
 

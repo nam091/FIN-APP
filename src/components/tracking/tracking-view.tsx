@@ -172,6 +172,13 @@ export function TrackingView() {
     };
 
     const totalItems = trackers.length + dailyTasks.length;
+    const today = getLocalDateString();
+
+    // Calculate tasks done today based on history
+    const tasksDoneToday = mergedDailyTasks.filter(task => {
+        const completedToday = task.completionLogs?.some((log: any) => log.date === today && log.completed);
+        return completedToday || task.completed; // Fallback to current state
+    }).length;
 
     return (
         <div className="flex flex-col h-full bg-background text-foreground overflow-hidden relative cursor-default w-full">
@@ -198,20 +205,20 @@ export function TrackingView() {
                     {/* Summary Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                         <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">{t("habits")}</div>
+                            <div className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest mb-1">{t("habits")}</div>
                             <div className="text-2xl font-bold text-foreground">{trackers.length}</div>
                         </div>
                         <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">{t("dailyTasks")}</div>
+                            <div className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest mb-1">{t("dailyTasks")}</div>
                             <div className="text-2xl font-bold text-cyan-500">{dailyTasks.length}</div>
                         </div>
                         <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">{t("totalItems")}</div>
+                            <div className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest mb-1">{t("totalItems")}</div>
                             <div className="text-2xl font-bold text-foreground">{totalItems}</div>
                         </div>
                         <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                            <div className="text-muted-foreground text-xs uppercase font-bold tracking-wider mb-1">{t("tasksDone")}</div>
-                            <div className="text-2xl font-bold text-green-500">{dailyTasks.filter(t => t.completed).length}</div>
+                            <div className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest mb-1">{t("tasksDone")}</div>
+                            <div className="text-2xl font-bold text-green-500">{tasksDoneToday}</div>
                         </div>
                     </div>
 

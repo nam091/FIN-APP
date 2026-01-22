@@ -184,15 +184,22 @@ export function NoteList() {
                         <ActiveTasksPanel />
 
 
-                        {/* Sticky Note */}
-                        <div className="bg-amber-500/10 border border-amber-500/20 p-6 rounded-xl rotate-1 shadow-lg hover:rotate-0 transition-all cursor-move">
-                            <div className="flex items-center gap-2 mb-2 text-amber-600 dark:text-amber-500/70">
-                                <Pin className="w-3 h-3" />
-                                <span className="text-[10px] font-bold uppercase tracking-wider">{t("summary")}</span>
+                        {/* Sticky Note - Shows the most recent or pinned note */}
+                        <div className="bg-amber-500/15 border border-amber-500/30 p-6 rounded-[32px] rotate-1 shadow-xl hover:rotate-0 transition-all duration-500 cursor-default group/sticky relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-16 h-16 bg-amber-500/10 rounded-bl-[40px]" />
+                            <div className="flex items-center gap-2 mb-3 text-amber-600 dark:text-amber-500/80">
+                                <Pin className="w-3.5 h-3.5 fill-current" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">{t("pinned") || "Featured"}</span>
                             </div>
-                            <p className="text-foreground text-base font-medium leading-relaxed italic">
-                                "The best way to predict the future is to create it." - Note: Remember to finalize the UI/UX workshop notes by Friday morning.
+                            <p className="text-foreground/90 text-base font-semibold leading-relaxed italic relative z-10">
+                                {sortedNotes.length > 0
+                                    ? `"${sortedNotes[0].title}: ${sortedNotes[0].content.substring(0, 80)}${sortedNotes[0].content.length > 80 ? '...' : ''}"`
+                                    : t("noNotes")}
                             </p>
+                            <div className="mt-4 flex items-center justify-between text-[10px] font-bold text-amber-600/60 uppercase tracking-widest">
+                                <span>{sortedNotes.length > 0 ? new Date(sortedNotes[0].date).toLocaleDateString() : ""}</span>
+                                <span>Sticky Note</span>
+                            </div>
                         </div>
 
                         {/* Recent Notes Panel */}
