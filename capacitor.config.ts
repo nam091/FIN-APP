@@ -5,12 +5,11 @@ const config: CapacitorConfig = {
   appName: 'FinApp',
   webDir: 'out',
 
-  // Server configuration
+  // Server configuration - Point to production
   server: {
     androidScheme: 'https',
-    // For development, you can set this to your local dev server
-    // url: 'http://192.168.1.x:3000',
-    // cleartext: true
+    url: 'https://www.allforpeople.dev',
+    cleartext: true
   },
 
   // Android-specific settings
