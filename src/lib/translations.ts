@@ -30,6 +30,10 @@ export const translations = {
         pending: "Pending",
         totalNotes: "Total Notes",
         ideaNotes: "Idea Notes",
+        activityOverview: "Activity Overview",
+        productivityLast7Days: "Your productivity over the last 7 days",
+        financeOverview: "Finance Overview",
+        incomeExpenseChart: "Income & Expense over time",
 
         // Finance View
         transactions: "Transactions",
@@ -233,6 +237,10 @@ export const translations = {
         pending: "Chưa xong",
         totalNotes: "Tổng ghi chú",
         ideaNotes: "Ý tưởng",
+        activityOverview: "Tổng quan hoạt động",
+        productivityLast7Days: "Năng suất của bạn trong 7 ngày qua",
+        financeOverview: "Tổng quan tài chính",
+        incomeExpenseChart: "Thu nhập & Chi tiêu theo thời gian",
 
         // Finance View
         transactions: "Giao dịch",
