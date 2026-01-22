@@ -56,101 +56,108 @@ export function TimePicker({ value, onChange, className }: TimePickerProps) {
             </button>
 
             {isOpen && (
-                <div className="absolute top-full mt-2 left-0 right-0 bg-card border border-border rounded-2xl p-4 shadow-xl z-50">
-                    <div className="flex items-center justify-center gap-4">
-                        {/* Hours */}
-                        <div className="flex flex-col items-center">
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => adjustHours(1)}
-                                className="h-8 w-8"
-                            >
-                                <ChevronUp className="w-4 h-4" />
-                            </Button>
-                            <span className="text-3xl font-bold w-14 text-center">{displayHours.toString().padStart(2, '0')}</span>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => adjustHours(-1)}
-                                className="h-8 w-8"
-                            >
-                                <ChevronDown className="w-4 h-4" />
-                            </Button>
-                        </div>
-
-                        <span className="text-2xl font-bold text-muted-foreground">:</span>
-
-                        {/* Minutes */}
-                        <div className="flex flex-col items-center">
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => adjustMinutes(5)}
-                                className="h-8 w-8"
-                            >
-                                <ChevronUp className="w-4 h-4" />
-                            </Button>
-                            <span className="text-3xl font-bold w-14 text-center">{minutes.toString().padStart(2, '0')}</span>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => adjustMinutes(-5)}
-                                className="h-8 w-8"
-                            >
-                                <ChevronDown className="w-4 h-4" />
-                            </Button>
-                        </div>
-
-                        {/* AM/PM */}
-                        <div className="flex flex-col items-center gap-1">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    if (hours >= 12) {
-                                        const newHours = hours - 12;
-                                        setHours(newHours);
-                                        onChange(formatTime(newHours, minutes));
-                                    }
-                                }}
-                                className={cn(
-                                    "px-3 py-1 rounded-lg text-sm font-medium transition-all",
-                                    hours < 12 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-                                )}
-                            >
-                                AM
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    if (hours < 12) {
-                                        const newHours = hours + 12;
-                                        setHours(newHours);
-                                        onChange(formatTime(newHours, minutes));
-                                    }
-                                }}
-                                className={cn(
-                                    "px-3 py-1 rounded-lg text-sm font-medium transition-all",
-                                    hours >= 12 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-                                )}
-                            >
-                                PM
-                            </button>
-                        </div>
-                    </div>
-
-                    <Button
-                        type="button"
+                <>
+                    {/* Backdrop */}
+                    <div
+                        className="fixed inset-0 bg-black/20 z-40 md:hidden"
                         onClick={() => setIsOpen(false)}
-                        className="w-full mt-4 bg-primary hover:bg-primary/90"
-                    >
-                        Done
-                    </Button>
-                </div>
+                    />
+                    <div className="fixed md:absolute left-1/2 md:left-0 top-1/2 md:top-full -translate-x-1/2 md:translate-x-0 -translate-y-1/2 md:translate-y-0 md:mt-2 md:right-0 bg-card border border-border rounded-2xl p-4 shadow-xl z-50 w-[280px] md:w-full">
+                        <div className="flex items-center justify-center gap-4">
+                            {/* Hours */}
+                            <div className="flex flex-col items-center">
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => adjustHours(1)}
+                                    className="h-8 w-8"
+                                >
+                                    <ChevronUp className="w-4 h-4" />
+                                </Button>
+                                <span className="text-3xl font-bold w-14 text-center">{displayHours.toString().padStart(2, '0')}</span>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => adjustHours(-1)}
+                                    className="h-8 w-8"
+                                >
+                                    <ChevronDown className="w-4 h-4" />
+                                </Button>
+                            </div>
+
+                            <span className="text-2xl font-bold text-muted-foreground">:</span>
+
+                            {/* Minutes */}
+                            <div className="flex flex-col items-center">
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => adjustMinutes(5)}
+                                    className="h-8 w-8"
+                                >
+                                    <ChevronUp className="w-4 h-4" />
+                                </Button>
+                                <span className="text-3xl font-bold w-14 text-center">{minutes.toString().padStart(2, '0')}</span>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => adjustMinutes(-5)}
+                                    className="h-8 w-8"
+                                >
+                                    <ChevronDown className="w-4 h-4" />
+                                </Button>
+                            </div>
+
+                            {/* AM/PM */}
+                            <div className="flex flex-col items-center gap-1">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (hours >= 12) {
+                                            const newHours = hours - 12;
+                                            setHours(newHours);
+                                            onChange(formatTime(newHours, minutes));
+                                        }
+                                    }}
+                                    className={cn(
+                                        "px-3 py-1 rounded-lg text-sm font-medium transition-all",
+                                        hours < 12 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                                    )}
+                                >
+                                    AM
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (hours < 12) {
+                                            const newHours = hours + 12;
+                                            setHours(newHours);
+                                            onChange(formatTime(newHours, minutes));
+                                        }
+                                    }}
+                                    className={cn(
+                                        "px-3 py-1 rounded-lg text-sm font-medium transition-all",
+                                        hours >= 12 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                                    )}
+                                >
+                                    PM
+                                </button>
+                            </div>
+                        </div>
+
+                        <Button
+                            type="button"
+                            onClick={() => setIsOpen(false)}
+                            className="w-full mt-4 bg-primary hover:bg-primary/90"
+                        >
+                            Done
+                        </Button>
+                    </div>
+                </>
             )}
         </div>
     );
