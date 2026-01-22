@@ -10,7 +10,21 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(head:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(npm run cap:build:*)",
+      "Bash(npm install)",
+      "Bash(./gradlew assembleDebug:*)",
+      "Bash(echo:*)",
+      "Bash(sdkmanager:*)",
+      "Bash(ln:*)",
+      "Bash(for f in *.exe)",
+      "Bash(do name=\"$f%.exe\")",
+      "Bash([ ! -e \"$name\" ])",
+      "Bash(done)",
+      "Bash(keytool:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run cap:sync:*)",
+      "Bash(ls:*)"
     ]
   }
 }
