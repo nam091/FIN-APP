@@ -48,6 +48,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
     const [reminder, setReminder] = useState("none");
     const [repeat, setRepeat] = useState("none");
     const [showAdvanced, setShowAdvanced] = useState(false);
+    const [openPicker, setOpenPicker] = useState<"date" | "time" | null>(null);
 
     // Pre-fill form when editing
     useEffect(() => {
@@ -158,6 +159,11 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                         <DatePicker
                             value={dueDate}
                             onChange={setDueDate}
+                            isOpen={openPicker === "date"}
+                            onOpenChange={(open) => {
+                                if (open) setOpenPicker("date");
+                                else if (openPicker === "date") setOpenPicker(null);
+                            }}
                         />
                     </div>
                     <div className="space-y-2">
@@ -167,6 +173,11 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
                         <TimePicker
                             value={dueTime}
                             onChange={setDueTime}
+                            isOpen={openPicker === "time"}
+                            onOpenChange={(open) => {
+                                if (open) setOpenPicker("time");
+                                else if (openPicker === "time") setOpenPicker(null);
+                            }}
                         />
                     </div>
                 </div>

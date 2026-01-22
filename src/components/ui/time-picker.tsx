@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Clock, ChevronUp, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -9,10 +9,24 @@ interface TimePickerProps {
     value?: string; // HH:mm format
     onChange: (time: string) => void;
     className?: string;
+    onOpenChange?: (isOpen: boolean) => void;
+    isOpen?: boolean;
 }
 
-export function TimePicker({ value, onChange, className }: TimePickerProps) {
+export function TimePicker({ value, onChange, className, onOpenChange, isOpen: controlledIsOpen }: TimePickerProps) {
     const [isOpen, setIsOpen] = useState(false);
+
+    // Sync with controlled state
+    useEffect(() => {
+        if (controlledIsOpen !== undefined && controlledIsOpen !== isOpen) {
+            setIsOpen(controlledIsOpen);
+        }
+    }, [controlledIsOpen]);
+
+    const handleSetOpen = (open: boolean) => {
+        setIsOpen(open);
+        onOpenChange?.(open);
+    };
 
     // Parse initial values
     const parseTime = (timeStr?: string) => {
@@ -48,7 +62,7 @@ export function TimePicker({ value, onChange, className }: TimePickerProps) {
         <div className={cn("relative", className)}>
             <button
                 type="button"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => handleSetOpen(!isOpen)}
                 className="flex items-center gap-2 px-4 py-3 bg-secondary/50 border border-border rounded-2xl hover:border-primary/50 transition-all w-full"
             >
                 <Clock className="w-5 h-5 text-muted-foreground" />
@@ -60,7 +74,7 @@ export function TimePicker({ value, onChange, className }: TimePickerProps) {
                     {/* Backdrop */}
                     <div
                         className="fixed inset-0 bg-black/20 z-40 md:hidden"
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => handleSetOpen(false)}
                     />
                     <div className="fixed md:absolute left-1/2 md:left-0 top-1/2 md:top-full -translate-x-1/2 md:translate-x-0 -translate-y-1/2 md:translate-y-0 md:mt-2 md:right-0 bg-card border border-border rounded-2xl p-4 shadow-xl z-50 w-[280px] md:w-full">
                         <div className="flex items-center justify-center gap-4">
@@ -151,7 +165,7 @@ export function TimePicker({ value, onChange, className }: TimePickerProps) {
 
                         <Button
                             type="button"
-                            onClick={() => setIsOpen(false)}
+                            onClick={() => handleSetOpen(false)}
                             className="w-full mt-4 bg-primary hover:bg-primary/90"
                         >
                             Done

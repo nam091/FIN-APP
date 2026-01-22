@@ -9,14 +9,28 @@ interface DatePickerProps {
     value?: string; // YYYY-MM-DD format
     onChange: (date: string) => void;
     className?: string;
+    onOpenChange?: (isOpen: boolean) => void;
+    isOpen?: boolean;
 }
 
 const DAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const MONTHS = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
     'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
 
-export function DatePicker({ value, onChange, className }: DatePickerProps) {
+export function DatePicker({ value, onChange, className, onOpenChange, isOpen: controlledIsOpen }: DatePickerProps) {
     const [isOpen, setIsOpen] = useState(false);
+
+    // Sync with controlled state
+    useEffect(() => {
+        if (controlledIsOpen !== undefined && controlledIsOpen !== isOpen) {
+            setIsOpen(controlledIsOpen);
+        }
+    }, [controlledIsOpen]);
+
+    const handleSetOpen = (open: boolean) => {
+        setIsOpen(open);
+        onOpenChange?.(open);
+    };
 
     const today = new Date();
 
@@ -88,7 +102,7 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
     const handleSelectDate = (day: number) => {
         const dateString = formatDateToString(viewYear, viewMonth, day);
         onChange(dateString);
-        setIsOpen(false);
+        handleSetOpen(false);
     };
 
     const handleTodayClick = (e: React.MouseEvent) => {
@@ -96,7 +110,7 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
         e.stopPropagation();
         const dateString = formatDateToString(today.getFullYear(), today.getMonth(), today.getDate());
         onChange(dateString);
-        setIsOpen(false);
+        handleSetOpen(false);
     };
 
     const handleTomorrowClick = (e: React.MouseEvent) => {
@@ -156,7 +170,7 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    setIsOpen(!isOpen);
+                    handleSetOpen(!isOpen);
                 }}
                 className="flex items-center gap-2 px-4 py-3 bg-secondary/50 border border-border rounded-2xl hover:border-primary/50 transition-all w-full h-14"
             >
@@ -170,71 +184,78 @@ export function DatePicker({ value, onChange, className }: DatePickerProps) {
             </button>
 
             {isOpen && (
-                <div
-                    className="absolute top-full mt-2 left-0 right-0 bg-card border border-border rounded-2xl p-4 shadow-xl z-50 min-w-[280px]"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    {/* Month/Year Header */}
-                    <div className="flex items-center justify-between mb-4">
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={handlePrevMonth}
-                            className="h-8 w-8"
-                        >
-                            <ChevronLeft className="w-4 h-4" />
-                        </Button>
-                        <span className="font-semibold">
-                            {MONTHS[viewMonth]} {viewYear}
-                        </span>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={handleNextMonth}
-                            className="h-8 w-8"
-                        >
-                            <ChevronRight className="w-4 h-4" />
-                        </Button>
-                    </div>
+                <>
+                    {/* Backdrop */}
+                    <div
+                        className="fixed inset-0 bg-black/20 z-40 md:hidden"
+                        onClick={() => handleSetOpen(false)}
+                    />
+                    <div
+                        className="fixed md:absolute left-1/2 md:left-0 top-1/2 md:top-full -translate-x-1/2 md:translate-x-0 -translate-y-1/2 md:translate-y-0 md:mt-2 md:right-0 bg-card border border-border rounded-2xl p-4 shadow-xl z-50 w-[320px] md:w-full md:min-w-[280px]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Month/Year Header */}
+                        <div className="flex items-center justify-between mb-4">
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={handlePrevMonth}
+                                className="h-8 w-8"
+                            >
+                                <ChevronLeft className="w-4 h-4" />
+                            </Button>
+                            <span className="font-semibold">
+                                {MONTHS[viewMonth]} {viewYear}
+                            </span>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={handleNextMonth}
+                                className="h-8 w-8"
+                            >
+                                <ChevronRight className="w-4 h-4" />
+                            </Button>
+                        </div>
 
-                    {/* Day Headers */}
-                    <div className="grid grid-cols-7 gap-1 mb-2">
-                        {DAYS.map(day => (
-                            <div key={day} className="w-9 h-9 flex items-center justify-center text-xs font-medium text-muted-foreground">
-                                {day}
-                            </div>
-                        ))}
-                    </div>
+                        {/* Day Headers */}
+                        <div className="grid grid-cols-7 gap-1 mb-2">
+                            {DAYS.map(day => (
+                                <div key={day} className="w-9 h-9 flex items-center justify-center text-xs font-medium text-muted-foreground">
+                                    {day}
+                                </div>
+                            ))}
+                        </div>
 
-                    {/* Calendar Grid */}
-                    <div className="grid grid-cols-7 gap-1">
-                        {days}
-                    </div>
+                        {/* Calendar Grid */}
+                        <div className="grid grid-cols-7 gap-1">
+                            {days}
+                        </div>
 
-                    {/* Quick Actions */}
-                    <div className="flex gap-2 mt-4 pt-4 border-t border-border">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={handleTodayClick}
-                            className="flex-1"
-                        >
-                            Hôm nay
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={handleTomorrowClick}
-                            className="flex-1"
-                        >
-                            Ngày mai
-                        </Button>
+                        {/* Quick Actions */}
+                        <div className="flex gap-2 mt-4 pt-4 border-t border-border">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={handleTodayClick}
+                                className="flex-1"
+                            >
+                                Hôm nay
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={handleTomorrowClick}
+                                className="flex-1"
+                            >
+                                Ngày mai
+                            </Button>
+                        </div>
                     </div>
-                </div>
+                </>
             )}
         </div>
     );
