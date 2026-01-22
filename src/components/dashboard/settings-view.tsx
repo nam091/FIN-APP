@@ -72,19 +72,12 @@ export function SettingsView() {
         if (!endpoint || !apiKey) return;
         setIsFetchingModels(true);
         try {
-            let baseUrl = endpoint;
-            if (baseUrl.endsWith("/chat/completions")) {
-                baseUrl = baseUrl.replace("/chat/completions", "");
-            }
-
-            // Standard OpenAI-compatible models endpoint
-            const modelsEndpoint = baseUrl.endsWith("/v1") ? `${baseUrl}/models` : `${baseUrl}/v1/models`;
-
-            const res = await fetch(modelsEndpoint, {
+            const res = await fetch("/api/proxy/models", {
+                method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${apiKey}`,
                     "Content-Type": "application/json"
-                }
+                },
+                body: JSON.stringify({ endpoint, apiKey })
             });
 
             if (res.ok) {
