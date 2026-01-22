@@ -15,10 +15,15 @@ export async function GET() {
         let user = await db.user.findUnique({
             where: { email: session.user.email },
             include: {
-                tasks: true,
+                tasks: {
+                    include: { completionLogs: true }
+                },
                 transactions: true,
                 notes: true,
                 settings: true,
+                trackers: {
+                    include: { entries: true }
+                },
             },
         });
 
@@ -35,10 +40,15 @@ export async function GET() {
                     },
                 },
                 include: {
-                    tasks: true,
+                    tasks: {
+                        include: { completionLogs: true }
+                    },
                     transactions: true,
                     notes: true,
                     settings: true,
+                    trackers: {
+                        include: { entries: true }
+                    },
                 },
             });
         }
@@ -48,6 +58,7 @@ export async function GET() {
             transactions: user.transactions,
             notes: user.notes,
             settings: user.settings,
+            trackers: user.trackers,
         });
     } catch (error) {
         console.error("Sync API Error:", error);

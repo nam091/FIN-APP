@@ -84,14 +84,28 @@ export function TrackerCard({ tracker, onToggle, onEdit, onDelete }: TrackerCard
                 </div>
             </div>
 
-            {/* Contribution Graph (Mini Calendar) Placeholder */}
-            <div className="flex gap-1 h-8 mb-4 items-end opacity-50">
-                {[...Array(14)].map((_, i) => (
-                    <div key={i} className={cn(
-                        "flex-1 rounded-sm transition-all",
-                        Math.random() > 0.5 ? "bg-primary/20 h-full" : "bg-secondary h-2"
-                    )} />
-                ))}
+            {/* Contribution Graph (Last 14 Days) */}
+            <div className="flex gap-1 h-8 mb-4 items-end">
+                {[...Array(14)].map((_, i) => {
+                    const date = new Date();
+                    date.setDate(date.getDate() - (13 - i)); // Show last 14 days ending today
+                    const dateStr = getLocalDateString(date);
+                    const entry = tracker.entries?.find((e: any) => e.date === dateStr);
+                    const isDone = entry && entry.value >= (tracker.goal || 1);
+
+                    return (
+                        <div
+                            key={i}
+                            title={dateStr}
+                            className={cn(
+                                "flex-1 rounded-sm transition-all",
+                                isDone
+                                    ? "bg-primary/80 h-full"
+                                    : "bg-secondary h-2"
+                            )}
+                        />
+                    );
+                })}
             </div>
 
             <Button

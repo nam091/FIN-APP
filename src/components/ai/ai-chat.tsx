@@ -65,9 +65,14 @@ export function AIChat() {
 
     useEffect(() => {
         if (scrollRef.current) {
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+            setTimeout(() => {
+                scrollRef.current?.scrollTo({
+                    top: scrollRef.current.scrollHeight,
+                    behavior: "smooth"
+                });
+            }, 100);
         }
-    }, [chatHistory]);
+    }, [chatHistory, isLoading]);
 
     if (!isMounted) return <div className="flex-1 bg-background" />;
 

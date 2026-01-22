@@ -37,6 +37,7 @@ import { FinanceForm } from "./finance-form";
 import { formatVND } from "@/lib/currency";
 import { SwipeToReveal } from "@/components/ui/swipe-to-reveal";
 import { BackgroundDots } from "@/components/ui/background-dots";
+import { ActivityChart } from "./activity-chart";
 
 const IconMap: Record<string, any> = {
     Utensils,
@@ -55,6 +56,9 @@ export function FinanceDashboard() {
         setFinanceFilter,
         setActiveTab,
         transactions,
+        tasks,
+        notes,
+        trackers,
         financeSummary,
         deleteTransaction,
         t
@@ -171,7 +175,12 @@ export function FinanceDashboard() {
                                 accent="purple"
                             />
                         </div>
+                        </div>
                     )}
+
+                    <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <ActivityChart tasks={tasks} notes={notes} trackers={trackers} />
+                    </div>
 
                     <div className="flex space-x-2 mb-8 overflow-x-auto no-scrollbar pb-2">
                         <Button variant="ghost" size="icon" className="shrink-0 w-10 h-10 bg-secondary rounded-full">
@@ -230,7 +239,7 @@ export function FinanceDashboard() {
                     />
                 </DrawerContent>
             </Drawer>
-        </div>
+        </div >
     );
 }
 

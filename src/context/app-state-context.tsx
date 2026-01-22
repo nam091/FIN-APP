@@ -123,6 +123,7 @@ interface AppState {
     removeNotificationHook: (id: string) => void;
     chatHistory: ChatMessage[];
     setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+    trackers: any[];
     t: (key: TranslationKey) => string;
 }
 
@@ -206,6 +207,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     const [notes, setNotes] = useState<Note[]>([]);
     const [userSettings, setUserSettings] = useState<UserSettings>(initialSettings);
     const [chatHistory, setChatHistory] = useState<ChatMessage[]>(initialChatHistory);
+    const [trackers, setTrackers] = useState<any[]>([]);
 
     const { data: session } = useSession();
 
@@ -221,6 +223,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
                     setTasks(data.tasks || []);
                     setTransactions(data.transactions || []);
                     setNotes(data.notes || []);
+                    setTrackers(data.trackers || []);
                     // Load from localStorage as fallback/priority
                     const localLang = localStorage.getItem("finapp_language");
                     if (localLang) {
@@ -592,6 +595,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             removeNotificationHook,
             chatHistory,
             setChatHistory,
+            trackers,
             t: (key: TranslationKey) => {
                 const lang = (userSettings.language as "en" | "vi") || "en";
                 return translations[lang][key] || translations.en[key] || key;
