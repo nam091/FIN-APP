@@ -8,6 +8,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { TimePicker } from "@/components/ui/time-picker";
 import { X, ListTodo, Briefcase, Clock, Bell, Calendar, Repeat, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { scheduleTaskReminder, cancelNotification } from "@/lib/local-notifications";
 
 interface TaskFormProps {
     onClose: () => void;
@@ -63,7 +64,7 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
         }
     }, [editingTask]);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!title) return;
 
@@ -78,12 +79,58 @@ export function TaskForm({ onClose, editingTask }: TaskFormProps) {
             repeat: repeat !== "none" ? repeat : undefined,
         };
 
+        let taskId: string | null;
         if (editingTask) {
             updateTask(editingTask.id, taskData);
+            taskId = String(editingTask.id);
+            // Cancel old notification if editing
+            await cancelNotification(taskId);
         } else {
-            addTask(taskData);
+            taskId = await addTask(taskData);
         }
+
+        // Schedule local notification if reminder is set
+        if (taskId && reminder !== "none" && dueDate) {
+            const reminderTime = calculateReminderTime(dueDate, dueTime, reminder);
+            if (reminderTime) {
+                await scheduleTaskReminder(
+                    taskId,
+                    `Task Reminder: ${title}`,
+                    project ? `Project: ${project}` : "You have a task due soon!",
+                    reminderTime
+                );
+            }
+        }
+
         onClose();
+    };
+
+    // Calculate reminder time based on due date/time and reminder option
+    const calculateReminderTime = (date: string, time: string | undefined, reminderOption: string): Date | null => {
+        try {
+            const dueDateTime = new Date(date);
+            if (time) {
+                const [hours, minutes] = time.split(":").map(Number);
+                dueDateTime.setHours(hours, minutes, 0, 0);
+            } else {
+                dueDateTime.setHours(9, 0, 0, 0); // Default to 9 AM if no time set
+            }
+
+            const reminderOffsets: Record<string, number> = {
+                "5min": 5 * 60 * 1000,
+                "15min": 15 * 60 * 1000,
+                "30min": 30 * 60 * 1000,
+                "1hour": 60 * 60 * 1000,
+                "1day": 24 * 60 * 60 * 1000,
+            };
+
+            const offset = reminderOffsets[reminderOption];
+            if (!offset) return null;
+
+            return new Date(dueDateTime.getTime() - offset);
+        } catch {
+            return null;
+        }
     };
 
     const isEditing = !!editingTask;

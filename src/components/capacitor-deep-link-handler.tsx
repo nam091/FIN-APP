@@ -4,10 +4,20 @@ import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
 import { App, URLOpenListenerEvent } from "@capacitor/app";
 import { Browser } from "@capacitor/browser";
+import {
+    requestNotificationPermission,
+    createNotificationChannels
+} from "@/lib/local-notifications";
 
 export function CapacitorDeepLinkHandler() {
     useEffect(() => {
         if (!Capacitor.isNativePlatform()) return;
+
+        // Initialize notifications
+        const initNotifications = async () => {
+            await createNotificationChannels();
+            await requestNotificationPermission();
+        };
 
         // Listen for deep links
         const setupDeepLinkListener = async () => {
@@ -29,6 +39,7 @@ export function CapacitorDeepLinkHandler() {
             });
         };
 
+        initNotifications();
         setupDeepLinkListener();
 
         return () => {

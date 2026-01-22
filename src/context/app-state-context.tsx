@@ -360,7 +360,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const addTask = async (task: Omit<Task, "id">) => {
+    const addTask = async (task: Omit<Task, "id">): Promise<string | null> => {
         console.log("AppStateContext: addTask called with", task);
         try {
             const res = await fetch("/api/tasks", {
@@ -373,13 +373,16 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
                 console.log("AppStateContext: addTask success, new task:", newTask);
                 setTasks(prev => [newTask, ...prev]);
                 syncToGoogleCalendar(newTask);
+                return String(newTask.id);
             } else {
                 console.error("AppStateContext: addTask failed with status", res.status);
                 const errorText = await res.text();
                 console.error("Error details:", errorText);
+                return null;
             }
         } catch (error) {
             console.error("AppStateContext: Failed to add task", error);
+            return null;
         }
     };
 
