@@ -236,29 +236,28 @@ export function AIChat() {
             </header>
 
             <div
-                ref={scrollRef}
-                className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-6"
+                className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-4"
             >
                 {chatHistory.map((msg) => (
                     <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                        <div className={`max-w-[85%] md:max-w-[70%] flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                        <div className={`max-w-[88%] md:max-w-[70%] flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
                             <div className={cn(
-                                "w-10 h-10 rounded-full shrink-0 flex items-center justify-center shadow-lg border-2 border-background overflow-hidden",
+                                "w-8 h-8 rounded-full shrink-0 flex items-center justify-center shadow-md border border-background overflow-hidden",
                                 msg.role === "user"
                                     ? "bg-gradient-to-br from-zinc-700 to-zinc-800"
                                     : "bg-gradient-to-br from-indigo-500 to-purple-600"
                             )}>
                                 {msg.role === "user" ? (
-                                    userSettings.ai.userAvatar ? <img src={userSettings.ai.userAvatar} className="w-full h-full object-cover" alt={t("user")} /> : <User className="w-5 h-5 text-white" />
+                                    userSettings.ai.userAvatar ? <img src={userSettings.ai.userAvatar} className="w-full h-full object-cover" alt={t("user")} /> : <User className="w-4 h-4 text-white" />
                                 ) : (
-                                    userSettings.ai.aiAvatar ? <img src={userSettings.ai.aiAvatar} className="w-full h-full object-cover" alt={t("ai")} /> : <Zap className="w-5 h-5 text-white" />
+                                    userSettings.ai.aiAvatar ? <img src={userSettings.ai.aiAvatar} className="w-full h-full object-cover" alt={t("ai")} /> : <Zap className="w-4 h-4 text-white" />
                                 )}
                             </div>
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <div className={cn(
-                                    "px-7 py-4 rounded-[32px] text-sm leading-[1.6] shadow-xl",
+                                    "px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-lg",
                                     msg.role === "user"
-                                        ? "bg-primary text-primary-foreground rounded-br-lg font-medium"
+                                        ? "bg-primary text-primary-foreground rounded-br-sm font-medium"
                                         : "bg-card text-card-foreground rounded-bl-lg border border-border/50"
                                 )}>
                                     <div dangerouslySetInnerHTML={{ __html: parseMarkdown(msg.content) }} />

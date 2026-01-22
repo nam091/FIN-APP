@@ -143,7 +143,7 @@ export function HomeDashboard() {
                         <div className="grid grid-cols-2 gap-4">
                             <Card className="bg-emerald-500/10 border-emerald-500/30 rounded-[32px] p-5">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+                                    <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center">
                                         <CheckCircle2 className="w-6 h-6 text-emerald-500" />
                                     </div>
                                     <div>
@@ -154,7 +154,7 @@ export function HomeDashboard() {
                             </Card>
                             <Card className="bg-amber-500/10 border-amber-500/30 rounded-[32px] p-5">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center">
+                                    <div className="w-12 h-12 bg-amber-500/20 rounded-full flex items-center justify-center">
                                         <Clock className="w-6 h-6 text-amber-500" />
                                     </div>
                                     <div>
@@ -184,7 +184,7 @@ export function HomeDashboard() {
                         <div className="grid grid-cols-2 gap-4">
                             <Card className="bg-purple-500/10 border-purple-500/30 rounded-[32px] p-5">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                                    <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
                                         <FileText className="w-6 h-6 text-purple-500" />
                                     </div>
                                     <div>
@@ -195,7 +195,7 @@ export function HomeDashboard() {
                             </Card>
                             <Card className="bg-pink-500/10 border-pink-500/30 rounded-[32px] p-5">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-pink-500/20 rounded-xl flex items-center justify-center">
+                                    <div className="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center">
                                         <Lightbulb className="w-6 h-6 text-pink-500" />
                                     </div>
                                     <div>
