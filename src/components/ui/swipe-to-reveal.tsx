@@ -100,7 +100,7 @@ export function SwipeToReveal({ children, onDelete, onEdit, className }: SwipeTo
     const buttonOpacity = Math.min(1, translateX / (actionZoneWidth * 0.5));
 
     return (
-        <div className={cn("relative overflow-hidden rounded-2xl", className)}>
+        <div className={cn("relative overflow-hidden rounded-2xl", className)} data-swipe-to-reveal="true">
             {/* Action Buttons Background */}
             <div
                 className="absolute inset-y-0 right-0 flex items-center justify-end"

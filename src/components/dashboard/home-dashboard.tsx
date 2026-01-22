@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatVND, formatVNDShort } from "@/lib/currency";
+import { BackgroundDots } from "@/components/ui/background-dots";
 
 export function HomeDashboard() {
     const { setActiveTab, transactions, tasks } = useAppState();
@@ -35,6 +36,7 @@ export function HomeDashboard() {
 
     return (
         <div className="flex flex-col h-full w-full bg-background text-foreground overflow-hidden relative">
+            <BackgroundDots />
             {/* Header */}
             <header className="px-6 pt-12 pb-4 z-40 shrink-0">
                 <div className="max-w-4xl mx-auto w-full">

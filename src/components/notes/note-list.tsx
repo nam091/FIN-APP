@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/drawer";
 import { NoteForm } from "./note-form";
 import { SwipeToReveal } from "@/components/ui/swipe-to-reveal";
+import { BackgroundDots } from "@/components/ui/background-dots";
 
 export function NoteList() {
     const { setActiveTab, dismissedItems, dismissItem, notes, addNote, updateNote, deleteNote } = useAppState();
@@ -70,13 +71,7 @@ export function NoteList() {
 
     return (
         <div className="flex flex-col h-full bg-background text-foreground overflow-hidden relative cursor-default w-full">
-            {/* Grid Pattern Background */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none"
-                style={{
-                    backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)",
-                    backgroundSize: "30px 30px"
-                }}
-            />
+            <BackgroundDots />
 
             <header className="px-6 py-4 flex justify-between items-center shrink-0">
                 <Button
@@ -164,25 +159,6 @@ export function NoteList() {
                             </div>
                         </div>
 
-                        {/* Monthly Budget Panel */}
-                        <div className="bg-secondary/40 backdrop-blur-xl border border-border p-5 rounded-3xl group hover:border-emerald-500/30 transition-all cursor-move">
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="font-semibold text-foreground flex items-center gap-2">
-                                    <Wallet className="w-4 h-4 text-emerald-500" />
-                                    Monthly Budget
-                                </h3>
-                                <Search className="text-muted-foreground w-4 h-4 cursor-pointer hover:text-foreground" />
-                            </div>
-                            <div className="mb-4">
-                                <div className="text-3xl font-bold tracking-tight text-foreground">$4,280.00</div>
-                                <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                                    <span className="text-emerald-500 font-medium">+12%</span> vs last month
-                                </div>
-                            </div>
-                            <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                                <div className="bg-emerald-500 h-full w-[65%] shadow-[0_0_10px_rgba(16,185,129,0.3)]"></div>
-                            </div>
-                        </div>
 
                         {/* Sticky Note */}
                         <div className="bg-amber-500/10 border border-amber-500/20 p-6 rounded-xl rotate-1 shadow-lg hover:rotate-0 transition-all cursor-move">

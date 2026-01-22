@@ -24,7 +24,7 @@ export function TrackerCard({ tracker, onToggle, onEdit, onDelete }: TrackerCard
 
     const isCompletedToday = () => {
         const today = getLocalDateString();
-        return tracker.entries.some((e: any) => e.date === today && e.value >= (tracker.goal || 1));
+        return tracker.entries?.some((e: any) => e.date === today && e.value >= (tracker.goal || 1)) ?? false;
     };
 
     const handleToggleToday = () => {

@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { NewTrackerModal } from "./new-tracker-modal";
 import { useAppState } from "@/context/app-state-context";
 import { getLocalDateString } from "@/lib/date-utils";
+import { BackgroundDots } from "@/components/ui/background-dots";
 
 export function TrackingView() {
     const { data: session } = useSession();
@@ -141,8 +142,9 @@ export function TrackingView() {
         setTrackers(prev => prev.map(t => {
             if (t.id !== trackerId) return t;
 
-            const existingEntryIndex = t.entries.findIndex((e: any) => e.date === date);
-            let newEntries = [...t.entries];
+            const entries = t.entries || [];
+            const existingEntryIndex = entries.findIndex((e: any) => e.date === date);
+            let newEntries = [...entries];
 
             if (existingEntryIndex >= 0) {
                 if (newEntries[existingEntryIndex].value >= t.goal) {
@@ -172,13 +174,7 @@ export function TrackingView() {
 
     return (
         <div className="flex flex-col h-full bg-background text-foreground overflow-hidden relative cursor-default w-full">
-            {/* Grid Pattern Background */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none"
-                style={{
-                    backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)",
-                    backgroundSize: "30px 30px"
-                }}
-            />
+            <BackgroundDots />
 
             <header className="px-6 py-4 flex justify-between items-center shrink-0">
                 <h1 className="text-2xl font-bold flex items-center gap-3">

@@ -185,9 +185,9 @@ const initialSettings: UserSettings = {
         googleCalendarSync: false
     },
     ai: {
-        endpoint: "http://proxy.allforpeople.ninja/v1/chat/completions",
-        apiKey: "proxypal-local",
-        model: "gemini-3-flash-preview",
+        endpoint: "http://159.223.33.155:8317/v1",
+        apiKey: "proxypal-apikey",
+        model: "gpt-4o",
         userAvatar: "",
         aiAvatar: ""
     }

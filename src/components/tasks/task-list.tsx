@@ -33,6 +33,7 @@ import {
 import { TaskForm } from "./task-form";
 import { SwipeToReveal } from "@/components/ui/swipe-to-reveal";
 import { useRef } from "react";
+import { BackgroundDots } from "@/components/ui/background-dots";
 
 export function TaskList() {
     const { setActiveTab, tasks, toggleTask, deleteTask, dismissedItems, dismissItem, userSettings } = useAppState();
@@ -97,6 +98,7 @@ export function TaskList() {
 
     return (
         <div className="flex flex-col h-full bg-background text-foreground overflow-hidden relative w-full">
+            <BackgroundDots />
             <header className="px-6 py-4 flex justify-between items-center shrink-0">
                 <Button
                     variant="ghost"

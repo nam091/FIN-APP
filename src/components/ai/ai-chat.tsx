@@ -24,6 +24,7 @@ import {
 import { useAppState, Transaction } from "@/context/app-state-context";
 import { cn } from "@/lib/utils";
 import { formatVND } from "@/lib/currency";
+import { BackgroundDots } from "@/components/ui/background-dots";
 
 interface ChatMessage {
     id: number;
@@ -163,6 +164,7 @@ export function AIChat() {
 
     return (
         <div className="flex flex-col h-full bg-background text-foreground overflow-hidden relative w-full">
+            <BackgroundDots />
             <header className="px-6 py-4 flex justify-between items-center shrink-0 border-b z-30">
                 <div className="flex items-center gap-3">
                     <Button

@@ -11,9 +11,12 @@ import { SettingsView } from "@/components/dashboard/settings-view";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Sidebar } from "@/components/layout/sidebar";
 import { useAppState } from "@/context/app-state-context";
+import { SwipeNavWrapper } from "@/components/ui/swipe-nav-wrapper";
 
 export default function Home() {
-  const { activeTab } = useAppState();
+  const { activeTab, setActiveTab } = useAppState();
+
+  const tabs = ["home", "finance", "tasks", "tracking", "notes", "ai", "settings"];
 
   return (
     <main className="flex min-h-screen bg-background text-foreground relative">
@@ -22,15 +25,17 @@ export default function Home() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
-        <div className="flex-1 overflow-hidden relative w-full h-full">
-          {activeTab === "home" && <HomeDashboard />}
-          {activeTab === "finance" && <FinanceDashboard />}
-          {activeTab === "tasks" && <TaskList />}
-          {activeTab === "notes" && <NoteList />}
-          {activeTab === "tracking" && <TrackingView />}
-          {activeTab === "ai" && <AIChat />}
-          {activeTab === "settings" && <SettingsView />}
-        </div>
+        <SwipeNavWrapper activeTab={activeTab} onTabChange={(tab: string) => setActiveTab(tab as typeof activeTab)} tabs={tabs}>
+          <div className="flex-1 overflow-hidden relative w-full h-full">
+            {activeTab === "home" && <HomeDashboard />}
+            {activeTab === "finance" && <FinanceDashboard />}
+            {activeTab === "tasks" && <TaskList />}
+            {activeTab === "notes" && <NoteList />}
+            {activeTab === "tracking" && <TrackingView />}
+            {activeTab === "ai" && <AIChat />}
+            {activeTab === "settings" && <SettingsView />}
+          </div>
+        </SwipeNavWrapper>
 
         {/* Mobile Bottom Nav (Hidden on desktop via md:hidden internally) */}
         <BottomNav />

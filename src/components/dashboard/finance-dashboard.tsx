@@ -33,6 +33,7 @@ import {
 import { FinanceForm } from "./finance-form";
 import { formatVND } from "@/lib/currency";
 import { SwipeToReveal } from "@/components/ui/swipe-to-reveal";
+import { BackgroundDots } from "@/components/ui/background-dots";
 
 const IconMap: Record<string, any> = {
     Utensils,
@@ -87,6 +88,7 @@ export function FinanceDashboard() {
 
     return (
         <div className="flex flex-col h-full bg-background text-foreground overflow-hidden relative w-full">
+            <BackgroundDots />
             <header className="px-6 py-4 flex justify-between items-center shrink-0">
                 <Button
                     variant="ghost"
