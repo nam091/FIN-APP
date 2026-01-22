@@ -43,11 +43,12 @@ export function BottomNav() {
 
                     {/* Sliding Highlight Pill */}
                     <div
-                        className="absolute top-1.5 bottom-1.5 rounded-xl bg-primary shadow-lg shadow-primary/30 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)"
+                        className="absolute top-1.5 bottom-1.5 rounded-xl bg-primary shadow-lg shadow-primary/30 transition-all duration-500 ease-out"
                         style={{
-                            width: `calc(${itemWidthPercentage}% - 8px)`,
-                            left: `calc(${activeIndex * itemWidthPercentage}% + 4px)`,
-                            transform: `scale(${activeIndex === -1 ? 0 : 1})`,
+                            width: `calc(${100 / navItems.length}% - 6px)`,
+                            left: 3,
+                            transform: `translateX(calc(${activeIndex * 100}% + ${activeIndex * 6 / navItems.length}px))`,
+                            opacity: activeIndex === -1 ? 0 : 1,
                         }}
                     />
 
