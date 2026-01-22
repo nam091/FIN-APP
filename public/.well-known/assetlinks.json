@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "io.antigravity.finapp",
+    "sha256_cert_fingerprints": ["2B:61:EA:6B:01:68:72:7C:B7:F6:F6:83:55:10:8B:BD:A8:49:3C:F2:76:43:94:1C:74:95:9B:A4:FB:90:4C:99"]
+  }
+}]

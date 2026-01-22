@@ -1,10 +1,10 @@
 "use client";
 
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { useAppState } from "@/context/app-state-context";
-import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import { handleGoogleSignIn } from "@/lib/capacitor-auth";
 
 export function CalendarConnectButton() {
     const { t } = useAppState();
@@ -34,7 +34,7 @@ export function CalendarConnectButton() {
 
     return (
         <Button
-            onClick={() => signIn("google")}
+            onClick={() => handleGoogleSignIn()}
             className="rounded-2xl px-6 h-11 font-bold bg-white text-black hover:bg-zinc-200"
         >
             {t("connect")}
