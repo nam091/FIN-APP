@@ -63,21 +63,31 @@ export function TrackerCard({ tracker, onToggle, onEdit, onDelete }: TrackerCard
                     {streak}
                 </div>
 
-                {/* Edit/Delete Actions */}
-                <div className="absolute top-4 right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100 z-20 pointer-events-none group-hover:pointer-events-auto">
+                {/* Edit/Delete Actions - Always visible but subtle */}
+                <div className="absolute top-4 right-4 flex items-center gap-1 z-20">
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={(e) => { e.stopPropagation(); e.preventDefault(); onEdit?.(); }}
-                        className="w-8 h-8 rounded-full bg-secondary/80 hover:bg-accent text-muted-foreground pointer-events-auto"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            console.log("Edit button clicked for tracker:", tracker.id);
+                            onEdit?.();
+                        }}
+                        className="w-8 h-8 rounded-full bg-secondary/80 hover:bg-accent text-muted-foreground opacity-60 hover:opacity-100 transition-opacity"
                     >
                         <Edit2 className="w-3.5 h-3.5" />
                     </Button>
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={(e) => { e.stopPropagation(); e.preventDefault(); onDelete?.(); }}
-                        className="w-8 h-8 rounded-full bg-secondary/80 hover:bg-rose-500/20 text-rose-500 pointer-events-auto"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            console.log("Delete button clicked for tracker:", tracker.id);
+                            onDelete?.();
+                        }}
+                        className="w-8 h-8 rounded-full bg-secondary/80 hover:bg-rose-500/20 text-rose-500 opacity-60 hover:opacity-100 transition-opacity"
                     >
                         <Trash2 className="w-3.5 h-3.5" />
                     </Button>
