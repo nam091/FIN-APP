@@ -201,7 +201,7 @@ export function FinanceChart({ transactions }: FinanceChartProps) {
                                 border: "none",
                                 boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
                             }}
-                            formatter={(value: any, name: string) => [formatVND(Number(value) || 0), name === "income" ? "Income" : "Expense"]}
+                            formatter={(value: any, name: any) => [formatVND(Number(value) || 0), name === "income" ? "Income" : "Expense"]}
                         />
                         {(displayType === "all" || displayType === "income") && (
                             <Bar
