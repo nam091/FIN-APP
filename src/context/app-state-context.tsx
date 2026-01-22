@@ -88,7 +88,6 @@ interface UserSettings {
         aiAvatar?: string;
     };
     language: string;
-    t: (key: TranslationKey) => string;
 }
 
 interface AppState {
