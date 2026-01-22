@@ -23,7 +23,8 @@ import {
     Plus,
     ArrowUpRight,
     ArrowDownLeft,
-    Calendar
+    Calendar,
+    MoreHorizontal
 } from "lucide-react";
 import { useAppState, Transaction } from "@/context/app-state-context";
 import { cn } from "@/lib/utils";
