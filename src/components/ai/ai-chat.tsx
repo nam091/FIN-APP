@@ -57,21 +57,21 @@ export function AIChat() {
     const [isLoading, setIsLoading] = useState(false);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
-    const scrollRef = useRef<HTMLDivElement>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setIsMounted(true);
     }, []);
 
+    // Auto-scroll to bottom when chat updates
     useEffect(() => {
-        if (scrollRef.current) {
-            setTimeout(() => {
-                scrollRef.current?.scrollTo({
-                    top: scrollRef.current.scrollHeight,
-                    behavior: "smooth"
-                });
-            }, 100);
-        }
+        const scrollToBottom = () => {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        };
+        // Use requestAnimationFrame to ensure DOM is updated
+        requestAnimationFrame(() => {
+            setTimeout(scrollToBottom, 50);
+        });
     }, [chatHistory, isLoading]);
 
     if (!isMounted) return <div className="flex-1 bg-background" />;
@@ -364,6 +364,8 @@ export function AIChat() {
                         </div>
                     </div>
                 )}
+                {/* Scroll anchor */}
+                <div ref={messagesEndRef} />
                 <div className="h-28 md:h-20" />
             </div>
 

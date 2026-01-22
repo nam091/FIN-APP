@@ -10,6 +10,7 @@ import { NewTrackerModal } from "./new-tracker-modal";
 import { useAppState } from "@/context/app-state-context";
 import { getLocalDateString } from "@/lib/date-utils";
 import { BackgroundDots } from "@/components/ui/background-dots";
+import { SwipeToReveal } from "@/components/ui/swipe-to-reveal";
 
 export function TrackingView() {
     const { data: session } = useSession();
@@ -244,16 +245,24 @@ export function TrackingView() {
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {trackers.map(tracker => (
-                                    <TrackerCard
+                                    <SwipeToReveal
                                         key={tracker.id}
-                                        tracker={tracker}
-                                        onToggle={(date) => handleToggle(tracker.id, date)}
+                                        onDelete={() => handleDeleteTracker(tracker.id)}
                                         onEdit={() => {
                                             setEditingTracker(tracker);
                                             setIsNewModalOpen(true);
                                         }}
-                                        onDelete={() => handleDeleteTracker(tracker.id)}
-                                    />
+                                    >
+                                        <TrackerCard
+                                            tracker={tracker}
+                                            onToggle={(date) => handleToggle(tracker.id, date)}
+                                            onEdit={() => {
+                                                setEditingTracker(tracker);
+                                                setIsNewModalOpen(true);
+                                            }}
+                                            onDelete={() => handleDeleteTracker(tracker.id)}
+                                        />
+                                    </SwipeToReveal>
                                 ))}
                             </div>
                         </div>
