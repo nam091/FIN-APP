@@ -1,8 +1,7 @@
 "use client";
 
 import { Capacitor } from "@capacitor/core";
-import { Browser } from "@capacitor/browser";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 
 // Check if running in Capacitor (mobile app)
 export const isCapacitor = (): boolean => {
@@ -10,36 +9,18 @@ export const isCapacitor = (): boolean => {
     return Capacitor.isNativePlatform();
 };
 
-// Handle Google Sign In for both web and mobile
+// Handle Google Sign In
+// On mobile WebView, OAuth popup might not work well
+// But since app loads from production URL, cookies should persist
 export const handleGoogleSignIn = async () => {
-    if (isCapacitor()) {
-        // On mobile: Open OAuth in system browser
-        // The deep link will bring user back to the app
-        const authUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://www.allforpeople.dev"}/api/auth/signin/google?callbackUrl=${encodeURIComponent("https://www.allforpeople.dev/")}`;
-
-        await Browser.open({
-            url: authUrl,
-            presentationStyle: "popover"
-        });
-
-        // Listen for app resume to close browser
-        Browser.addListener("browserFinished", () => {
-            // Browser closed, reload to check session
-            window.location.reload();
-        });
-    } else {
-        // On web: Use normal NextAuth signIn
-        signIn("google");
-    }
+    // Use redirect mode instead of popup for better mobile compatibility
+    signIn("google", {
+        callbackUrl: window.location.origin + "/",
+        redirect: true
+    });
 };
 
 // Handle Sign Out
 export const handleSignOut = async () => {
-    if (isCapacitor()) {
-        const signOutUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://www.allforpeople.dev"}/api/auth/signout`;
-        await Browser.open({ url: signOutUrl });
-    } else {
-        const { signOut } = await import("next-auth/react");
-        signOut();
-    }
+    signOut({ callbackUrl: "/" });
 };
