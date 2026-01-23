@@ -101,7 +101,7 @@ interface AppState {
     dismissItem: (id: string) => void;
     tasks: Task[];
     toggleTask: (id: number) => void;
-    addTask: (task: Omit<Task, "id">) => void;
+    addTask: (task: Omit<Task, "id">) => Promise<string | null>;
     updateTask: (id: number, task: Partial<Task>) => void;
     deleteTask: (id: number) => void;
     transactions: Transaction[];
