@@ -19,9 +19,11 @@ export function CapacitorDeepLinkHandler() {
             await requestNotificationPermission();
         };
 
-        // Listen for deep links
+        // Listen for deep links (when app is opened via URL)
         const setupDeepLinkListener = async () => {
             await App.addListener("appUrlOpen", async (event: URLOpenListenerEvent) => {
+                console.log("Deep link received:", event.url);
+
                 // Close any open browser
                 try {
                     await Browser.close();
@@ -29,21 +31,41 @@ export function CapacitorDeepLinkHandler() {
                     // Browser might not be open
                 }
 
-                // If the URL contains auth callback, reload to pick up session
-                if (event.url.includes("/api/auth/callback") || event.url.includes("allforpeople.dev")) {
-                    // Small delay to ensure session is set
+                // If the URL is from our domain, reload to pick up session
+                if (event.url.includes("allforpeople.dev")) {
+                    // Small delay to ensure cookies are set
                     setTimeout(() => {
-                        window.location.reload();
-                    }, 500);
+                        window.location.href = "/";
+                    }, 300);
                 }
+            });
+
+            // Listen for app state changes (resume from background)
+            await App.addListener("appStateChange", async (state) => {
+                if (state.isActive) {
+                    // App became active - might be returning from OAuth
+                    // Check if there's a session by reloading
+                    console.log("App resumed, checking session...");
+                }
+            });
+        };
+
+        // Listen for browser close
+        const setupBrowserListener = async () => {
+            await Browser.addListener("browserFinished", () => {
+                console.log("Browser closed, reloading to check session...");
+                // Reload to pick up any new session
+                window.location.href = "/";
             });
         };
 
         initNotifications();
         setupDeepLinkListener();
+        setupBrowserListener();
 
         return () => {
             App.removeAllListeners();
+            Browser.removeAllListeners();
         };
     }, []);
 
