@@ -22,6 +22,7 @@ import { getLocalDateString } from "@/lib/date-utils";
 import { BackgroundDots } from "@/components/ui/background-dots";
 import { ActivityChart } from "./activity-chart";
 import { FinanceChart } from "./finance-chart";
+import { TargetsView } from "@/components/targets/targets-view";
 
 export function HomeDashboard() {
     const {
@@ -131,6 +132,11 @@ export function HomeDashboard() {
                     {/* Finance Overview Chart */}
                     <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <FinanceChart transactions={transactions} />
+                    </section>
+
+                    {/* Targets Overview */}
+                    <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <TargetsView />
                     </section>
 
                     {/* Tasks Overview */}

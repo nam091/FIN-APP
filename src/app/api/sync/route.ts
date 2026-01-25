@@ -24,6 +24,7 @@ export async function GET() {
                 trackers: {
                     include: { entries: true }
                 },
+                targets: true,
             },
         });
 
@@ -49,6 +50,7 @@ export async function GET() {
                     trackers: {
                         include: { entries: true }
                     },
+                    targets: true,
                 },
             });
         }
@@ -59,6 +61,7 @@ export async function GET() {
             notes: user.notes,
             settings: user.settings,
             trackers: user.trackers,
+            targets: user.targets,
         });
     } catch (error) {
         console.error("Sync API Error:", error);

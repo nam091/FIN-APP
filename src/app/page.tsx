@@ -7,6 +7,7 @@ import { TaskList } from "@/components/tasks/task-list";
 import { NoteList } from "@/components/notes/note-list";
 import { AIChat } from "@/components/ai/ai-chat";
 import { TrackingView } from "@/components/tracking/tracking-view";
+import { TargetList } from "@/components/targets/target-list";
 import { SettingsView } from "@/components/dashboard/settings-view";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Sidebar } from "@/components/layout/sidebar";
@@ -16,7 +17,7 @@ import { SwipeNavWrapper } from "@/components/ui/swipe-nav-wrapper";
 export default function Home() {
   const { activeTab, setActiveTab } = useAppState();
 
-  const tabs = ["home", "finance", "tasks", "tracking", "notes", "ai", "settings"];
+  const tabs = ["home", "finance", "tasks", "targets", "tracking", "notes", "ai", "settings"];
 
   return (
     <main className="flex min-h-screen bg-background text-foreground relative">
@@ -30,6 +31,7 @@ export default function Home() {
             {activeTab === "home" && <HomeDashboard />}
             {activeTab === "finance" && <FinanceDashboard />}
             {activeTab === "tasks" && <TaskList />}
+            {activeTab === "targets" && <TargetList />}
             {activeTab === "tracking" && <TrackingView />}
             {activeTab === "notes" && <NoteList />}
             {activeTab === "ai" && <AIChat />}

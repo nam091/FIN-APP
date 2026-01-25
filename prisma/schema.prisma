@@ -19,6 +19,7 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   trackers     Tracker[]
+  targets      Target[]
 }
 
 model Task {
@@ -113,4 +114,18 @@ model TaskCompletionLog {
   createdAt DateTime @default(now())
 
   @@unique([taskId, date])
+}
+
+model Target {
+  id            String   @id @default(cuid())
+  name          String
+  targetAmount  Float
+  currentAmount Float    @default(0)
+  deadline      String?  // YYYY-MM-DD
+  category      String   @default("savings")
+  status        String   @default("active") // "active" | "completed" | "cancelled"
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

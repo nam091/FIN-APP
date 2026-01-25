@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Home, ListTodo, BookOpen, MessageSquare, Wallet, Activity } from "lucide-react";
+import { Home, ListTodo, BookOpen, MessageSquare, Wallet, Activity, Target } from "lucide-react";
 import { useAppState } from "@/context/app-state-context";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +12,7 @@ export function BottomNav() {
         { id: "home", icon: Home },
         { id: "finance", icon: Wallet },
         { id: "tasks", icon: ListTodo },
+        { id: "targets", icon: Target },
         { id: "tracking", icon: Activity },
         { id: "notes", icon: BookOpen },
         { id: "ai", icon: MessageSquare },

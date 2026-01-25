@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 import { getLocalDateString } from "@/lib/date-utils";
 import { translations, TranslationKey } from "@/lib/translations";
 
-type TabType = "home" | "finance" | "tasks" | "notes" | "tracking" | "ai" | "settings" | "add";
+type TabType = "home" | "finance" | "tasks" | "notes" | "tracking" | "targets" | "ai" | "settings" | "add";
 
 export interface Transaction {
     id: string;
@@ -48,6 +48,18 @@ export interface Note {
     category: string;
     date: string;
     tags: string[];
+}
+
+export interface Target {
+    id: string;
+    name: string;
+    targetAmount: number;
+    currentAmount: number;
+    deadline?: string;
+    category: string;
+    status: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface ChatMessage {
@@ -129,6 +141,10 @@ interface AppState {
     updateTracker: (id: string, tracker: any) => Promise<void>;
     deleteTracker: (id: string) => Promise<void>;
     toggleTrackerEntry: (id: string, date: string) => Promise<void>;
+    targets: Target[];
+    addTarget: (target: Omit<Target, "id">) => Promise<void>;
+    updateTarget: (id: string, target: Partial<Target>) => Promise<void>;
+    deleteTarget: (id: string) => Promise<void>;
     t: (key: TranslationKey) => string;
 }
 
@@ -213,6 +229,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     const [userSettings, setUserSettings] = useState<UserSettings>(initialSettings);
     const [chatHistory, setChatHistory] = useState<ChatMessage[]>(initialChatHistory);
     const [trackers, setTrackers] = useState<any[]>([]);
+    const [targets, setTargets] = useState<Target[]>([]);
 
     const { data: session } = useSession();
 
@@ -229,6 +246,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
                     setTransactions(data.transactions || []);
                     setNotes(data.notes || []);
                     setTrackers(data.trackers || []);
+                    setTargets(data.targets || []);
                     // Load from localStorage as fallback/priority
                     const localLang = localStorage.getItem("finapp_language");
                     if (localLang) {
@@ -633,6 +651,39 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         } catch (error) { console.error(error); }
     };
 
+    // Target management functions
+    const addTarget = async (target: Omit<Target, "id">) => {
+        try {
+            const res = await fetch("/api/targets", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(target),
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setTargets(prev => [data, ...prev]);
+            }
+        } catch (error) { console.error("Failed to add target", error); }
+    };
+
+    const updateTarget = async (id: string, target: Partial<Target>) => {
+        setTargets(prev => prev.map(t => t.id === id ? { ...t, ...target } : t));
+        try {
+            await fetch("/api/targets", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, ...target }),
+            });
+        } catch (error) { console.error("Failed to update target", error); }
+    };
+
+    const deleteTarget = async (id: string) => {
+        setTargets(prev => prev.filter(t => t.id !== id));
+        try {
+            await fetch(`/api/targets?id=${id}`, { method: "DELETE" });
+        } catch (error) { console.error("Failed to delete target", error); }
+    };
+
     return (
         <AppStateContext.Provider value={{
             activeTab,
@@ -677,6 +728,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             updateTracker,
             deleteTracker,
             toggleTrackerEntry,
+            targets,
+            addTarget,
+            updateTarget,
+            deleteTarget,
             t: (key: TranslationKey) => {
                 const lang = (userSettings.language as "en" | "vi") || "en";
                 return translations[lang][key] || translations.en[key] || key;
