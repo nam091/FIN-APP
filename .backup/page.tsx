@@ -1,0 +1,47 @@
+"use client";
+
+import React from "react";
+import { HomeDashboard } from "@/components/dashboard/home-dashboard";
+import { FinanceDashboard } from "@/components/dashboard/finance-dashboard";
+import { TaskList } from "@/components/tasks/task-list";
+import { NoteList } from "@/components/notes/note-list";
+import { AIChat } from "@/components/ai/ai-chat";
+import { TrackingView } from "@/components/tracking/tracking-view";
+import { TargetList } from "@/components/targets/target-list";
+import { SettingsView } from "@/components/dashboard/settings-view";
+import { BottomNav } from "@/components/layout/bottom-nav";
+import { Sidebar } from "@/components/layout/sidebar";
+import { useAppState } from "@/context/app-state-context";
+import { SwipeNavWrapper } from "@/components/ui/swipe-nav-wrapper";
+
+export default function Home() {
+  const { activeTab, setActiveTab } = useAppState();
+
+  const tabs = ["home", "finance", "tasks", "targets", "tracking", "notes", "ai", "settings"];
+
+  return (
+    <main className="flex min-h-screen bg-background text-foreground relative">
+      {/* Desktop Sidebar (Hidden on mobile) */}
+      <Sidebar />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <SwipeNavWrapper activeTab={activeTab} onTabChange={(tab: string) => setActiveTab(tab as typeof activeTab)} tabs={tabs}>
+          <div className="flex-1 overflow-hidden relative w-full h-full">
+            {activeTab === "home" && <HomeDashboard />}
+            {activeTab === "finance" && <FinanceDashboard />}
+            {activeTab === "tasks" && <TaskList />}
+            {activeTab === "targets" && <TargetList />}
+            {activeTab === "tracking" && <TrackingView />}
+            {activeTab === "notes" && <NoteList />}
+            {activeTab === "ai" && <AIChat />}
+            {activeTab === "settings" && <SettingsView />}
+          </div>
+        </SwipeNavWrapper>
+
+        {/* Mobile Bottom Nav (Hidden on desktop via md:hidden internally) */}
+        <BottomNav />
+      </div>
+    </main>
+  );
+}

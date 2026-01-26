@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String?
+  image        String?
+  tasks        Task[]
+  transactions Transaction[]
+  notes        Note[]
+  settings     Settings?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  trackers     Tracker[]
+  targets      Target[]
+}
+
+model Task {
+  id             Int                 @id @default(autoincrement())
+  title          String
+  project        String
+  type           String              @default("task")
+  completed      Boolean             @default(false)
+  dueDate        String?
+  dueTime        String?
+  reminder       String?
+  repeat         String?
+  googleEventId  String?
+  userId         String
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  completionLogs TaskCompletionLog[]
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  date      String
+  title     String
+  category  String
+  amount    Float
+  type      String // "income" | "expense"
+  iconName  String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  category  String
+  date      String
+  tags      String[]
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Settings {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme     String   @default("dark")
+  data      Json? // Stores complex settings like notification hooks and AI config
+  updatedAt DateTime @updatedAt
+}
+
+model Tracker {
+  id          String          @id @default(cuid())
+  title       String
+  description String?
+  icon        String          @default("Activity")
+  color       String          @default("blue")
+  type        String          @default("habit") // "habit" (boolean), "count" (numeric)
+  goal        Int             @default(1)
+  unit        String? // e.g., "pages", "min"
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entries     TrackingEntry[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model TrackingEntry {
+  id        String   @id @default(cuid())
+  trackerId String
+  tracker   Tracker  @relation(fields: [trackerId], references: [id], onDelete: Cascade)
+  date      String // YYYY-MM-DD
+  value     Float    @default(1) // 1 for boolean habit completion
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([trackerId, date])
+}
+
+model TaskCompletionLog {
+  id        String   @id @default(cuid())
+  taskId    Int
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  date      String // YYYY-MM-DD
+  completed Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@unique([taskId, date])
+}
+
+model Target {
+  id            String   @id @default(cuid())
+  name          String
+  targetAmount  Float
+  currentAmount Float    @default(0)
+  deadline      String?  // YYYY-MM-DD
+  category      String   @default("savings")
+  status        String   @default("active") // "active" | "completed" | "cancelled"
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

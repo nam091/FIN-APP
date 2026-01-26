@@ -81,13 +81,6 @@ interface NotificationHook {
     enabled: boolean;
 }
 
-interface CatalogItem {
-    id: string;
-    labelKey: string;
-    iconName: string;
-    color: string;
-}
-
 interface UserSettings {
     theme: "dark" | "light" | "system";
     dismissedItems: Record<string, number>;
@@ -107,11 +100,6 @@ interface UserSettings {
         aiAvatar?: string;
     };
     language: string;
-    catalogs: {
-        transactions: CatalogItem[];
-        tasks: CatalogItem[];
-        targets: CatalogItem[];
-    };
 }
 
 interface AppState {
@@ -145,8 +133,6 @@ interface AppState {
     updateSettings: (settings: Partial<UserSettings>) => void;
     addNotificationHook: (hook: Omit<NotificationHook, "id">) => void;
     removeNotificationHook: (id: string) => void;
-    addCatalogItem: (type: "transactions" | "tasks" | "targets", item: CatalogItem) => void;
-    removeCatalogItem: (type: "transactions" | "tasks" | "targets", id: string) => void;
     chatHistory: ChatMessage[];
     setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
     trackers: any[];
@@ -230,29 +216,7 @@ const initialSettings: UserSettings = {
         userAvatar: "",
         aiAvatar: ""
     },
-    language: "en",
-    catalogs: {
-        transactions: [
-            { id: "dining", labelKey: "dining", iconName: "Utensils", color: "text-emerald-500" },
-            { id: "shopping", labelKey: "shopping", iconName: "ShoppingBag", color: "text-pink-500" },
-            { id: "transport", labelKey: "transport", iconName: "Car", color: "text-blue-500" },
-            { id: "health", labelKey: "health", iconName: "Heart", color: "text-rose-500" },
-            { id: "income", labelKey: "income", iconName: "Briefcase", color: "text-emerald-500" },
-            { id: "other", labelKey: "other", iconName: "Sparkles", color: "text-indigo-500" },
-        ],
-        tasks: [
-            { id: "me", labelKey: "tasksForMe", iconName: "User", color: "text-blue-500" },
-            { id: "others", labelKey: "tasksOthers", iconName: "Users", color: "text-purple-500" },
-            { id: "upcoming", labelKey: "tasksUpcoming", iconName: "Calendar", color: "text-orange-500" },
-        ],
-        targets: [
-            { id: "savings", labelKey: "savings", iconName: "PiggyBank", color: "text-emerald-500" },
-            { id: "shopping", labelKey: "shopping", iconName: "ShoppingBag", color: "text-pink-500" },
-            { id: "car", labelKey: "car", iconName: "Car", color: "text-blue-500" },
-            { id: "home", labelKey: "homeCategory", iconName: "Home", color: "text-amber-500" },
-            { id: "other", labelKey: "other", iconName: "Sparkles", color: "text-indigo-500" },
-        ]
-    }
+    language: "en"
 };
 
 export function AppStateProvider({ children }: { children: ReactNode }) {
@@ -572,26 +536,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         }));
     };
 
-    const addCatalogItem = (type: "transactions" | "tasks" | "targets", item: CatalogItem) => {
-        setUserSettings(prev => {
-            const newCatalogs = { ...prev.catalogs };
-            newCatalogs[type] = [...newCatalogs[type], item];
-            const updated = { ...prev, catalogs: newCatalogs };
-            updateSettings(updated);
-            return updated;
-        });
-    };
-
-    const removeCatalogItem = (type: "transactions" | "tasks" | "targets", id: string) => {
-        setUserSettings(prev => {
-            const newCatalogs = { ...prev.catalogs };
-            newCatalogs[type] = newCatalogs[type].filter(i => i.id !== id);
-            const updated = { ...prev, catalogs: newCatalogs };
-            updateSettings(updated);
-            return updated;
-        });
-    };
-
     const financeSummary = useMemo(() => {
         const now = new Date();
         const todayStr = getLocalDateString(now);
@@ -788,8 +732,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             addTarget,
             updateTarget,
             deleteTarget,
-            addCatalogItem,
-            removeCatalogItem,
             t: (key: TranslationKey) => {
                 const lang = (userSettings.language as "en" | "vi") || "en";
                 return translations[lang][key] || translations.en[key] || key;

@@ -7,7 +7,7 @@ export async function POST(req: Request) {
         // Use provided settings or defaults
         let endpoint = aiSettings?.endpoint || "http://159.223.33.155:8317/v1/chat/completions";
         const apiKey = aiSettings?.apiKey || "proxypal-apikey";
-        const model = aiSettings?.model || "gemini-3-flash-preview";
+        const model = aiSettings?.model || "claude-3-haiku-20240307";
         const useDirectGemini = aiSettings?.useDirectGemini || false;
 
         // Ensure endpoint ends with /chat/completions if it's not a direct Gemini endpoint

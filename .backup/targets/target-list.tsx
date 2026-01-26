@@ -70,16 +70,12 @@ const CATEGORY_TRANSLATION_KEYS: Record<string, string> = {
     other: "other",
 };
 
-import { TargetUpdateDrawer } from "./target-update-drawer";
-
 export function TargetList() {
     const { setActiveTab, targets, deleteTarget, dismissedItems, dismissItem, t } = useAppState();
     const [filter, setFilter] = useState("All");
     const [sortBy, setSortBy] = useState<"created" | "name" | "deadline" | "progress">("created");
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const [isUpdateOpen, setIsUpdateOpen] = useState(false);
     const [editingTarget, setEditingTarget] = useState<TargetType | null>(null);
-    const [updatingTarget, setUpdatingTarget] = useState<TargetType | null>(null);
     const [targetMenuOpen, setTargetMenuOpen] = useState<string | null>(null);
     const [menuPosition, setMenuPosition] = useState<{ top: number; right: number } | null>(null);
     const menuButtonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
@@ -262,13 +258,7 @@ export function TargetList() {
                                         setIsFormOpen(true);
                                     }}
                                 >
-                                    <div 
-                                        className="flex flex-col gap-3 group cursor-pointer bg-secondary/40 backdrop-blur-xl border border-border hover:border-foreground/20 p-5 rounded-3xl transition-all"
-                                        onClick={() => {
-                                            setUpdatingTarget(target);
-                                            setIsUpdateOpen(true);
-                                        }}
-                                    >
+                                    <div className="flex flex-col gap-3 group cursor-pointer bg-secondary/40 backdrop-blur-xl border border-border hover:border-foreground/20 p-5 rounded-3xl transition-all">
                                         <div className="flex items-start gap-4">
                                             <div className={cn("shrink-0 w-12 h-12 flex items-center justify-center rounded-2xl bg-secondary", categoryColor)}>
                                                 <CategoryIcon className="w-6 h-6" />
@@ -367,17 +357,6 @@ export function TargetList() {
                         onClose={() => { setIsFormOpen(false); setEditingTarget(null); }}
                         editingTarget={editingTarget}
                     />
-                </DrawerContent>
-            </Drawer>
-
-            <Drawer open={isUpdateOpen} onOpenChange={setIsUpdateOpen}>
-                <DrawerContent className="bg-transparent border-none p-0 max-w-2xl mx-auto">
-                    {updatingTarget && (
-                        <TargetUpdateDrawer
-                            target={updatingTarget}
-                            onClose={() => { setIsUpdateOpen(false); setUpdatingTarget(null); }}
-                        />
-                    )}
                 </DrawerContent>
             </Drawer>
 

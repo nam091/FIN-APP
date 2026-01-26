@@ -24,7 +24,8 @@
       "Bash(keytool:*)",
       "Bash(npm install:*)",
       "Bash(npm run cap:sync:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebFetch(domain:www.allforpeople.dev)"
     ]
   }
 }

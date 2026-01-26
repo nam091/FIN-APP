@@ -1,0 +1,248 @@
+"use client";
+
+import React from "react";
+import { useAppState } from "@/context/app-state-context";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+    Wallet,
+    TrendingUp,
+    TrendingDown,
+    CheckCircle2,
+    Clock,
+    FileText,
+    Lightbulb,
+    ArrowRight,
+    Sparkles,
+    Settings
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { formatVND, formatVNDShort } from "@/lib/currency";
+import { getLocalDateString } from "@/lib/date-utils";
+import { BackgroundDots } from "@/components/ui/background-dots";
+import { ActivityChart } from "./activity-chart";
+import { FinanceChart } from "./finance-chart";
+import { TargetsView } from "@/components/targets/targets-view";
+
+export function HomeDashboard() {
+    const {
+        activeTab,
+        setActiveTab,
+        notes,
+        financeSummary,
+        tasks,
+        trackers,
+        transactions,
+        t
+    } = useAppState();
+
+    const [isMounted, setIsMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) return <div className="flex-1 bg-background" />;
+
+    // Finance stats from summary - safety check
+    const todayIncome = financeSummary?.today?.income ?? 0;
+    const todayExpense = financeSummary?.today?.expense ?? 0;
+    const balance = financeSummary?.today?.balance ?? 0;
+
+    // Task stats
+    const completedTasks = tasks?.filter(t => t.completed).length ?? 0;
+    const pendingTasks = tasks?.filter(t => !t.completed).length ?? 0;
+
+    // Notes summary
+    const totalNotes = notes?.length ?? 0;
+    const notesToday = notes?.filter(n => n.date === getLocalDateString(new Date())).length ?? 0;
+
+    return (
+        <div className="flex flex-col h-full w-full bg-background text-foreground overflow-hidden relative">
+            <BackgroundDots />
+            {/* Header */}
+            <header className="px-6 pt-12 pb-4 z-40 shrink-0">
+                <div className="max-w-4xl mx-auto w-full">
+                    <div className="flex items-center justify-between mb-2">
+                        <h1 className="text-4xl font-bold tracking-tight">{t("dashboard")}</h1>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setActiveTab("settings")}
+                            className="md:hidden w-10 h-10 rounded-full hover:bg-secondary"
+                        >
+                            <Settings className="w-5 h-5 text-muted-foreground" />
+                        </Button>
+                    </div>
+                    <p className="text-muted-foreground/80 text-sm font-medium">{t("overview")}</p>
+                </div>
+            </header>
+
+            {/* Main Content */}
+            <div className="flex-1 overflow-y-auto no-scrollbar px-6 pb-32">
+                <div className="max-w-4xl mx-auto w-full space-y-8">
+
+                    {/* Finance Overview */}
+                    <section>
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-lg font-bold flex items-center gap-2">
+                                <Wallet className="w-5 h-5 text-indigo-500" />
+                                {t("todayFinance")}
+                            </h2>
+                            <Button
+                                variant="ghost"
+                                className="text-muted-foreground hover:text-foreground text-sm flex items-center gap-1"
+                                onClick={() => setActiveTab("finance")}
+                            >
+                                {t("viewAll")} <ArrowRight className="w-4 h-4" />
+                            </Button>
+                        </div>
+                        <div className="grid grid-cols-3 gap-4">
+                            <Card className="bg-secondary/50 border-border rounded-[32px] p-4 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <TrendingUp className="w-4 h-4 text-emerald-500" />
+                                    <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-wider">{t("income")}</span>
+                                </div>
+                                <span className="text-xl font-bold text-emerald-500">{formatVNDShort(todayIncome)}</span>
+                            </Card>
+                            <Card className="bg-secondary/50 border-border rounded-[32px] p-4 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <TrendingDown className="w-4 h-4 text-rose-500" />
+                                    <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-wider">{t("expense")}</span>
+                                </div>
+                                <span className="text-xl font-bold text-rose-500">-{formatVNDShort(todayExpense)}</span>
+                            </Card>
+                            <Card className="bg-secondary/50 border-border rounded-[32px] p-4 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Wallet className="w-4 h-4 text-indigo-500" />
+                                    <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-wider">{t("balance")}</span>
+                                </div>
+                                <span className={cn("text-xl font-bold", balance >= 0 ? "text-foreground" : "text-rose-500")}>
+                                    {balance < 0 ? "-" : ""}{formatVNDShort(Math.abs(balance))}
+                                </span>
+                            </Card>
+                        </div>
+                    </section>
+
+                    {/* Activity Overview Chart */}
+                    <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <ActivityChart tasks={tasks} notes={notes} trackers={trackers} />
+                    </section>
+
+                    {/* Finance Overview Chart */}
+                    <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <FinanceChart transactions={transactions} />
+                    </section>
+
+                    {/* Targets Overview */}
+                    <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <TargetsView />
+                    </section>
+
+                    {/* Tasks Overview */}
+                    <section>
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-lg font-bold flex items-center gap-2">
+                                <CheckCircle2 className="w-5 h-5 text-violet-500" />
+                                {t("tasks")}
+                            </h2>
+                            <Button
+                                variant="ghost"
+                                className="text-muted-foreground hover:text-foreground text-sm flex items-center gap-1"
+                                onClick={() => setActiveTab("tasks")}
+                            >
+                                {t("viewAll")} <ArrowRight className="w-4 h-4" />
+                            </Button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <Card className="bg-emerald-500/10 border-emerald-500/30 rounded-[32px] p-5 shadow-sm hover:shadow-md transition-all">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
+                                        <CheckCircle2 className="w-6 h-6 text-emerald-500" />
+                                    </div>
+                                    <div>
+                                        <span className="text-3xl font-extrabold text-emerald-500">{completedTasks}</span>
+                                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">{t("completed")}</p>
+                                    </div>
+                                </div>
+                            </Card>
+                            <Card className="bg-amber-500/10 border-amber-500/30 rounded-[32px] p-5 shadow-sm hover:shadow-md transition-all">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center">
+                                        <Clock className="w-6 h-6 text-amber-500" />
+                                    </div>
+                                    <div>
+                                        <span className="text-3xl font-extrabold text-amber-500">{pendingTasks}</span>
+                                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">{t("pending")}</p>
+                                    </div>
+                                </div>
+                            </Card>
+                        </div>
+                    </section>
+
+                    {/* Notes Overview */}
+                    <section>
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-lg font-bold flex items-center gap-2">
+                                <FileText className="w-5 h-5 text-purple-500" />
+                                {t("notes")}
+                            </h2>
+                            <Button
+                                variant="ghost"
+                                className="text-muted-foreground hover:text-foreground text-sm flex items-center gap-1"
+                                onClick={() => setActiveTab("notes")}
+                            >
+                                {t("viewAll")} <ArrowRight className="w-4 h-4" />
+                            </Button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <Card className="bg-purple-500/10 border-purple-500/30 rounded-[32px] p-5 shadow-sm hover:shadow-md transition-all">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 bg-purple-500/20 rounded-2xl flex items-center justify-center">
+                                        <FileText className="w-6 h-6 text-purple-500" />
+                                    </div>
+                                    <div>
+                                        <span className="text-3xl font-extrabold text-purple-500">{totalNotes}</span>
+                                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">{t("totalNotes")}</p>
+                                    </div>
+                                </div>
+                            </Card>
+                            <Card className="bg-pink-500/10 border-pink-500/30 rounded-[32px] p-5 shadow-sm hover:shadow-md transition-all">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 bg-pink-500/20 rounded-2xl flex items-center justify-center">
+                                        <Lightbulb className="w-6 h-6 text-pink-500" />
+                                    </div>
+                                    <div>
+                                        <span className="text-3xl font-extrabold text-pink-500">{notesToday}</span>
+                                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">{t("today")}</p>
+                                    </div>
+                                </div>
+                            </Card>
+                        </div>
+                    </section>
+
+                    {/* AI Assistant Quick Access */}
+                    <section>
+                        <Card className="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border-indigo-500/30 rounded-3xl p-6">
+                            <div className="flex items-center gap-4">
+                                <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center">
+                                    <Sparkles className="w-7 h-7 text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-lg text-foreground">{t("aiAssistant")}</h3>
+                                    <p className="text-muted-foreground text-sm">{t("aiDescriptionShort")}</p>
+                                </div>
+                                <Button
+                                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl"
+                                    onClick={() => setActiveTab("ai")}
+                                >
+                                    {t("openChat")}
+                                </Button>
+                            </div>
+                        </Card>
+                    </section>
+                </div>
+            </div>
+        </div>
+    );
+}

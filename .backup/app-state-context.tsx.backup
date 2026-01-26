@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 import { getLocalDateString } from "@/lib/date-utils";
 import { translations, TranslationKey } from "@/lib/translations";
 
-type TabType = "home" | "finance" | "tasks" | "notes" | "tracking" | "targets" | "ai" | "settings" | "add";
+type TabType = "home" | "finance" | "tasks" | "notes" | "tracking" | "ai" | "settings" | "add";
 
 export interface Transaction {
     id: string;
@@ -50,18 +50,6 @@ export interface Note {
     tags: string[];
 }
 
-export interface Target {
-    id: string;
-    name: string;
-    targetAmount: number;
-    currentAmount: number;
-    deadline?: string;
-    category: string;
-    status: string;
-    createdAt?: string;
-    updatedAt?: string;
-}
-
 export interface ChatMessage {
     id: number;
     role: "user" | "assistant";
@@ -79,13 +67,6 @@ interface NotificationHook {
     type: "discord" | "telegram" | "gmail" | "webhook";
     url: string;
     enabled: boolean;
-}
-
-interface CatalogItem {
-    id: string;
-    labelKey: string;
-    iconName: string;
-    color: string;
 }
 
 interface UserSettings {
@@ -107,11 +88,6 @@ interface UserSettings {
         aiAvatar?: string;
     };
     language: string;
-    catalogs: {
-        transactions: CatalogItem[];
-        tasks: CatalogItem[];
-        targets: CatalogItem[];
-    };
 }
 
 interface AppState {
@@ -145,8 +121,6 @@ interface AppState {
     updateSettings: (settings: Partial<UserSettings>) => void;
     addNotificationHook: (hook: Omit<NotificationHook, "id">) => void;
     removeNotificationHook: (id: string) => void;
-    addCatalogItem: (type: "transactions" | "tasks" | "targets", item: CatalogItem) => void;
-    removeCatalogItem: (type: "transactions" | "tasks" | "targets", id: string) => void;
     chatHistory: ChatMessage[];
     setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
     trackers: any[];
@@ -155,10 +129,6 @@ interface AppState {
     updateTracker: (id: string, tracker: any) => Promise<void>;
     deleteTracker: (id: string) => Promise<void>;
     toggleTrackerEntry: (id: string, date: string) => Promise<void>;
-    targets: Target[];
-    addTarget: (target: Omit<Target, "id">) => Promise<void>;
-    updateTarget: (id: string, target: Partial<Target>) => Promise<void>;
-    deleteTarget: (id: string) => Promise<void>;
     t: (key: TranslationKey) => string;
 }
 
@@ -230,29 +200,7 @@ const initialSettings: UserSettings = {
         userAvatar: "",
         aiAvatar: ""
     },
-    language: "en",
-    catalogs: {
-        transactions: [
-            { id: "dining", labelKey: "dining", iconName: "Utensils", color: "text-emerald-500" },
-            { id: "shopping", labelKey: "shopping", iconName: "ShoppingBag", color: "text-pink-500" },
-            { id: "transport", labelKey: "transport", iconName: "Car", color: "text-blue-500" },
-            { id: "health", labelKey: "health", iconName: "Heart", color: "text-rose-500" },
-            { id: "income", labelKey: "income", iconName: "Briefcase", color: "text-emerald-500" },
-            { id: "other", labelKey: "other", iconName: "Sparkles", color: "text-indigo-500" },
-        ],
-        tasks: [
-            { id: "me", labelKey: "tasksForMe", iconName: "User", color: "text-blue-500" },
-            { id: "others", labelKey: "tasksOthers", iconName: "Users", color: "text-purple-500" },
-            { id: "upcoming", labelKey: "tasksUpcoming", iconName: "Calendar", color: "text-orange-500" },
-        ],
-        targets: [
-            { id: "savings", labelKey: "savings", iconName: "PiggyBank", color: "text-emerald-500" },
-            { id: "shopping", labelKey: "shopping", iconName: "ShoppingBag", color: "text-pink-500" },
-            { id: "car", labelKey: "car", iconName: "Car", color: "text-blue-500" },
-            { id: "home", labelKey: "homeCategory", iconName: "Home", color: "text-amber-500" },
-            { id: "other", labelKey: "other", iconName: "Sparkles", color: "text-indigo-500" },
-        ]
-    }
+    language: "en"
 };
 
 export function AppStateProvider({ children }: { children: ReactNode }) {
@@ -265,7 +213,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     const [userSettings, setUserSettings] = useState<UserSettings>(initialSettings);
     const [chatHistory, setChatHistory] = useState<ChatMessage[]>(initialChatHistory);
     const [trackers, setTrackers] = useState<any[]>([]);
-    const [targets, setTargets] = useState<Target[]>([]);
 
     const { data: session } = useSession();
 
@@ -282,7 +229,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
                     setTransactions(data.transactions || []);
                     setNotes(data.notes || []);
                     setTrackers(data.trackers || []);
-                    setTargets(data.targets || []);
                     // Load from localStorage as fallback/priority
                     const localLang = localStorage.getItem("finapp_language");
                     if (localLang) {
@@ -572,26 +518,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         }));
     };
 
-    const addCatalogItem = (type: "transactions" | "tasks" | "targets", item: CatalogItem) => {
-        setUserSettings(prev => {
-            const newCatalogs = { ...prev.catalogs };
-            newCatalogs[type] = [...newCatalogs[type], item];
-            const updated = { ...prev, catalogs: newCatalogs };
-            updateSettings(updated);
-            return updated;
-        });
-    };
-
-    const removeCatalogItem = (type: "transactions" | "tasks" | "targets", id: string) => {
-        setUserSettings(prev => {
-            const newCatalogs = { ...prev.catalogs };
-            newCatalogs[type] = newCatalogs[type].filter(i => i.id !== id);
-            const updated = { ...prev, catalogs: newCatalogs };
-            updateSettings(updated);
-            return updated;
-        });
-    };
-
     const financeSummary = useMemo(() => {
         const now = new Date();
         const todayStr = getLocalDateString(now);
@@ -707,39 +633,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         } catch (error) { console.error(error); }
     };
 
-    // Target management functions
-    const addTarget = async (target: Omit<Target, "id">) => {
-        try {
-            const res = await fetch("/api/targets", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(target),
-            });
-            if (res.ok) {
-                const data = await res.json();
-                setTargets(prev => [data, ...prev]);
-            }
-        } catch (error) { console.error("Failed to add target", error); }
-    };
-
-    const updateTarget = async (id: string, target: Partial<Target>) => {
-        setTargets(prev => prev.map(t => t.id === id ? { ...t, ...target } : t));
-        try {
-            await fetch("/api/targets", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id, ...target }),
-            });
-        } catch (error) { console.error("Failed to update target", error); }
-    };
-
-    const deleteTarget = async (id: string) => {
-        setTargets(prev => prev.filter(t => t.id !== id));
-        try {
-            await fetch(`/api/targets?id=${id}`, { method: "DELETE" });
-        } catch (error) { console.error("Failed to delete target", error); }
-    };
-
     return (
         <AppStateContext.Provider value={{
             activeTab,
@@ -784,12 +677,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             updateTracker,
             deleteTracker,
             toggleTrackerEntry,
-            targets,
-            addTarget,
-            updateTarget,
-            deleteTarget,
-            addCatalogItem,
-            removeCatalogItem,
             t: (key: TranslationKey) => {
                 const lang = (userSettings.language as "en" | "vi") || "en";
                 return translations[lang][key] || translations.en[key] || key;

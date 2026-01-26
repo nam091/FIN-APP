@@ -236,6 +236,10 @@ export const translations = {
         travel: "Travel",
         gift: "Gift",
         other: "Other",
+        updateTarget: "Update Target",
+        manageCatalog: "Manage Catalog",
+        addCatalog: "Add Catalog",
+        catalogName: "Catalog Name",
     },
     vi: {
         // Navigation
@@ -472,5 +476,9 @@ export const translations = {
         travel: "Du lịch",
         gift: "Quà tặng",
         other: "Khác",
+        updateTarget: "Cập nhật mục tiêu",
+        manageCatalog: "Quản lý danh mục",
+        addCatalog: "Thêm danh mục",
+        catalogName: "Tên danh mục",
     },
 };
